@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GymRoutine</title>
+    <title>HassanGym</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -34,15 +34,33 @@
         }
 
         .sidebar-logo {
-            padding: 26px 24px 18px;
-            font-size: 1.3rem;
+            padding: 22px 20px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+        .sidebar-logo .logo-svg { flex-shrink: 0; }
+        .sidebar-logo .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+        }
+        .sidebar-logo .logo-name {
+            font-size: 1.15rem;
             font-weight: 900;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             color: white;
             text-transform: uppercase;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
         }
-        .sidebar-logo span { color: #ff5722; }
+        .sidebar-logo .logo-name span { color: #ff5722; }
+        .sidebar-logo .logo-sub {
+            font-size: 0.58rem;
+            letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
 
         .sidebar-user {
             padding: 14px 24px 16px;
@@ -2067,7 +2085,27 @@
 
 <!-- ===================== SIDEBAR ===================== -->
 <nav class="sidebar" id="sidebar">
-    <div class="sidebar-logo">GYM<span>ROUTINE</span></div>
+    <div class="sidebar-logo">
+        <svg class="logo-svg" width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="38" height="38" rx="10" fill="#ff5722"/>
+            <!-- Barra de pesas -->
+            <rect x="4" y="17" width="30" height="4" rx="2" fill="white"/>
+            <!-- Disco izquierdo grande -->
+            <rect x="4" y="11" width="5" height="16" rx="2.5" fill="white" opacity="0.95"/>
+            <!-- Disco izquierdo pequeño -->
+            <rect x="10" y="13" width="3.5" height="12" rx="1.8" fill="white" opacity="0.7"/>
+            <!-- Disco derecho grande -->
+            <rect x="29" y="11" width="5" height="16" rx="2.5" fill="white" opacity="0.95"/>
+            <!-- Disco derecho pequeño -->
+            <rect x="24.5" y="13" width="3.5" height="12" rx="1.8" fill="white" opacity="0.7"/>
+            <!-- Letra H central -->
+            <text x="19" y="22.5" text-anchor="middle" font-family="Arial Black, Arial" font-weight="900" font-size="9" fill="#ff5722" letter-spacing="0">H</text>
+        </svg>
+        <div class="logo-text">
+            <div class="logo-name">HASSAN<span>GYM</span></div>
+            <div class="logo-sub">Fuerza · Músculo · Salud</div>
+        </div>
+    </div>
     <div class="sidebar-user" id="sidebar-user">
         <div class="su-nombre" id="sidebar-nombre">—</div>
         <div class="su-objetivo">Fuerza · Músculo · Salud</div>
@@ -2423,6 +2461,22 @@
                 <button class="btn-op" onclick="elegirFeedback('dificultad', 'normal', this)">Normal</button>
                 <button class="btn-op" onclick="elegirFeedback('dificultad', 'dificil', this)">Difícil</button>
             </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">¿Cómo fueron los pesos?</div>
+            <div class="btn-group">
+                <button class="btn-op" onclick="elegirFeedback('pesos_feedback', 'ligeros', this)">Muy ligeros</button>
+                <button class="btn-op" onclick="elegirFeedback('pesos_feedback', 'bien', this)">Perfectos</button>
+                <button class="btn-op" onclick="elegirFeedback('pesos_feedback', 'pesados', this)">Muy pesados</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">¿Qué ejercicio te costó más? (opcional)</div>
+            <select id="feedback-ejercicio-duro" style="width:100%;padding:10px;border-radius:8px;border:1.5px solid #eee;font-size:0.95rem;background:#fafafa">
+                <option value="">— Ninguno en especial —</option>
+            </select>
         </div>
 
         <div class="card">
@@ -3304,9 +3358,11 @@ function construirPrompt(perfil, material, sesiones, tiempo, nivel, objetivo) {
             const diasSem = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
             const diaStr = isNaN(fechaDate) ? s.fecha : `${diasSem[fechaDate.getDay()]} ${s.fecha}`;
             let linea = `[${diaStr}] ${s.tiempo}min · nivel:${s.nivel} · obj:${s.objetivo}`;
-            if (s.dificultad) linea += ` · dificultad:${s.dificultad}`;
-            if (s.molestia)   linea += ` · ⚠️ MOLESTIA:"${s.molestia}"`;
-            if (s.comentario) linea += ` · nota:"${s.comentario}"`;
+            if (s.dificultad)        linea += ` · dificultad:${s.dificultad}`;
+            if (s.pesos_feedback)    linea += ` · pesos:${s.pesos_feedback}`;
+            if (s.ejercicio_mas_duro) linea += ` · más duro:"${s.ejercicio_mas_duro}"`;
+            if (s.molestia)          linea += ` · ⚠️ MOLESTIA:"${s.molestia}"`;
+            if (s.comentario)        linea += ` · nota:"${s.comentario}"`;
             if (s.ejercicios && s.ejercicios.length) {
                 // Grupos musculares únicos trabajados
                 const grupos = [...new Set(s.ejercicios.map(e => e.grupo_muscular).filter(Boolean))];
@@ -4035,6 +4091,18 @@ function irAFeedback() {
     document.getElementById('feedback-comentario').value = '';
     document.querySelectorAll('#pantalla-feedback .btn-op').forEach(b => b.classList.remove('activo'));
 
+    // Poblar dropdown con ejercicios de la sesión actual
+    const selectEj = document.getElementById('feedback-ejercicio-duro');
+    selectEj.innerHTML = '<option value="">— Ninguno en especial —</option>';
+    (sesionActual.ejercicios || []).forEach(ej => {
+        if (ej.nombre) {
+            const opt = document.createElement('option');
+            opt.value = ej.nombre;
+            opt.textContent = ej.nombre;
+            selectEj.appendChild(opt);
+        }
+    });
+
     // Mostrar evaluación de la IA si hay una
     const evalCard = document.getElementById('evaluacion-card');
     if (ultimaEvaluacion) {
@@ -4089,10 +4157,12 @@ function guardarFeedback() {
         nivel:       sesionActual.nivel      || '—',
         objetivo:    sesionActual.objetivo   || '—',
         tiempo:      sesionActual.tiempo     || '—',
-        completada:  feedbackElegido.completada || null,
-        dificultad:  feedbackElegido.dificultad || null,
-        molestia:    document.getElementById('feedback-molestia').value.trim(),
-        comentario:  document.getElementById('feedback-comentario').value.trim(),
+        completada:        feedbackElegido.completada    || null,
+        dificultad:        feedbackElegido.dificultad    || null,
+        pesos_feedback:    feedbackElegido.pesos_feedback || null,
+        ejercicio_mas_duro: document.getElementById('feedback-ejercicio-duro').value.trim(),
+        molestia:          document.getElementById('feedback-molestia').value.trim(),
+        comentario:        document.getElementById('feedback-comentario').value.trim(),
         evaluacion_pregunta:  ultimaEvaluacion || '',
         evaluacion_respuesta: document.getElementById('evaluacion-respuesta') ? document.getElementById('evaluacion-respuesta').value.trim() : '',
         calentamiento: ejConPeso(sesionActual.calentamiento),
@@ -4296,10 +4366,14 @@ function mostrarProgreso() {
                 s.comentario           ? `Nota: ${s.comentario}` : '',
                 s.evaluacion_respuesta ? `Evaluación: ${s.evaluacion_respuesta}` : '',
             ].filter(Boolean).map(t => `<div class="sesion-molestia">${t}</div>`).join('');
+            const tagPesos = s.pesos_feedback ? `<span class="sesion-tag" style="background:${s.pesos_feedback==='pesados'?'#fce4ec':s.pesos_feedback==='ligeros'?'#e8f5e9':'#e3f2fd'};color:#333">Pesos: ${s.pesos_feedback==='pesados'?'muy pesados':s.pesos_feedback==='ligeros'?'muy ligeros':'perfectos'}</span>` : '';
+            const gruposEj = s.ejercicios ? [...new Set(s.ejercicios.map(e=>e.grupo_muscular).filter(Boolean))].join(', ') : '';
             card.innerHTML = `
                 <div class="sesion-fecha">${s.fecha}</div>
                 <div class="sesion-info">${textoNiv[s.nivel] || s.nivel} — ${textoObj[s.objetivo] || s.objetivo} · ${s.tiempo} min</div>
-                <div class="sesion-tags">${tagComp}${tagDif}</div>
+                ${gruposEj ? `<div class="sesion-info" style="color:#888;font-size:0.8rem">💪 ${gruposEj}</div>` : ''}
+                <div class="sesion-tags">${tagComp}${tagDif}${tagPesos}</div>
+                ${s.ejercicio_mas_duro ? `<div class="sesion-molestia">Más duro: ${s.ejercicio_mas_duro}</div>` : ''}
                 ${extra}
             `;
             contenedor.appendChild(card);
@@ -5002,9 +5076,14 @@ async function generarPlanSemanal() {
         return `${n}: ${ds}`;
     }).join(' | ');
 
-    const ultimasSes = sesiones.slice(-5).map(s => {
-        let l = `- ${s.fecha}: ${s.nivel||''} / ${s.objetivo||''} / ${s.tiempo||''}min`;
-        if (s.tipo_entrenamiento) l += ` / ${s.tipo_entrenamiento}`;
+    const ultimasSes = sesiones.slice(-15).reverse().map(s => {
+        const grupos = s.ejercicios ? [...new Set(s.ejercicios.map(e=>e.grupo_muscular).filter(Boolean))].join(', ') : '';
+        let l = `- ${s.fecha}: ${s.nivel||''} / ${s.tiempo||''}min`;
+        if (grupos) l += ` / músculos: ${grupos}`;
+        if (s.dificultad)         l += ` / dificultad: ${s.dificultad}`;
+        if (s.pesos_feedback)     l += ` / pesos: ${s.pesos_feedback}`;
+        if (s.ejercicio_mas_duro) l += ` / más duro: ${s.ejercicio_mas_duro}`;
+        if (s.molestia)           l += ` / ⚠️ molestia: ${s.molestia}`;
         if (s.deporteHecho    && s.deporteHecho.length)    l += ` / deporte hecho: ${fmtDep(s.deporteHecho)}`;
         if (s.deportePrevisto && s.deportePrevisto.length) l += ` / deporte previsto: ${fmtDep(s.deportePrevisto)}`;
         return l;
@@ -5198,7 +5277,7 @@ function programarRecordatorio() {
     _notifTimeout = setTimeout(() => {
         const perfil = cargarPerfil();
         const nombre = perfil && perfil.nombre ? perfil.nombre : 'campeón';
-        new Notification('GymRoutine — ¡Hora de entrenar!', {
+        new Notification('HassanGym — ¡Hora de entrenar!', {
             body: `Hola ${nombre}, toca sesión hoy. ¡A por ello!`,
             icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🏋️</text></svg>'
         });
