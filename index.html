@@ -3299,19 +3299,42 @@ function construirPrompt(perfil, material, sesiones, tiempo, nivel, objetivo) {
 
     let historialText = 'Sin sesiones previas — es la primera vez del usuario.';
     if (sesiones.length > 0) {
-        historialText = sesiones.slice(-5).reverse().map((s, i) => {
-            let linea = `Sesión ${i + 1} (${s.fecha}): nivel ${s.nivel}, objetivo ${s.objetivo}, ${s.tiempo} min`;
-            if (s.completada) linea += `, completada: ${s.completada}`;
-            if (s.dificultad) linea += `, dificultad: ${s.dificultad}`;
-            if (s.molestia)   linea += `, molestia: "${s.molestia}"`;
-            if (s.comentario) linea += `, nota: "${s.comentario}"`;
+        historialText = sesiones.slice(-40).reverse().map((s, i) => {
+            const fechaDate = new Date(s.fecha);
+            const diasSem = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+            const diaStr = isNaN(fechaDate) ? s.fecha : `${diasSem[fechaDate.getDay()]} ${s.fecha}`;
+            let linea = `[${diaStr}] ${s.tiempo}min · nivel:${s.nivel} · obj:${s.objetivo}`;
+            if (s.dificultad) linea += ` · dificultad:${s.dificultad}`;
+            if (s.molestia)   linea += ` · ⚠️ MOLESTIA:"${s.molestia}"`;
+            if (s.comentario) linea += ` · nota:"${s.comentario}"`;
             if (s.ejercicios && s.ejercicios.length) {
-                const pesos = s.ejercicios.filter(e => e.peso).map(e => `${e.nombre}: ${e.peso}`).join(', ');
-                if (pesos) linea += ` | Pesos usados: ${pesos}`;
+                // Grupos musculares únicos trabajados
+                const grupos = [...new Set(s.ejercicios.map(e => e.grupo_muscular).filter(Boolean))];
+                if (grupos.length) linea += `\n   Músculos: ${grupos.join(', ')}`;
+                // Ejercicios con pesos
+                const ejPesos = s.ejercicios.filter(e => e.nombre).map(e => {
+                    let txt = e.nombre;
+                    if (e.pesoUsado) txt += ` ${e.pesoUsado}kg`;
+                    else if (e.peso) txt += ` (ref:${e.peso})`;
+                    return txt;
+                });
+                if (ejPesos.length) linea += `\n   Ejercicios: ${ejPesos.join(' | ')}`;
             }
             return linea;
         }).join('\n');
     }
+
+    // Aviso explícito de músculos trabajados en últimas 48h
+    const hace48h = new Date(Date.now() - 48*3600*1000);
+    const recientes = sesiones.filter(s => new Date(s.fecha) >= hace48h);
+    let gruposRecientes = [];
+    recientes.forEach(s => {
+        if (s.ejercicios) s.ejercicios.forEach(e => { if (e.grupo_muscular) gruposRecientes.push(e.grupo_muscular); });
+    });
+    gruposRecientes = [...new Set(gruposRecientes)];
+    const avisoReciente = gruposRecientes.length
+        ? `⚠️ MÚSCULOS TRABAJADOS EN LAS ÚLTIMAS 48H (evitar sobrecargar): ${gruposRecientes.join(', ')}`
+        : '';
 
     const energia     = elegido.energia || 'normal';
     const energiaTexto = { cargado: 'CARGADO (mucha energía — puede aumentar intensidad)', normal: 'NORMAL', cansado: 'CANSADO (poca energía — reducir intensidad y volumen)' };
@@ -3339,8 +3362,9 @@ function construirPrompt(perfil, material, sesiones, tiempo, nivel, objetivo) {
 RÉCORDS PERSONALES (usa esto para referencia de pesos):
 ${recordsText}
 
-HISTORIAL DE SESIONES (más reciente primero):
+HISTORIAL DE SESIONES (más reciente primero, últimas 10):
 ${historialText}
+${avisoReciente}
 
 SOLICITUD DE HOY (${hoy}):
 - Tiempo disponible: ${tiempo} minutos${modoCircuito ? ' — MODO CIRCUITO: usa circuitos en lugar de series separadas, mantén intensidad' : ''}
@@ -3355,9 +3379,10 @@ SOLICITUD DE HOY (${hoy}):
 INSTRUCCIONES OBLIGATORIAS:
 1. Crea calentamiento (3-4 ejercicios), rutina principal (${numEj} ejercicios) y estiramientos (3-4 ejercicios).
 2. Para CADA ejercicio en las tres secciones incluye SIEMPRE todos los campos: nombre, grupo_muscular, explicacion, series, reps, descanso_series, descanso_ejercicios, peso (obligatorio si aplica, null si no), youtube.
-3. El peso es OBLIGATORIO para todo ejercicio que lo requiera. Basa el peso en el perfil e historial. Si hay pesos previos, decide si subir, mantener o bajar.
-4. Ajusta la intensidad según el historial.
-5. Si hay molestias, evita esas zonas y propón alternativas.
+3. El peso es OBLIGATORIO para todo ejercicio que lo requiera. Basa el peso en el perfil e historial. Si hay pesos previos, decide si subir, mantener o bajar según la dificultad reportada.
+4. Ajusta la intensidad según el historial: si la sesión anterior fue "muy difícil" baja volumen; si fue "fácil" sube intensidad.
+5. Si hay molestias registradas, evita esas zonas completamente y propón alternativas. Si la molestia es recurrente, menciónalo.
+5b. EVITAR REPETICIÓN: no repitas los mismos grupos musculares principales de las últimas 48h salvo que sea recuperación activa ligera.
 6. ZONAS: si el usuario ha especificado zonas concretas, TODOS los ejercicios de la rutina principal deben trabajar esas zonas exclusivamente. Si no especificó zonas, distribuye el entrenamiento libremente.
 7. DEPORTE COMPLEMENTARIO: si ha hecho deporte esta semana (running, padel, bici…), evita sobrecargar los grupos musculares ya fatigados por ese deporte. Si tiene deporte previsto, no agotes los músculos clave para ese deporte (ej: si tiene padel, no quemes hombros ni muñecas; si tiene running, no cargues piernas). Diseña el gym como entrenamiento de apoyo y complemento al deporte, no en competición con él.
 7. Para "youtube" escribe los mejores términos de búsqueda en español para encontrar un tutorial del ejercicio.
