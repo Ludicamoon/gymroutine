@@ -1162,6 +1162,15 @@
             line-height: 1.5;
         }
 
+        .perfil-nota { font-size: 0.78rem; color: #999; margin-top: 6px; }
+        /* Material del perfil más compacto: 19 opciones en 3 columnas */
+        #material-zona .material-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        #material-zona .material-item { padding: 10px 6px; min-height: 0; text-align: center; }
+        #material-zona .mat-icono { font-size: 1.2rem; margin-bottom: 4px; }
+        #material-zona .mat-nombre { font-size: 0.75rem; line-height: 1.2; }
+        .material-grupo-titulo { font-size: 0.72rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #999; margin: 14px 0 8px; }
+        .material-extra { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; font-size: 0.85rem; color: #555; }
+        .material-extra input { width: 90px; }
         .aviso-sin-material {
             background: #fff5f2;
             border: 1px solid #ffd5c8;
@@ -2451,27 +2460,22 @@
             </div>
             <div class="input-row" style="margin-bottom:12px">
                 <div>
-                    <div class="input-label">Edad</div>
-                    <input type="number" id="perfil-edad" placeholder="Ej: 47" min="10" max="100">
+                    <div class="input-label">Año de nacimiento</div>
+                    <input type="number" id="perfil-anio" placeholder="Ej: 1978" min="1920" max="2015" inputmode="numeric">
                 </div>
-                <div>
-                    <div class="input-label">Peso (kg)</div>
-                    <input type="number" id="perfil-peso" placeholder="Ej: 75" min="30" max="250">
-                </div>
-            </div>
-            <div class="input-row">
                 <div>
                     <div class="input-label">Altura (cm)</div>
                     <input type="number" id="perfil-altura" placeholder="Ej: 178" min="140" max="220">
                 </div>
-                <div>
-                    <div class="input-label">Pesas disponibles (kg máx)</div>
-                    <input type="number" id="perfil-pesas-kg" placeholder="Ej: 40" min="1" max="200">
-                </div>
+            </div>
+            <div>
+                <div class="input-label">Peso (kg)</div>
+                <input type="number" id="perfil-peso" placeholder="Ej: 75" min="30" max="250" step="0.1">
+                <div class="perfil-nota" id="perfil-peso-nota">Es el mismo que apuntas en Progreso: si lo cambias aquí, se apunta allí con la fecha de hoy.</div>
             </div>
         </div>
 
-        <!-- Nivel y objetivo de entrenamiento (antes se preguntaban cada día) -->
+        <!-- Nivel, objetivo y días (antes se preguntaban cada día) -->
         <div class="card">
             <div class="card-label">Tu nivel</div>
             <div class="btn-group" id="perfil-nivel-group">
@@ -2485,6 +2489,14 @@
                 <button class="btn-op" data-valor="peso" onclick="elegirPerfil('objetivoTipo', this)">Perder peso</button>
                 <button class="btn-op" data-valor="mantener" onclick="elegirPerfil('objetivoTipo', this)">Mantenerme</button>
             </div>
+            <div class="card-label" style="margin-top:16px">¿Cuántos días a la semana puedes entrenar?</div>
+            <div class="btn-group" id="perfil-diasSemana-group">
+                <button class="btn-op" data-valor="2" onclick="elegirPerfil('diasSemana', this)">2</button>
+                <button class="btn-op" data-valor="3" onclick="elegirPerfil('diasSemana', this)">3</button>
+                <button class="btn-op" data-valor="4" onclick="elegirPerfil('diasSemana', this)">4</button>
+                <button class="btn-op" data-valor="5" onclick="elegirPerfil('diasSemana', this)">5</button>
+                <button class="btn-op" data-valor="6" onclick="elegirPerfil('diasSemana', this)">6</button>
+            </div>
             <p style="font-size:0.8rem;color:#999;margin-top:10px">La app ajusta cada día la intensidad según cómo te vaya; esto es tu punto de partida.</p>
         </div>
 
@@ -2497,19 +2509,10 @@
         <!-- Deportes habituales -->
         <div class="card">
             <div class="card-label">Deportes que practicas habitualmente <span style="font-weight:400;color:#aaa;font-size:0.78rem">(opcional)</span></div>
-            <p style="font-size:0.82rem;color:#999;margin-bottom:12px">La app los recordará y adaptará el gym a tu semana deportiva.</p>
-            <div class="btn-group zonas-group" id="perfil-deportes-group">
-                <button class="btn-op" onclick="toggleDeportePerfil('running',this)">🏃 Running</button>
-                <button class="btn-op" onclick="toggleDeportePerfil('padel',this)">🎾 Pádel</button>
-                <button class="btn-op" onclick="toggleDeportePerfil('bici',this)">🚴 Bici</button>
-                <button class="btn-op" onclick="toggleDeportePerfil('natacion',this)">🏊 Natación</button>
-                <button class="btn-op" onclick="toggleDeportePerfil('futbol',this)">⚽ Fútbol</button>
-                <button class="btn-op" onclick="toggleDeportePerfil('tenis',this)">🎾 Tenis</button>
-                <button class="btn-op" onclick="toggleDeportePerfil('senderismo',this)">🥾 Senderismo</button>
-                <button class="btn-op" onclick="toggleDeportePerfil('yoga',this)">🧘 Yoga</button>
-                <button class="btn-op" onclick="toggleDeportePerfil('crossfit',this)">🏋️ CrossFit</button>
-                <button class="btn-op" onclick="toggleDeportePerfil('gimnasio',this)">🏢 Gimnasio</button>
-            </div>
+            <p style="font-size:0.82rem;color:#999;margin-bottom:12px">La app los recordará y adaptará el gimnasio a tu semana deportiva.</p>
+            <div class="btn-group zonas-group" id="perfil-deportes-group"></div>
+            <div class="input-label" style="margin-top:12px">¿Otro? Escríbelo (separa varios con comas)</div>
+            <input type="text" id="perfil-deportes-otros" placeholder="Ej: Golf, Remo">
         </div>
 
         <!-- Lesiones / molestias -->
@@ -2518,64 +2521,17 @@
             <textarea id="perfil-lesiones" placeholder="Ej: rodilla derecha, lumbar..."></textarea>
         </div>
 
-        <!-- Material disponible -->
+        <!-- Ejercicios a evitar -->
         <div class="card">
-            <div class="card-label">Material disponible</div>
-            <p style="font-size:0.85rem; color:#777; margin-bottom:14px;">Marca lo que tienes. El peso corporal siempre está disponible.</p>
+            <div class="card-label">Ejercicios que no quieres o no puedes hacer (opcional)</div>
+            <textarea id="perfil-evitar" placeholder="Ej: nada de burpees, no tengo sitio para zancadas..."></textarea>
+        </div>
 
-            <div class="material-grid">
-
-                <div class="material-item" id="mat-pesas" onclick="toggleMaterial('pesas')">
-                    <div class="mat-icono">🏋️</div>
-                    <div class="mat-nombre">Pesas</div>
-                </div>
-
-                <div class="material-item" id="mat-barras" onclick="toggleMaterial('barras')">
-                    <div class="mat-icono">🔩</div>
-                    <div class="mat-nombre">Barras</div>
-                </div>
-
-                <div class="material-item" id="mat-press_banca" onclick="toggleMaterial('press_banca')">
-                    <div class="mat-icono">🪑</div>
-                    <div class="mat-nombre">Press de banca</div>
-                </div>
-
-                <div class="material-item" id="mat-esterilla" onclick="toggleMaterial('esterilla')">
-                    <div class="mat-icono">🟩</div>
-                    <div class="mat-nombre">Esterilla</div>
-                </div>
-
-                <div class="material-item" id="mat-trx" onclick="toggleMaterial('trx')">
-                    <div class="mat-icono">🪢</div>
-                    <div class="mat-nombre">TRX</div>
-                </div>
-
-                <div class="material-item" id="mat-barra_dominadas" onclick="toggleMaterial('barra_dominadas')">
-                    <div class="mat-icono">🔝</div>
-                    <div class="mat-nombre">Barra dominadas</div>
-                </div>
-
-                <div class="material-item" id="mat-gomas" onclick="toggleMaterial('gomas')">
-                    <div class="mat-icono">🔴</div>
-                    <div class="mat-nombre">Gomas elásticas</div>
-                </div>
-
-                <div class="material-item" id="mat-barra_z" onclick="toggleMaterial('barra_z')">
-                    <div class="mat-icono">〰️</div>
-                    <div class="mat-nombre">Barra Z</div>
-                </div>
-
-                <div class="material-item" id="mat-gimnasio" onclick="toggleMaterial('gimnasio')"
-                     style="grid-column: 1 / -1; background: linear-gradient(135deg,#fff8f5,#fff3ee); border: 2px solid #ffccb3;">
-                    <div class="mat-icono">🏢</div>
-                    <div class="mat-nombre" style="font-weight:800">Gimnasio completo</div>
-                </div>
-
-            </div>
-
-            <div class="aviso-sin-material" id="aviso-material">
-                Selecciona al menos un material (o deja en blanco para solo peso corporal).
-            </div>
+        <!-- Dónde entrenas y material -->
+        <div class="card">
+            <div class="card-label">¿Dónde entrenas?</div>
+            <div class="btn-group" id="perfil-lugar-group"></div>
+            <div id="material-zona" style="margin-top:16px"></div>
         </div>
 
         <button class="btn-generar" onclick="guardarPerfil()">Guardar y empezar →</button>
@@ -2643,6 +2599,13 @@
                 <option value="60">60 minutos</option>
             </select>
         </div>
+        <div class="card" id="card-lugar-hoy" style="display:none">
+            <div class="card-label">¿Dónde entrenas hoy?</div>
+            <div class="btn-group">
+                <button class="btn-op" data-lugar="casa" onclick="elegirLugarHoy('casa', this)">🏠 Fuera del gimnasio</button>
+                <button class="btn-op" data-lugar="gimnasio" onclick="elegirLugarHoy('gimnasio', this)">🏢 En el gimnasio</button>
+            </div>
+        </div>
 
         <div class="card">
             <div class="card-label">Zonas a trabajar <span style="font-weight:400;color:#aaa;font-size:0.78rem">(opcional — deja vacío para cuerpo completo)</span></div>
@@ -2675,16 +2638,6 @@
         <div class="card">
             <div class="card-label">Deporte hecho esta semana <span style="font-weight:400;color:#aaa;font-size:0.78rem">(opcional)</span></div>
             <div class="btn-group zonas-group" id="deporte-hecho-group">
-                <button class="btn-op" onclick="toggleDeporteForm('hecho','running',this)">🏃 Running</button>
-                <button class="btn-op" onclick="toggleDeporteForm('hecho','padel',this)">🎾 Pádel</button>
-                <button class="btn-op" onclick="toggleDeporteForm('hecho','bici',this)">🚴 Bici</button>
-                <button class="btn-op" onclick="toggleDeporteForm('hecho','natacion',this)">🏊 Natación</button>
-                <button class="btn-op" onclick="toggleDeporteForm('hecho','futbol',this)">⚽ Fútbol</button>
-                <button class="btn-op" onclick="toggleDeporteForm('hecho','tenis',this)">🎾 Tenis</button>
-                <button class="btn-op" onclick="toggleDeporteForm('hecho','senderismo',this)">🥾 Senderismo</button>
-                <button class="btn-op" onclick="toggleDeporteForm('hecho','yoga',this)">🧘 Yoga</button>
-                <button class="btn-op" onclick="toggleDeporteForm('hecho','crossfit',this)">🏋️ CrossFit</button>
-                <button class="btn-op" onclick="toggleDeporteForm('hecho','gimnasio',this)">🏢 Gimnasio</button>
             </div>
             <div id="deporte-hecho-detalles"></div>
         </div>
@@ -2692,16 +2645,6 @@
         <div class="card">
             <div class="card-label">Deporte previsto esta semana <span style="font-weight:400;color:#aaa;font-size:0.78rem">(opcional)</span></div>
             <div class="btn-group zonas-group" id="deporte-previsto-group">
-                <button class="btn-op" onclick="toggleDeporteForm('previsto','running',this)">🏃 Running</button>
-                <button class="btn-op" onclick="toggleDeporteForm('previsto','padel',this)">🎾 Pádel</button>
-                <button class="btn-op" onclick="toggleDeporteForm('previsto','bici',this)">🚴 Bici</button>
-                <button class="btn-op" onclick="toggleDeporteForm('previsto','natacion',this)">🏊 Natación</button>
-                <button class="btn-op" onclick="toggleDeporteForm('previsto','futbol',this)">⚽ Fútbol</button>
-                <button class="btn-op" onclick="toggleDeporteForm('previsto','tenis',this)">🎾 Tenis</button>
-                <button class="btn-op" onclick="toggleDeporteForm('previsto','senderismo',this)">🥾 Senderismo</button>
-                <button class="btn-op" onclick="toggleDeporteForm('previsto','yoga',this)">🧘 Yoga</button>
-                <button class="btn-op" onclick="toggleDeporteForm('previsto','crossfit',this)">🏋️ CrossFit</button>
-                <button class="btn-op" onclick="toggleDeporteForm('previsto','gimnasio',this)">🏢 Gimnasio</button>
             </div>
             <div id="deporte-previsto-detalles"></div>
         </div>
@@ -3031,50 +2974,175 @@ function resetearHistorial() {
 }
 
 function guardarPerfil() {
-    const nombre   = document.getElementById('perfil-nombre').value.trim();
-    const edad     = document.getElementById('perfil-edad').value.trim();
-    const peso     = document.getElementById('perfil-peso').value.trim();
-    const altura   = document.getElementById('perfil-altura').value.trim();
-    const lesiones = document.getElementById('perfil-lesiones').value.trim();
-    const pesasKg  = document.getElementById('perfil-pesas-kg').value.trim();
-    const objetivo = document.getElementById('perfil-objetivo').value.trim();
+    const val = id => document.getElementById(id).value.trim();
+    const anterior = cargarPerfil() || {};
+    const anio = parseInt(val('perfil-anio')) || null;
+    const peso = val('perfil-peso');
 
-    const perfil = { nombre, edad, peso, altura, lesiones, pesasKg, objetivo, deportesHabituales: deportesPerfilSeleccionados,
-                     nivel: _perfilSel.nivel, objetivoTipo: _perfilSel.objetivoTipo };
+    // El peso es uno solo: si cambia, se apunta en Progreso con la fecha de hoy
+    const pesoNum = parseFloat(peso.replace(',', '.'));
+    if (pesoNum >= 20 && pesoNum <= 300 && pesoNum !== pesoActual(anterior)) {
+        const regs = cargarPesoCorporal();
+        const hoy = _fechaHoy();
+        const idx = regs.findIndex(r => r.fecha === hoy);
+        if (idx >= 0) regs[idx].kg = pesoNum; else regs.push({ fecha: hoy, kg: pesoNum });
+        guardarPesoCorporal(regs);
+    }
+
+    const lugar = _perfilSel.lugar;
+    const perfil = {
+        nombre: val('perfil-nombre'),
+        anioNacimiento: anio,
+        edad: anio ? String(new Date().getFullYear() - anio) : (anterior.edad || ''),
+        peso, altura: val('perfil-altura'),
+        lesiones: val('perfil-lesiones'),
+        evitar: val('perfil-evitar'),
+        objetivo: val('perfil-objetivo'),
+        deportesHabituales: deportesPerfilSeleccionados.filter(d => d !== 'gimnasio'),
+        deportesOtros: limpiarDeportesOtros(val('perfil-deportes-otros')),
+        nivel: _perfilSel.nivel, objetivoTipo: _perfilSel.objetivoTipo,
+        diasSemana: parseInt(_perfilSel.diasSemana) || null,
+        lugar,
+        pesasKg: document.getElementById('perfil-pesas-kg') ? val('perfil-pesas-kg') : (anterior.pesasKg || ''),
+        materialOtro: document.getElementById('perfil-material-otro') ? val('perfil-material-otro') : (anterior.materialOtro || ''),
+    };
+    // Los deportes escritos en "Otro" también cuentan como habituales
+    perfil.deportesOtros.forEach(d => { if (!perfil.deportesHabituales.includes(d)) perfil.deportesHabituales.push(d); });
+    // Quitar de habituales los "Otro" que se han borrado del texto
+    perfil.deportesHabituales = perfil.deportesHabituales.filter(d => DEPORTES_BASE.includes(d) || perfil.deportesOtros.includes(d));
+
+    const material = lugar === 'gimnasio' ? ['gimnasio'] : materialSeleccionado.filter(m => m !== 'gimnasio' || lugar === 'mezcla');
     localStorage.setItem('gym_perfil', JSON.stringify(perfil));
-    localStorage.setItem('gym_material', JSON.stringify(materialSeleccionado));
+    localStorage.setItem('gym_material', JSON.stringify(material));
     scheduleSyncGym();
 
     mostrarFormulario();
 }
 
-// ===================== MATERIAL =====================
+// ===================== MATERIAL Y LUGAR EN EL PERFIL =====================
 function toggleMaterial(id) {
-    const el = document.getElementById('mat-' + id);
-    if (materialSeleccionado.includes(id)) {
-        materialSeleccionado = materialSeleccionado.filter(m => m !== id);
-        el.classList.remove('activo');
-    } else {
-        materialSeleccionado.push(id);
-        el.classList.add('activo');
+    materialSeleccionado = materialSeleccionado.includes(id)
+        ? materialSeleccionado.filter(m => m !== id)
+        : [...materialSeleccionado, id];
+    renderizarMaterialPerfil();
+}
+
+function elegirLugar(lugar) {
+    const antes = _perfilSel.lugar;
+    _perfilSel.lugar = lugar;
+    // Atajos: el parque ya trae barra y paralelas; al salir de "Gimnasio" se empieza en blanco
+    if (lugar === 'parque' && antes !== 'parque' && !materialSeleccionado.some(m => m !== 'gimnasio')) {
+        materialSeleccionado = ['barra_dominadas', 'paralelas'];
     }
-    // (campo kg movido al perfil general)
+    if (lugar !== 'mezcla') materialSeleccionado = materialSeleccionado.filter(m => m !== 'gimnasio');
+    renderizarMaterialPerfil();
+}
+
+function renderizarMaterialPerfil() {
+    const perfil = cargarPerfil() || {};
+    const lugar = _perfilSel.lugar;
+    document.getElementById('perfil-lugar-group').innerHTML = Object.entries(LUGARES).map(([id, txt]) =>
+        `<button class="btn-op${id === lugar ? ' activo' : ''}" onclick="elegirLugar('${id}')">${txt}</button>`).join('');
+
+    // Conservar lo que ya se ha escrito en los campos antes de redibujar
+    const kgPrevio = document.getElementById('perfil-pesas-kg')?.value ?? perfil.pesasKg ?? '';
+    const otroPrevio = document.getElementById('perfil-material-otro')?.value ?? perfil.materialOtro ?? '';
+    const zona = document.getElementById('material-zona');
+    if (lugar === 'gimnasio') {
+        zona.innerHTML = `<p class="perfil-nota" style="font-size:0.85rem">🏢 Con gimnasio tienes todo el material: máquinas, poleas, barras, mancuernas, cardio… No hace falta marcar nada.</p>`;
+        return;
+    }
+    const nota = lugar === 'mezcla'
+        ? 'Marca el material que tienes fuera del gimnasio. En "Entrenar" eliges cada día dónde entrenas.'
+        : 'Marca lo que tienes. El peso corporal siempre cuenta.';
+    zona.innerHTML = `<p class="perfil-nota" style="font-size:0.85rem;margin-bottom:4px">${nota}</p>`
+        + MATERIAL_GRUPOS.map(([grupo, items]) => `<div class="material-grupo-titulo">${grupo}</div>
+            <div class="material-grid">${items.map(([id, ico, nombre]) =>
+                `<div class="material-item${materialSeleccionado.includes(id) ? ' activo' : ''}" onclick="toggleMaterial('${id}')">
+                    <div class="mat-icono">${ico}</div><div class="mat-nombre">${nombre}</div></div>`).join('')}</div>`).join('')
+        + (materialSeleccionado.includes('pesas') ? `<div class="material-extra">🏋️ Mancuernas: hasta
+            <input type="number" id="perfil-pesas-kg" min="1" max="100" step="0.5" placeholder="kg" value="${escaparHTML(kgPrevio)}"> kg cada una</div>` : '')
+        + `<div class="input-label" style="margin-top:14px">¿Otro material? Escríbelo</div>
+           <input type="text" id="perfil-material-otro" placeholder="Ej: saco de boxeo, chaleco lastrado" value="${escaparHTML(otroPrevio)}">`;
+}
+
+function renderizarDeportesPerfil(perfil) {
+    const otros = (perfil && perfil.deportesOtros) || [];
+    document.getElementById('perfil-deportes-group').innerHTML = DEPORTES_BASE.map(d =>
+        `<button class="btn-op${deportesPerfilSeleccionados.includes(d) ? ' activo' : ''}" data-deporte="${d}">${nombreDeporte(d)}</button>`).join('');
+    document.querySelectorAll('#perfil-deportes-group .btn-op').forEach(b =>
+        b.addEventListener('click', () => toggleDeportePerfil(b.dataset.deporte, b)));
+    document.getElementById('perfil-deportes-otros').value = otros.join(', ');
+}
+
+// ===================== MATERIAL (una sola lista para toda la app) =====================
+// [id, icono, nombre en pantalla, nombre para la IA]. Los id antiguos se mantienen
+// para que los perfiles guardados sigan valiendo (pesas = mancuernas, barras = barra y discos).
+const MATERIAL_GRUPOS = [
+    ['Pesos libres', [['pesas', '🏋️', 'Mancuernas', 'mancuernas'], ['barras', '🔩', 'Barra y discos', 'barra olímpica con discos'],
+                      ['barra_z', '〰️', 'Barra Z', 'barra Z'], ['kettlebell', '🔔', 'Kettlebell', 'kettlebell']]],
+    ['Banco y rack', [['press_banca', '🪑', 'Banco', 'banco plano/inclinable'], ['rack', '🏗️', 'Rack o jaula', 'rack o jaula de sentadillas']]],
+    ['Calistenia', [['barra_dominadas', '🔝', 'Barra de dominadas', 'barra de dominadas'], ['paralelas', '⏸️', 'Paralelas', 'paralelas para fondos'],
+                    ['anillas', '⭕', 'Anillas', 'anillas']]],
+    ['Accesorios', [['gomas', '🔴', 'Gomas elásticas', 'gomas elásticas'], ['trx', '🪢', 'TRX', 'TRX'], ['esterilla', '🟩', 'Esterilla', 'esterilla'],
+                    ['comba', '➰', 'Comba', 'comba'], ['cajon', '📦', 'Cajón / step', 'cajón o step'], ['fitball', '⚪', 'Fitball', 'fitball']]],
+    ['Cardio', [['bici', '🚴', 'Bici estática', 'bici estática'], ['cinta', '🏃', 'Cinta', 'cinta de correr'],
+                ['remo', '🚣', 'Remo', 'máquina de remo'], ['eliptica', '🔄', 'Elíptica', 'elíptica']]],
+];
+const MATERIAL_INFO = Object.fromEntries(MATERIAL_GRUPOS.flatMap(([, items]) => items.map(([id, ico, nombre, ia]) => [id, { ico, nombre, ia }])));
+MATERIAL_INFO.gimnasio = { ico: '🏢', nombre: 'Gimnasio completo', ia: 'gimnasio completo' };
+const MATERIAL_GIMNASIO_IA = 'acceso completo a gimnasio: mancuernas, barra olímpica, press de banca plano/inclinado/declinado, máquina de cables y poleas, lat pulldown, remo en máquina, leg press, hack squat, extensión de cuádriceps, curl femoral, hip thrust en máquina, pec deck, máquina de hombros, pull-over en polea, fondos en paralelas, barra de dominadas, esterilla, TRX, máquinas de cardio (cinta, bici, elíptica)';
+const LUGARES = { casa: '🏠 Casa', gimnasio: '🏢 Gimnasio', parque: '🌳 Parque', mezcla: '🔀 Varios sitios' };
+
+function lugarPerfil(perfil = cargarPerfil(), material = cargarMaterial()) {
+    if (perfil && LUGARES[perfil.lugar]) return perfil.lugar;
+    return material.length === 1 && material[0] === 'gimnasio' ? 'gimnasio' : 'casa'; // perfiles antiguos
 }
 
 function nombresMaterial(lista) {
-    const nombres = {
-        pesas: 'Pesas',
-        barras: 'Barras',
-        press_banca: 'Press banca',
-        esterilla: 'Esterilla',
-        trx: 'TRX',
-        barra_dominadas: 'Barra dominadas',
-        gomas: 'Gomas',
-        barra_z: 'Barra Z',
-        gimnasio: 'Gimnasio completo'
-    };
-    if (!lista || lista.length === 0) return 'Solo peso corporal';
-    return lista.map(m => nombres[m] || m).join(', ');
+    const perfil = cargarPerfil();
+    const lugar = lugarPerfil(perfil, lista || []);
+    if (lugar === 'gimnasio') return 'Gimnasio completo';
+    const nombres = (lista || []).map(m => (MATERIAL_INFO[m] || {}).nombre || m);
+    if (perfil && perfil.materialOtro) nombres.push(perfil.materialOtro);
+    const txt = nombres.length ? nombres.join(', ') : 'Solo peso corporal';
+    return lugar === 'casa' ? txt : `${LUGARES[lugar]} · ${txt}`;
+}
+
+// Material tal y como se le explica a la IA. lugarHoy: 'casa' | 'gimnasio' (para "Varios sitios")
+function textoMaterialIA(perfil = cargarPerfil(), material = cargarMaterial(), lugarHoy = null) {
+    const lugar = lugarPerfil(perfil, material);
+    const propio = material.filter(m => m !== 'gimnasio').map(m => (MATERIAL_INFO[m] || {}).ia || m);
+    if (perfil && perfil.materialOtro) propio.push(perfil.materialOtro);
+    const kg = perfil && perfil.pesasKg && material.includes('pesas') ? ` (mancuernas de hasta ${perfil.pesasKg} kg cada una: no propongas más peso)` : '';
+    const casa = ['peso corporal', ...propio].join(', ') + kg;
+    if (lugar === 'gimnasio') return MATERIAL_GIMNASIO_IA;
+    if (lugar === 'parque') return `parque de calistenia al aire libre: ${casa}`;
+    if (lugar === 'mezcla') {
+        return lugarHoy === 'gimnasio'
+            ? `HOY entrena en el gimnasio: ${MATERIAL_GIMNASIO_IA}`
+            : `HOY entrena fuera del gimnasio (casa/parque): ${casa}. Otros días va al gimnasio.`;
+    }
+    return casa;
+}
+
+// Edad a partir del año de nacimiento (la edad escrita a mano se quedaba vieja)
+function edadPerfil(perfil = cargarPerfil()) {
+    if (perfil && perfil.anioNacimiento > 1900) return new Date().getFullYear() - perfil.anioNacimiento;
+    return perfil && perfil.edad ? parseInt(perfil.edad) || null : null;
+}
+// Peso: el último apuntado en Progreso; si no hay, el del perfil
+function pesoActual(perfil = cargarPerfil()) {
+    const regs = cargarPesoCorporal();
+    if (regs.length) return regs[regs.length - 1].kg;
+    return perfil && perfil.peso ? parseFloat(perfil.peso) || null : null;
+}
+// Días por semana y ejercicios a evitar, para las instrucciones de la IA
+function textoPreferenciasIA(perfil = cargarPerfil()) {
+    const l = [];
+    if (perfil && perfil.diasSemana) l.push(`- Días que puede entrenar por semana: ${perfil.diasSemana}`);
+    if (perfil && perfil.evitar) l.push(`- Ejercicios que NO quiere o no puede hacer (no los incluyas nunca): ${perfil.evitar}`);
+    return l.join('\n');
 }
 
 // ===================== NAVEGACIÓN =====================
@@ -3131,7 +3199,7 @@ function nivelYObjetivo(perfil = cargarPerfil()) {
         objetivoTipo: validoObj(perfil && perfil.objetivoTipo) || validoObj(ultima && ultima.objetivo) || 'mantener',
     };
 }
-let _perfilSel = { nivel: 'medio', objetivoTipo: 'mantener' };
+let _perfilSel = { nivel: 'medio', objetivoTipo: 'mantener', diasSemana: null, lugar: 'casa' };
 function elegirPerfil(campo, btn) {
     _perfilSel[campo] = btn.dataset.valor;
     btn.parentElement.querySelectorAll('.btn-op').forEach(b => b.classList.toggle('activo', b === btn));
@@ -3144,42 +3212,30 @@ function mostrarPerfil() {
     document.getElementById('btn-header-perfil').style.display = 'none';
     document.getElementById('btn-header-historial').style.display = 'none';
 
-    // Cargar datos guardados si existen
-    const perfil = cargarPerfil();
-    if (perfil) {
-        document.getElementById('perfil-nombre').value   = perfil.nombre   || '';
-        document.getElementById('perfil-edad').value     = perfil.edad     || '';
-        document.getElementById('perfil-peso').value     = perfil.peso     || '';
-        document.getElementById('perfil-altura').value   = perfil.altura   || '';
-        document.getElementById('perfil-lesiones').value = perfil.lesiones || '';
-        document.getElementById('perfil-pesas-kg').value = perfil.pesasKg  || '';
-        document.getElementById('perfil-objetivo').value = perfil.objetivo || '';
-    }
+    const perfil = cargarPerfil() || {};
+    const pon = (id, v) => { document.getElementById(id).value = v ?? ''; };
+    pon('perfil-nombre', perfil.nombre);
+    pon('perfil-anio', perfil.anioNacimiento || (perfil.edad ? new Date().getFullYear() - parseInt(perfil.edad) : ''));
+    pon('perfil-peso', pesoActual(perfil) || '');
+    pon('perfil-altura', perfil.altura);
+    pon('perfil-lesiones', perfil.lesiones);
+    pon('perfil-evitar', perfil.evitar);
+    pon('perfil-objetivo', perfil.objetivo);
 
-    // Cargar material guardado
-    materialSeleccionado = cargarMaterial();
-    document.querySelectorAll('.material-item').forEach(el => el.classList.remove('activo'));
-    materialSeleccionado.forEach(id => {
-        const el = document.getElementById('mat-' + id);
-        if (el) el.classList.add('activo');
-    });
-
-    // Cargar deportes habituales
-    const perfilDeportes = cargarPerfil();
-    deportesPerfilSeleccionados = (perfilDeportes && perfilDeportes.deportesHabituales) || [];
-    document.querySelectorAll('#perfil-deportes-group .btn-op').forEach(btn => btn.classList.remove('activo'));
-    deportesPerfilSeleccionados.forEach(d => {
-        const btn = [...document.querySelectorAll('#perfil-deportes-group .btn-op')].find(b =>
-            b.getAttribute('onclick').includes(`'${d}'`)
-        );
-        if (btn) btn.classList.add('activo');
-    });
-    // Nivel y objetivo
-    _perfilSel = nivelYObjetivo(perfil);
-    ['nivel', 'objetivoTipo'].forEach(campo => {
+    // Nivel, objetivo, días y lugar
+    _perfilSel = { ...nivelYObjetivo(perfil), diasSemana: perfil.diasSemana ? String(perfil.diasSemana) : null, lugar: lugarPerfil(perfil) };
+    ['nivel', 'objetivoTipo', 'diasSemana'].forEach(campo => {
         document.querySelectorAll(`#perfil-${campo}-group .btn-op`).forEach(b =>
             b.classList.toggle('activo', b.dataset.valor === _perfilSel[campo]));
     });
+
+    // Deportes y material
+    deportesPerfilSeleccionados = (perfil.deportesHabituales || []).filter(d => d !== 'gimnasio');
+    renderizarDeportesPerfil(perfil);
+    materialSeleccionado = cargarMaterial();
+    if (document.getElementById('perfil-pesas-kg')) document.getElementById('perfil-pesas-kg').remove();
+    if (document.getElementById('perfil-material-otro')) document.getElementById('perfil-material-otro').remove();
+    renderizarMaterialPerfil();
 
     window.scrollTo(0, 0);
 }
@@ -3229,7 +3285,21 @@ function mostrarFormulario() {
     document.getElementById('error').style.display = 'none';
 
     // Deporte de la semana: se recuerda hasta el domingo (si no, los habituales del perfil)
+    renderBotonesDeporteSemana();
     restaurarDeporteSemana();
+
+    // Quien entrena en varios sitios elige cada día dónde
+    const cardLugar = document.getElementById('card-lugar-hoy');
+    if (lugarPerfil(perfil, material) === 'mezcla') {
+        let hoyEn = 'casa';
+        try { hoyEn = localStorage.getItem(claveLocal('gym_lugar_hoy')) || 'casa'; } catch {}
+        elegido.lugarHoy = hoyEn;
+        cardLugar.style.display = '';
+        cardLugar.querySelectorAll('.btn-op').forEach(b => b.classList.toggle('activo', b.dataset.lugar === hoyEn));
+    } else {
+        elegido.lugarHoy = null;
+        cardLugar.style.display = 'none';
+    }
 
     window.scrollTo(0, 0);
 }
@@ -3261,11 +3331,7 @@ function restaurarDeporteSemana() {
             const lista = _listaDeporte(tipo);
             lista.length = 0;
             (guardado[tipo] || []).forEach(e => lista.push(JSON.parse(JSON.stringify(e))));
-            const grupo = document.getElementById(`deporte-${tipo}-group`);
-            if (grupo) grupo.querySelectorAll('.btn-op').forEach(btn => {
-                const m = (btn.getAttribute('onclick') || '').match(/'(\w+)',this\)$/);
-                btn.classList.toggle('activo', !!(m && lista.some(e => e.deporte === m[1])));
-            });
+            _marcarBotonesDeporte(tipo);
             renderDetallesDeporte(tipo);
         });
     } else {
@@ -3280,7 +3346,7 @@ function actualizarResumenMasOpciones() {
     const el = document.getElementById('mas-opciones-resumen');
     if (!el) return;
     const nombres = lista => lista.map(e => {
-        const n = (DEPORTES_NOMBRES[e.deporte] || e.deporte).replace(/^\S+\s/, '');
+        const n = nombreDeporte(e.deporte).replace(/^\S+\s/, '');
         return e.dias && e.dias.length ? `${n} (${e.dias.map(d => d.dia).join(', ')})` : n;
     });
     const partes = [];
@@ -3339,8 +3405,22 @@ function toggleDeportePerfil(deporte, btn) {
 const DEPORTES_NOMBRES = {
     running:'🏃 Running', padel:'🎾 Pádel', bici:'🚴 Bici', natacion:'🏊 Natación',
     futbol:'⚽ Fútbol', tenis:'🎾 Tenis', senderismo:'🥾 Senderismo', yoga:'🧘 Yoga',
-    crossfit:'🏋️ CrossFit', gimnasio:'🏢 Gimnasio'
+    crossfit:'🏋️ CrossFit', pilates:'🤸 Pilates', escalada:'🧗 Escalada', boxeo:'🥊 Boxeo / artes marciales',
+    baloncesto:'🏀 Baloncesto', esqui:'⛷️ Esquí / snow', surf:'🏄 Surf / pádel surf', baile:'💃 Baile',
+    gimnasio:'🏢 Gimnasio', // solo para datos antiguos: ya no se ofrece como deporte
 };
+const DEPORTES_BASE = ['running','padel','bici','natacion','futbol','tenis','senderismo','yoga','crossfit',
+                       'pilates','escalada','boxeo','baloncesto','esqui','surf','baile'];
+const nombreDeporte = d => DEPORTES_NOMBRES[d] || `🏅 ${d}`;
+// Deportes escritos a mano en "Otro" ("Remo, Golf"): sin comillas ni símbolos raros
+function limpiarDeportesOtros(texto) {
+    return String(texto || '').split(/[,;\n]/).map(t => t.replace(/['"`<>\\]/g, '').trim().slice(0, 25))
+        .filter(t => t && !DEPORTES_BASE.includes(t.toLowerCase())).slice(0, 6);
+}
+// Lista de deportes para elegir: los habituales + los escritos por el usuario
+function deportesDisponibles(perfil = cargarPerfil()) {
+    return [...DEPORTES_BASE, ...((perfil && perfil.deportesOtros) || [])];
+}
 const CF_TIPOS = [
     { id:'pierna',       label:'Pierna' },
     { id:'empuje',       label:'Empuje' },
@@ -3355,6 +3435,12 @@ function _listaDeporte(tipo) {
 }
 function _findEntry(tipo, deporte) {
     return _listaDeporte(tipo).find(e => e.deporte === deporte);
+}
+
+function elegirLugarHoy(lugar, btn) {
+    elegido.lugarHoy = lugar;
+    btn.parentElement.querySelectorAll('.btn-op').forEach(b => b.classList.toggle('activo', b === btn));
+    try { localStorage.setItem(claveLocal('gym_lugar_hoy'), lugar); } catch {}
 }
 
 function toggleDeporteForm(tipo, deporte, btn) {
@@ -3400,7 +3486,7 @@ function renderDetallesDeporte(tipo) {
 
     panel.innerHTML = '<div class="deporte-detalle-panel">' +
         lista.map(entry => {
-            const nombre = DEPORTES_NOMBRES[entry.deporte] || entry.deporte;
+            const nombre = nombreDeporte(entry.deporte);
             const diasSeleccionados = entry.dias.map(d => d.dia);
 
             const diasHtml = DIAS.map(d =>
@@ -3430,20 +3516,28 @@ function renderDetallesDeporte(tipo) {
         }).join('') + '</div>';
 }
 
+// Botones de "Deporte hecho / previsto": los de la lista + los escritos en el perfil
+function renderBotonesDeporteSemana() {
+    const lista = deportesDisponibles();
+    ['hecho', 'previsto'].forEach(tipo => {
+        const grupo = document.getElementById(`deporte-${tipo}-group`);
+        if (!grupo) return;
+        grupo.innerHTML = lista.map(d => `<button class="btn-op" data-deporte="${escaparHTML(d)}">${escaparHTML(nombreDeporte(d))}</button>`).join('');
+        grupo.querySelectorAll('.btn-op').forEach(b => b.addEventListener('click', () => toggleDeporteForm(tipo, b.dataset.deporte, b)));
+    });
+}
+function _marcarBotonesDeporte(tipo) {
+    const lista = _listaDeporte(tipo);
+    document.querySelectorAll(`#deporte-${tipo}-group .btn-op`).forEach(b =>
+        b.classList.toggle('activo', lista.some(e => e.deporte === b.dataset.deporte)));
+}
+
 function preseleccionarDeportesForm(habituales) {
     ['hecho', 'previsto'].forEach(tipo => {
         const lista = _listaDeporte(tipo);
         lista.length = 0;
-        const grupo = document.getElementById(`deporte-${tipo}-group`);
-        if (!grupo) return;
-        grupo.querySelectorAll('.btn-op').forEach(btn => btn.classList.remove('activo'));
-        habituales.forEach(d => {
-            lista.push({ deporte: d, dias: [] });
-            const btn = [...grupo.querySelectorAll('.btn-op')].find(b =>
-                b.getAttribute('onclick').includes(`'${d}'`)
-            );
-            if (btn) btn.classList.add('activo');
-        });
+        habituales.filter(d => d !== 'gimnasio').forEach(d => lista.push({ deporte: d, dias: [] }));
+        _marcarBotonesDeporte(tipo);
         renderDetallesDeporte(tipo);
     });
 }
@@ -3797,16 +3891,10 @@ function parseFechaES(str) {
 
 function construirPrompt(perfil, material, sesiones, tiempo, nivel, objetivo, contextoSemana = '') {
     const nombresObj = { fuerza: 'fuerza e hipertrofia', peso: 'pérdida de peso y cardio', mantener: 'mantenimiento general' };
-    const nombresMat = { pesas: 'pesas/mancuernas', barras: 'barra olímpica', press_banca: 'press de banca', esterilla: 'esterilla', trx: 'TRX', barra_dominadas: 'barra de dominadas', gomas: 'gomas elásticas', barra_z: 'barra Z', gimnasio: 'gimnasio completo' };
     const numEj = cuantosEjercicios(tiempo);
     const diasSemana = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
     const hoy = diasSemana[new Date().getDay()];
-
-    const tieneGimnasio = material.includes('gimnasio');
-    const matLista = tieneGimnasio
-        ? 'acceso completo a gimnasio: mancuernas, barra olímpica, press de banca plano/inclinado/declinado, máquina de cables y poleas, lat pulldown, remo en máquina, leg press, hack squat, extensión de cuádriceps, curl femoral, hip thrust en máquina, pec deck, máquina de hombros, pull-over en polea, fondos en paralelas, barra de dominadas, esterilla, TRX, máquinas de cardio (cinta, bici, elíptica)'
-        : ['peso corporal', ...material.map(m => nombresMat[m] || m)].join(', ');
-    const pesasKgText = perfil.pesasKg ? ` (máximo ${perfil.pesasKg} kg disponibles)` : '';
+    const matLista = textoMaterialIA(perfil, material, elegido.lugarHoy);
 
     let historialText = 'Sin sesiones previas — es la primera vez del usuario.';
     if (sesiones.length > 0) {
@@ -3931,11 +4019,12 @@ function construirPrompt(perfil, material, sesiones, tiempo, nivel, objetivo, co
 
     return `PERFIL DEL USUARIO:
 - Nombre: ${perfil.nombre || _currentGymUser || 'campeón'}
-- Edad: ${perfil.edad || 'no indicada'} años
-- Peso corporal: ${perfil.peso || 'no indicado'} kg${pesoCorporalText}
+- Edad: ${edadPerfil(perfil) || 'no indicada'} años
+- Peso corporal: ${pesoActual(perfil) || 'no indicado'} kg${pesoCorporalText}
 - Altura: ${perfil.altura || 'no indicada'} cm
 - Lesiones o molestias permanentes: ${perfil.lesiones || 'ninguna'}
-- Material disponible: ${matLista}${pesasKgText}
+- Material disponible: ${matLista}
+${textoPreferenciasIA(perfil)}
 - Objetivo a largo plazo: ${perfil.objetivo || 'no especificado'}
 
 RÉCORDS PERSONALES (usa esto para referencia de pesos):
@@ -3957,8 +4046,8 @@ ${duracionText}SOLICITUD DE HOY (${hoy}):
 - Nivel: ${nivel}
 - Objetivo: ${nombresObj[objetivo]}
 - Zonas a trabajar: ${elegido.zonas.length === 0 || elegido.zonas.includes('fullbody') ? 'cuerpo completo (distribuye entre todos los grupos musculares)' : elegido.zonas.join(', ')}
-- Deporte hecho esta semana: ${elegido.deporteHecho.length > 0 ? elegido.deporteHecho.map(e => { const nombre = DEPORTES_NOMBRES[e.deporte]||e.deporte; if(!e.dias||e.dias.length===0) return nombre; const diasStr = e.dias.map(d => { let s = d.dia; if(d.tipo_cf) s += ` (${CF_TIPOS.find(t=>t.id===d.tipo_cf)?.label||d.tipo_cf})`; return s; }).join(' y '); return `${nombre}: ${diasStr}`; }).join(' | ') : 'ninguno indicado'}
-- Deporte previsto esta semana: ${elegido.deportePrevisto.length > 0 ? elegido.deportePrevisto.map(e => { const nombre = DEPORTES_NOMBRES[e.deporte]||e.deporte; if(!e.dias||e.dias.length===0) return nombre; const diasStr = e.dias.map(d => { let s = d.dia; if(d.tipo_cf) s += ` (${CF_TIPOS.find(t=>t.id===d.tipo_cf)?.label||d.tipo_cf})`; return s; }).join(' y '); return `${nombre}: ${diasStr}`; }).join(' | ') : 'ninguno indicado'}
+- Deporte hecho esta semana: ${elegido.deporteHecho.length > 0 ? elegido.deporteHecho.map(e => { const nombre = nombreDeporte(e.deporte); if(!e.dias||e.dias.length===0) return nombre; const diasStr = e.dias.map(d => { let s = d.dia; if(d.tipo_cf) s += ` (${CF_TIPOS.find(t=>t.id===d.tipo_cf)?.label||d.tipo_cf})`; return s; }).join(' y '); return `${nombre}: ${diasStr}`; }).join(' | ') : 'ninguno indicado'}
+- Deporte previsto esta semana: ${elegido.deportePrevisto.length > 0 ? elegido.deportePrevisto.map(e => { const nombre = nombreDeporte(e.deporte); if(!e.dias||e.dias.length===0) return nombre; const diasStr = e.dias.map(d => { let s = d.dia; if(d.tipo_cf) s += ` (${CF_TIPOS.find(t=>t.id===d.tipo_cf)?.label||d.tipo_cf})`; return s; }).join(' y '); return `${nombre}: ${diasStr}`; }).join(' | ') : 'ninguno indicado'}
 - Ejercicios en rutina principal: exactamente ${numEj}
 ${contextoSemana ? `\nCONTEXTO ADICIONAL DEL USUARIO (muy importante, adáptate a esto):\n${contextoSemana}` : ''}
 
@@ -4029,10 +4118,16 @@ async function llamarIA(prompt) {
 
     // En la rutina principal: mismo nombre que en el historial y, si ya se hizo con
     // un peso real, el peso lo decide la regla de progresión de la app.
+    const perfilIA = cargarPerfil() || {};
     const aplicarProgresion = ejs => ejs.map(ej => {
         const nombre = nombreConocido(ej.nombre);
         const p = ej.tipo === 'normal' ? calcularProgresion(nombre) : null;
-        return p ? { ...ej, nombre, peso: `${p.siguienteKg} kg` } : { ...ej, nombre };
+        if (!p) return { ...ej, nombre };
+        // En casa, las mancuernas tienen un máximo: no pedir más peso del que hay
+        const maxKg = parseFloat(perfilIA.pesasKg);
+        const enCasa = lugarPerfil(perfilIA) !== 'gimnasio' && elegido.lugarHoy !== 'gimnasio';
+        const kg = enCasa && maxKg > 0 && /mancuern/i.test(nombre) ? Math.min(p.siguienteKg, maxKg) : p.siguienteKg;
+        return { ...ej, nombre, peso: `${kg} kg` };
     });
 
     if (parsed.calentamiento) parsed.calentamiento = normalizarEjs(parsed.calentamiento, true);
@@ -5503,19 +5598,15 @@ function construirSystemPromptChat() {
     const records  = cargarRecords();
 
     const nombre   = perfil.nombre || _currentGymUser || 'campeón';
-    const edad     = perfil.edad     || '';
-    const peso     = perfil.peso     || '';
+    const edad     = edadPerfil(perfil) || '';
+    const peso     = pesoActual(perfil) || '';
     const altura   = perfil.altura   || '';
     const lesiones = perfil.lesiones || '';
     const objetivo = perfil.objetivo || '';
     const pesasKg  = perfil.pesasKg  || '';
     const material = cargarMaterial();
 
-    const nombresM = {
-        pesas:'Pesas', barras:'Barras', press_banca:'Press banca', esterilla:'Esterilla',
-        trx:'TRX', barra_dominadas:'Barra dominadas', gomas:'Gomas elásticas', barra_z:'Barra Z'
-    };
-    const matTexto = material.length ? material.map(m => nombresM[m] || m).join(', ') : 'solo peso corporal';
+    const matTexto = textoMaterialIA(perfil, material);
 
     const ultimasSesiones = sesiones.slice(-20).map(s => {
         let linea = `- ${s.fecha}: ${s.nivel || ''} / ${s.objetivo || ''} / ${s.tiempo || ''}min${s.duracionReal ? ` (duró ${s.duracionReal})` : ''}`;
@@ -5570,8 +5661,9 @@ ${fmtEj(sesionActual.estiramientos)}
 PERFIL DEL USUARIO:
 - Nombre: ${nombre}
 - Edad: ${edad ? edad + ' años' : 'no indicada'}${peso ? ' | Peso: ' + peso + ' kg' : ''}${altura ? ' | Altura: ' + altura + ' cm' : ''}
-- Material disponible: ${matTexto}${pesasKg ? ` (pesas hasta ${pesasKg} kg)` : ''}
+- Material disponible: ${matTexto}
 ${lesiones ? `- Lesiones/limitaciones: ${lesiones}` : ''}
+${textoPreferenciasIA(perfil)}
 ${objetivo ? `- Objetivo personal: ${objetivo}` : ''}
 
 ESTADÍSTICAS GLOBALES:
@@ -5892,11 +5984,7 @@ async function generarPlanSemanal() {
     const material = cargarMaterial();
     const records  = cargarRecords();
 
-    const nombresM = {
-        pesas:'Pesas', barras:'Barras', press_banca:'Press banca', esterilla:'Esterilla',
-        trx:'TRX', barra_dominadas:'Barra dominadas', gomas:'Gomas elásticas', barra_z:'Barra Z'
-    };
-    const matTexto = material.length ? material.map(m => nombresM[m] || m).join(', ') : 'solo peso corporal';
+    const matTexto = textoMaterialIA(perfil, material);
 
     const fmtDep = (lista) => (lista||[]).map(e => {
         const n = e.deporte || e;
@@ -5927,12 +6015,13 @@ async function generarPlanSemanal() {
 
 PERFIL:
 - Nombre: ${perfil.nombre || _currentGymUser || 'campeón'}
-- Edad: ${perfil.edad || '?'} años | Peso: ${perfil.peso || '?'} kg
-- Material: ${matTexto}${perfil.pesasKg ? ` (hasta ${perfil.pesasKg} kg)` : ''}
+- Edad: ${edadPerfil(perfil) || '?'} años | Peso: ${pesoActual(perfil) || '?'} kg
+- Material: ${matTexto}
 - Nivel: ${nivelYObjetivo(perfil).nivel}
 - Objetivo: ${perfil.objetivo || 'mantener forma'}
 ${perfil.lesiones ? `- Lesiones: ${perfil.lesiones}` : ''}
-- Deportes habituales: ${deportesHabituales.join(', ') || 'ninguno'}
+${textoPreferenciasIA(perfil)}
+- Deportes habituales: ${deportesHabituales.map(nombreDeporte).join(', ') || 'ninguno'}
 
 ÚLTIMAS SESIONES (más reciente primero):
 ${ultimasSes || 'Sin sesiones'}
@@ -5943,11 +6032,11 @@ SERIES DE LOS ÚLTIMOS 7 DÍAS POR MÚSCULO:
 ${textoSeriesSemanales()}
 ${textoMolestias() ? `\nMOLESTIAS DE LAS ÚLTIMAS ${DIAS_MOLESTIAS / 7} SEMANAS (evita cargar esas zonas; si se repiten, solo trabajo suave sin dolor):\n${textoMolestias()}\n` : ''}
 INSTRUCCIONES:
-- Crea un plan equilibrado de 7 días teniendo en cuenta los días de deporte habitual del usuario.
+- Crea un plan equilibrado de 7 días teniendo en cuenta los días de deporte habitual del usuario.${perfil.diasSemana ? `\n- Pon EXACTAMENTE ${perfil.diasSemana} días de gimnasio (los que puede entrenar); el resto, descanso o su deporte.` : ''}
 - Reparte las series para que todos los músculos principales se trabajen a lo largo de la semana.
 - Para los días de entreno de gym: indica 3-5 ejercicios principales con series y reps.
 - Para días de descanso o solo deporte: indica "Descanso activo" o el deporte.
-- Pon días de deporte SOLO para los deportes habituales del usuario (si no tiene ninguno, no inventes deportes). Elige tú cuántos días de gimnasio y de descanso según su nivel, objetivo y deporte.
+- Pon días de deporte SOLO para los deportes habituales del usuario (si no tiene ninguno, no inventes deportes). ${perfil.diasSemana ? 'Reparte los días de gimnasio' : 'Elige tú cuántos días de gimnasio y de descanso'} según su nivel, objetivo y deporte.
 - Responde SOLO con JSON válido, sin texto adicional. Formato (los valores entre <> son indicaciones, no los copies):
 {"semana":[
   {"dia":"Lunes","tipo":"<tipo de sesión, deporte o Descanso>","descanso":<true o false>,"ejercicios":["<Ejercicio NxReps>"],"nota":"<frase corta>"}
