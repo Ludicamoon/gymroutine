@@ -3,6 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <!-- App instalable: icono, nombre y colores -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="iconos/icono-192.png" type="image/png">
+    <link rel="apple-touch-icon" href="iconos/apple-touch-icon.png">
+    <meta name="theme-color" content="#ff5722">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="HassanGym">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>HassanGym</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -170,6 +180,7 @@
             header { display: block; }
             .container { max-width: 100%; padding: 16px 14px 20px; }
 
+            header { display: none !important; }
             .bottom-nav {
                 display: flex;
                 position: fixed;
@@ -224,7 +235,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: #999;
+            color: #666;
             margin-bottom: 14px;
         }
 
@@ -325,7 +336,7 @@
         }
         .cf-label {
             font-size: 0.75rem;
-            color: #999;
+            color: #666;
             margin: 6px 0 4px;
             font-weight: 600;
             text-transform: uppercase;
@@ -682,7 +693,7 @@
             padding: 14px 16px; margin: 12px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
         }
         .rs-titulo { font-weight: 800; font-size: 0.95rem; margin-bottom: 10px; padding-right: 24px; }
-        .rs-fecha { font-weight: 500; font-size: 0.75rem; color: #999; margin-left: 4px; }
+        .rs-fecha { font-weight: 500; font-size: 0.75rem; color: #666; margin-left: 4px; }
         .rs-numeros { display: flex; gap: 10px; }
         .rs-numeros > div { flex: 1; background: #fafafa; border-radius: 10px; padding: 8px; text-align: center; }
         .rs-numeros b { font-size: 1.3rem; }
@@ -690,8 +701,8 @@
         .rs-sube { color: #2e7d32; font-size: 0.72rem; font-weight: 700; }
         .rs-baja { color: #c62828; font-size: 0.72rem; font-weight: 700; }
         .rs-linea { font-size: 0.82rem; margin-top: 10px; line-height: 1.4; }
-        .rs-gris { color: #888; }
-        .rs-cerrar { position: absolute; top: 8px; right: 10px; background: none; border: none; font-size: 1rem; color: #999; cursor: pointer; padding: 4px; }
+        .rs-gris { color: #666; }
+        .rs-cerrar { position: absolute; top: 8px; right: 10px; background: none; border: none; font-size: 1rem; color: #666; cursor: pointer; padding: 4px; }
 
         .descarga-card {
             background: #eef4ff; border: 1px solid #c5d5f5; color: #1f3a6b;
@@ -802,7 +813,7 @@
         .mas-opciones > summary::-webkit-details-marker { display: none; }
         .mas-opciones > summary::before { content: '＋ '; color: #ff5722; }
         .mas-opciones[open] > summary::before { content: '－ '; }
-        .mas-opciones-resumen { font-weight: 500; color: #999; font-size: 0.8rem; }
+        .mas-opciones-resumen { font-weight: 500; color: #666; font-size: 0.8rem; }
         .mas-opciones[open] > summary { margin-bottom: 10px; }
 
 
@@ -832,10 +843,10 @@
         .st-ant { font-size: 0.82rem; color: #666; }
         .st-fila input { width: 100%; padding: 8px 4px; border: 2px solid #e0e0e0; border-radius: 8px; text-align: center; font-size: 1rem; font-weight: 800; background: white; }
         .st-fila input::placeholder, .mg-serie-campos input::placeholder { color: #bbb; font-weight: 500; }
-        .st-ok { height: 38px; border-radius: 10px; border: 2px solid #ccc; background: white; font-size: 1.1rem; font-weight: 900; color: #999; cursor: pointer; }
+        .st-ok { height: 38px; border-radius: 10px; border: 2px solid #ccc; background: white; font-size: 1.1rem; font-weight: 900; color: #666; cursor: pointer; }
         .st-fila.hecha .st-ok { background: #2e7d32; border-color: #2e7d32; color: white; }
         .st-rir { font-size: 0.85rem; color: #444; margin-top: 4px; }
-        .st-rir span { color: #888; }
+        .st-rir span { color: #666; }
         .st-rir-ops, .mg-rir div { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
         .st-rir .chip, .mg-rir .chip { padding: 6px 10px; border-radius: 16px; border: 1.5px solid #ddd; background: white; font-weight: 700; cursor: pointer; }
         .st-rir .chip.activo, .mg-rir .chip.activo { background: #ff5722; border-color: #ff5722; color: white; }
@@ -861,7 +872,7 @@
         .df-botones button { padding: 10px 12px; border-radius: 10px; border: none; background: #2a2a2a; color: white; font-weight: 800; cursor: pointer; }
         @media (max-width: 767px) { #descanso-flotante { bottom: calc(72px + env(safe-area-inset-bottom, 0px)); } }
         body.descansando #chat-flotante { display: none !important; }
-        #aviso-rapido { position: fixed; top: 16px; left: 50%; transform: translate(-50%, -150%); z-index: 2000; background: #111; color: #ffd740; font-weight: 800; padding: 12px 18px; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s; max-width: 90vw; text-align: center; }
+        #aviso-rapido { position: fixed; top: 16px; left: 50%; transform: translate(-50%, -150%); z-index: 2000; background: #111; color: #ffd740; font-weight: 800; padding: 12px 18px; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s; width: max-content; max-width: calc(100vw - 32px); text-align: center; }
         #aviso-rapido.visible { transform: translate(-50%, 0); }
         .mg-serie-campos { display: flex; gap: 10px; }
         .mg-serie-campos label { flex: 1; display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; color: #aaa; }
@@ -878,9 +889,76 @@
         .rf-numeros span { font-size: 0.75rem; color: #bbb; }
         .rf-records, .rf-comparacion, .rf-bloques { margin-top: 12px; font-size: 0.9rem; line-height: 1.5; }
         .rf-records { color: #ffd740; }
+        .rf-compartir { margin-top: 14px; padding: 11px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.1); color: white; font-weight: 800; font-size: 0.9rem; cursor: pointer; }
         .fb-caras .btn-op { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 14px 6px; }
         .fb-caras .btn-op span { font-size: 1.8rem; }
-        .opcional { font-weight: 400; color: #888; text-transform: none; letter-spacing: 0; }
+        .opcional { font-weight: 400; color: #666; text-transform: none; letter-spacing: 0; }
+
+        /* ---- FASE D: entre amigos ---- */
+        .grupo-card { background: white; border-radius: 14px; padding: 14px 16px; margin: 12px 0; }
+        .gr-titulo { font-weight: 800; font-size: 0.95rem; margin-bottom: 6px; }
+        .grupo-card p { font-size: 0.85rem; color: #555; margin: 4px 0 10px; line-height: 1.4; }
+        .gr-lista { display: flex; flex-direction: column; gap: 6px; }
+        .gr-fila { display: grid; grid-template-columns: 30px 1fr auto auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; background: #f6f7f9; font-size: 0.88rem; }
+        .gr-fila.yo { background: #fff3ef; outline: 1.5px solid #ffccb3; }
+        .gr-pos { font-weight: 900; text-align: center; }
+        .gr-nombre { font-weight: 700; text-transform: capitalize; }
+        .gr-dato { color: #555; white-space: nowrap; }
+        .gr-salir { background: none; border: none; color: #666; font-size: 0.8rem; margin-top: 10px; cursor: pointer; padding: 4px 0; }
+
+        /* ---- FASE D: fotos de ejercicios ---- */
+        .ej-foto { position: relative; width: 100%; max-width: 360px; aspect-ratio: 4 / 3; margin: 0 auto; border-radius: 12px; overflow: hidden; background: #f2f2f2; }
+        .ej-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .ej-foto .ej-foto-2 { animation: foto-alterna 3s infinite; }
+        @keyframes foto-alterna { 0%, 45% { opacity: 0; } 55%, 95% { opacity: 1; } 100% { opacity: 0; } }
+        #modo-guiado .ej-foto { margin: 10px auto; max-width: 300px; }
+
+        /* ---- FASE D: empezar rápido ---- */
+        .empezar-rapido { background: white; border-radius: 14px; padding: 12px 14px; margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
+        .er-titulo { font-weight: 800; font-size: 0.95rem; }
+        .er-titulo span { font-weight: 500; font-size: 0.78rem; color: #666; margin-left: 4px; }
+        .empezar-rapido button { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 12px; border-radius: 12px; border: 2px solid #ffccb3; background: #fff8f5; cursor: pointer; text-align: left; color: #222; }
+        .empezar-rapido button b { font-size: 0.92rem; }
+        .empezar-rapido button span { font-size: 0.78rem; color: #666; }
+
+        /* ---- FASE B: pestañas, tu semana, primer día ---- */
+        .tabs-progreso { display: flex; gap: 6px; background: #e9ebf0; padding: 4px; border-radius: 12px; margin-bottom: 14px; }
+        .tabs-progreso button { flex: 1; padding: 10px; border: none; border-radius: 9px; background: none; font-weight: 800; font-size: 0.9rem; color: #555; cursor: pointer; }
+        .tabs-progreso button.activo { background: white; color: #111; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .ayuda-pantalla { font-size: 0.85rem; color: #666; margin: 0 0 12px; }
+        .tira-semana { background: white; border-radius: 14px; padding: 12px 14px; margin: 12px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .ts-cab { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.95rem; }
+        .ts-cab button { background: none; border: none; color: #e64a19; font-weight: 800; font-size: 0.85rem; cursor: pointer; padding: 4px; }
+        .ts-dias { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .ts-dia { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; border-radius: 10px; background: #f4f5f8; }
+        .ts-dia.hoy { outline: 2px solid #ff5722; }
+        .ts-dia.hecho { background: #e8f5e9; }
+        .ts-letra { font-size: 0.7rem; font-weight: 800; color: #666; }
+        .ts-marca { font-weight: 900; font-size: 0.95rem; color: #222; }
+        .ts-dia.hecho .ts-marca { color: #2e7d32; }
+        .ts-tipo { font-size: 0.62rem; color: #666; min-height: 0.8rem; text-align: center; line-height: 1.1; padding: 0 2px; }
+        .ts-dia.descanso .ts-tipo { color: #999; }
+        .btn-chat-entrenar { display: block; width: 100%; margin-top: 10px; padding: 13px; border-radius: 12px; border: 2px solid #e0e0e0; background: white; font-weight: 800; font-size: 0.9rem; color: #333; cursor: pointer; }
+        body.primer-dia .bottom-nav, body.primer-dia .sidebar { display: none !important; }
+        body.primer-dia .main-content { margin-left: 0; }
+        .ob { max-width: 520px; margin: 0 auto; padding: 8px 0 30px; }
+        .ob h2 { font-size: 1.45rem; margin: 8px 0 16px; }
+        .ob-progreso { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 0.8rem; color: #666; font-weight: 700; }
+        .ob-progreso div { flex: 1; height: 6px; background: #e3e5ea; border-radius: 3px; overflow: hidden; }
+        .ob-progreso i { display: block; height: 100%; background: #ff5722; border-radius: 3px; }
+        .ob-grande { flex-direction: column; margin-bottom: 16px; }
+        .ob-grande .btn-op { padding: 16px; font-size: 1rem; text-align: left; }
+        .ob-hola { text-align: center; padding-top: 30px; }
+        .ob-logo { font-size: 3.4rem; }
+        .ob-hola h1 { font-size: 1.8rem; margin: 10px 0; }
+        .ob-hola p { color: #555; font-size: 1rem; line-height: 1.5; margin-bottom: 16px; }
+        .ob-hola ul { list-style: none; text-align: left; display: flex; flex-direction: column; gap: 12px; margin: 0 0 24px; padding: 0; font-size: 0.95rem; line-height: 1.4; }
+        .ob-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        .ob-chips .chip { padding: 9px 12px; border-radius: 20px; border: 1.5px solid #ddd; background: white; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+        .ob-chips .chip.activo { background: #ff5722; border-color: #ff5722; color: white; }
+        .ob-nota { font-size: 0.85rem; color: #666; margin: 10px 0; }
+        .ob-atras { display: block; margin: 14px auto 0; background: none; border: none; color: #666; font-size: 0.95rem; cursor: pointer; padding: 8px; }
+        .btn-generar:disabled { opacity: 0.45; cursor: not-allowed; }
 
         /* ---- TEMPORIZADORES ---- */
         .tz-titulo { font-size: 1.3rem; margin: 4px 0 14px; }
@@ -897,7 +975,7 @@
             font-size: 1rem; font-weight: 700; text-align: center; background: white;
         }
         .tz-config .tz-preset { align-self: flex-end; padding: 9px 12px; border-radius: 8px; border: 1px dashed #ccc; background: #fafafa; font-weight: 700; cursor: pointer; }
-        .tz-config .tz-nota { flex-basis: 100%; font-size: 0.78rem; color: #888; }
+        .tz-config .tz-nota { flex-basis: 100%; font-size: 0.78rem; color: #666; }
         .tz-reloj {
             background: #0d0d0d; color: white; border-radius: 18px; padding: 22px 16px;
             display: flex; flex-direction: column; align-items: center; gap: 10px; border: 2px solid #222;
@@ -1093,7 +1171,7 @@
         .plan-generando {
             text-align: center;
             padding: 40px 20px;
-            color: #888;
+            color: #666;
             font-size: 0.9rem;
         }
 
@@ -1124,7 +1202,7 @@
 
         .notif-sub {
             font-size: 0.78rem;
-            color: #888;
+            color: #666;
             margin-top: 2px;
         }
 
@@ -1239,15 +1317,15 @@
             line-height: 1.5;
         }
 
-        .perfil-nota { font-size: 0.78rem; color: #999; margin-top: 6px; }
+        .perfil-nota { font-size: 0.78rem; color: #666; margin-top: 6px; }
         /* Material del perfil más compacto: 19 opciones en 3 columnas */
         #material-zona .material-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
         #material-zona .material-item { padding: 10px 6px; min-height: 0; text-align: center; }
         #material-zona .mat-icono { font-size: 1.2rem; margin-bottom: 4px; }
         #material-zona .mat-nombre { font-size: 0.75rem; line-height: 1.2; }
-        .material-grupo-titulo { font-size: 0.72rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #999; margin: 14px 0 8px; }
+        .material-grupo-titulo { font-size: 0.72rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #666; margin: 14px 0 8px; }
         .material-extra { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; font-size: 0.85rem; color: #555; }
-        .material-extra input { width: 90px; }
+        .material-extra input { width: 90px !important; flex: 0 0 90px; }
         .aviso-sin-material {
             background: #fff5f2;
             border: 1px solid #ffd5c8;
@@ -1284,7 +1362,7 @@
             display: block;
             text-align: center;
             margin-top: 14px;
-            color: #aaa;
+            color: #666;
             font-size: 0.85rem;
             cursor: pointer;
             text-decoration: underline;
@@ -1305,7 +1383,7 @@
 
         .sesion-card .sesion-fecha {
             font-size: 0.78rem;
-            color: #999;
+            color: #666;
             font-weight: 600;
             margin-bottom: 6px;
             text-transform: uppercase;
@@ -1341,13 +1419,13 @@
 
         .sesion-card .sesion-molestia {
             font-size: 0.82rem;
-            color: #888;
+            color: #666;
             margin-top: 6px;
         }
 
         .historial-vacio {
             text-align: center;
-            color: #aaa;
+            color: #666;
             padding: 40px 20px;
             font-size: 0.95rem;
         }
@@ -1403,7 +1481,7 @@
 
         .cargando-subtitulo {
             font-size: 0.85rem;
-            color: #999;
+            color: #666;
         }
 
         /* ---- EJERCICIO CON IA ---- */
@@ -1487,7 +1565,7 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 3px;
-            color: #999;
+            color: #666;
             margin: 20px 0 10px 4px;
         }
 
@@ -1565,7 +1643,7 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: #999;
+            color: #666;
             margin-bottom: 8px;
         }
 
@@ -1625,7 +1703,7 @@
             text-align: center;
             font-size: 0.65rem;
             font-weight: 700;
-            color: #ccc;
+            color: #666;
             text-transform: uppercase;
             padding: 4px 0 6px;
             letter-spacing: 0.5px;
@@ -1669,7 +1747,7 @@
         }
         .dd-vacio {
             text-align: center;
-            color: #ccc;
+            color: #666;
             padding: 60px 20px;
             font-size: 0.9rem;
         }
@@ -1682,7 +1760,7 @@
         .dd-fecha {
             font-size: 0.75rem;
             font-weight: 700;
-            color: #999;
+            color: #666;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 6px;
@@ -1711,7 +1789,7 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: #bbb;
+            color: #666;
             margin: 16px 0 8px;
         }
         .dd-ejercicio {
@@ -1773,7 +1851,7 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: #bbb;
+            color: #666;
             margin: 10px 0 5px;
         }
         .dd-lista {
@@ -1785,7 +1863,7 @@
         }
         .dd-nota {
             font-size: 0.8rem;
-            color: #888;
+            color: #666;
             margin-top: 6px;
         }
         .dd-feedback-box {
@@ -1922,7 +2000,7 @@
         .chat-send-btn:disabled { background: #ccc; cursor: not-allowed; }
         .chat-vacío {
             text-align: center;
-            color: #ccc;
+            color: #666;
             padding: 40px 20px;
             font-size: 0.88rem;
         }
@@ -1972,7 +2050,7 @@
         }
         .rec-fecha {
             font-size: 0.7rem;
-            color: #bbb;
+            color: #666;
         }
 
         /* ---- PROGRESIÓN ---- */
@@ -2245,7 +2323,7 @@
             background: #ff5722; color: #fff; font-size: 0.9rem;
             font-weight: 700; cursor: pointer;
         }
-        .peso-corp-ultimo { font-size: 0.82rem; color: #888; margin-top: 8px; }
+        .peso-corp-ultimo { font-size: 0.82rem; color: #666; margin-top: 8px; }
 
         /* ===================== PROGRESIÓN EN TARJETA ===================== */
         .prog-hint {
@@ -2418,11 +2496,17 @@
             cursor: pointer; transition: background 0.15s;
         }
         @media (hover: hover) { .gym-user-enter:hover { background: #e64a19; } }
-        .gym-user-note { font-size: 0.78rem; color: #999; margin-top: 12px; }
+        .gym-user-note { font-size: 0.78rem; color: #666; margin-top: 12px; }
+        .groq-box { text-align: left; }
+        .groq-box h2, .groq-box > div:first-child { text-align: center; }
+        .groq-pasos { margin: 0 0 14px 18px; font-size: 0.88rem; line-height: 1.5; color: #333; display: flex; flex-direction: column; gap: 6px; }
+        .groq-pasos a { color: #e64a19; }
+        .groq-box .gym-user-enter { width: 100%; margin-top: 4px; }
+        .groq-box .gym-pin-volver { display: block; margin: 8px auto 0; }
         .gym-pin-input { letter-spacing: 8px; font-size: 1.3rem !important; font-weight: 800; text-transform: none; }
         .gym-pin-input::placeholder { letter-spacing: normal; font-size: 1rem; font-weight: 400; }
         .gym-pin-error { color: #c62828; font-size: 0.85rem; font-weight: 700; min-height: 1.1em; }
-        .gym-pin-volver { background: none; border: none; color: #888; font-size: 0.9rem; cursor: pointer; padding: 6px; }
+        .gym-pin-volver { background: none; border: none; color: #666; font-size: 0.9rem; cursor: pointer; padding: 6px; }
 
         /* Botón cambiar usuario en sidebar */
         .sidebar-switch-user {
@@ -2435,7 +2519,223 @@
         }
         @media (hover: hover) { .sidebar-switch-user:hover { background: rgba(255,87,34,0.28); } }
 
-    </style>
+    
+        /* ===================== MODO OSCURO (automático, según el móvil) =====================
+           Generado a partir de los colores claros: fondos claros → oscuros, textos oscuros → claros. */
+        @media (prefers-color-scheme: dark) {
+        body { background: #0f0f11; color: #ececec; }
+        .card { background: #1c1c1e; }
+        .card-label { color: #b0b0b0; }
+        select, input[type="number"], input[type="text"], textarea { border: 2px solid #3a3a3e; color: #ececec; background: #1c1c1e; }
+        .input-label { color: #b0b0b0; }
+        .deporte-detalle-item { background: #232326; }
+        .deporte-detalle-nombre { color: #cfcfcf; }
+        .chip { border: 1.5px solid #3f3f44; background: #1c1c1e; color: #c4c4c4; }
+        .cf-label { color: #b0b0b0; }
+        .btn-copia { background: #1c1c1e; color: #dddddd; border: 2px solid #3a3a3e; }
+        .btn-resetear-historial { background: #1c1c1e; color: #ef9a9a; border: 2px solid #7a3535; }
+        .btn-resetear-historial:hover { background: #3a1c1f; }
+        .cf-dia-bloque { border-top: 1px solid #34343a; }
+        .btn-op { border: 2px solid #3a3a3e; background: #1c1c1e; color: #cfcfcf; }
+        .material-item { border: 2px solid #3a3a3e; }
+        .material-item .mat-nombre { color: #e6e6e6; }
+        .btn-secundario { background: #1c1c1e; color: #ececec; border: 2px solid #3f3f44; }
+        .chat-aplicar-banner { background: #1b3320; }
+        .chat-aplicar-banner strong { color: #81c784; }
+        .ejercicio-card { background: #1c1c1e; }
+        .ej-info h3 { color: #ececec; }
+        .tag { background: #0f0f11; color: #c4c4c4; }
+        .tag.descanso { background: #3a2219; }
+        .peso-input { border: 2px solid #3a3a3e; }
+        .btn-cambiar-ej { background: #26262a; color: #cfcfcf; border: 1px dashed #46464c; }
+        .primeras-marcas span { background: #1c1c1e; border: 1px solid #34343a; }
+        .btn-ir-diario { background: #1c1c1e; border: 2px solid #3a3a3e; }
+        .grafica-resumen { color: #b0b0b0; }
+        .grafica-leyenda { color: #a6a6a6; }
+        .resumen-semana { background: #1c1c1e; border: 1px solid #34343a; }
+        .rs-fecha { color: #b0b0b0; }
+        .rs-numeros > div { background: #232326; }
+        .rs-sube { color: #81c784; }
+        .rs-baja { color: #ef9a9a; }
+        .rs-gris { color: #b0b0b0; }
+        .rs-cerrar { color: #b0b0b0; }
+        .descarga-card { background: #1a2438; border: 1px solid #2f4570; color: #9db9f0; }
+        .descarga-card.activa { background: #1b3320; border-color: #2f5a35; color: #9fd8a6; }
+        .aviso-seguridad { background: #3a3214; border: 1px solid #6b5a20; color: #f0d58a; }
+        .aviso-seguridad.fuerte { background: #3a1c1f; border-color: #7a3535; color: #f2a0a0; }
+        .reps-input, .rir-input { border: 2px solid #3a3a3e; background: #1c1c1e; }
+        .btn-timer { background: #3a2219; }
+        .mas-opciones > summary { background: #1c1c1e; border: 1px solid #34343a; color: #dddddd; }
+        .mas-opciones-resumen { color: #b0b0b0; }
+        .ej-resumen { color: #b0b0b0; }
+        .ej-progreso { color: #81c784; }
+        .ej-variantes summary { color: #c4c4c4; }
+        .st-cab { color: #b0b0b0; }
+        .st-fila { background: #232326; }
+        .st-fila.hecha { background: #1b3320; }
+        .st-ant { color: #b0b0b0; }
+        .st-fila input { border: 2px solid #3a3a3e; background: #1c1c1e; }
+        .st-ok { border: 2px solid #46464c; background: #1c1c1e; color: #b0b0b0; }
+        .st-rir { color: #cfcfcf; }
+        .st-rir span { color: #b0b0b0; }
+        .btn-hecho { border: 2px solid #46464c; background: #1c1c1e; }
+        .rutina-ayuda { color: #b0b0b0; }
+        .consejos-rutina { background: #1c1c1e; }
+        .opcional { color: #b0b0b0; }
+        .tz-modos button { border: 2px solid #3a3a3e; background: #1c1c1e; color: #cfcfcf; }
+        .tz-config label { color: #a6a6a6; }
+        .tz-config input, .tz-config select { border: 2px solid #3a3a3e; background: #1c1c1e; }
+        .tz-config .tz-preset { border: 1px dashed #46464c; background: #232326; }
+        .tz-config .tz-nota { color: #b0b0b0; }
+        .grafica-wrap { background: #1c1c1e; }
+        .grafica-titulo { color: #ececec; }
+        .plan-dia-card { background: #1c1c1e; }
+        .plan-dia-nombre { color: #ececec; }
+        .plan-dia-tipo { background: #0f0f11; color: #c4c4c4; }
+        .plan-ej-lista li { color: #cfcfcf; }
+        .plan-generando { color: #b0b0b0; }
+        .cal-dias .chip { border: 2px solid #3a3a3e; background: #1c1c1e; }
+        .notif-card { background: #1c1c1e; }
+        .notif-label { color: #dddddd; }
+        .notif-sub { color: #b0b0b0; }
+        .toggle-track::after { background: #1c1c1e; }
+        .perfil-banner { background: #1c1c1e; }
+        .perfil-banner-info { color: #c4c4c4; }
+        .perfil-banner-info strong { color: #ececec; }
+        .perfil-banner-edit { border: 2px solid #3a3a3e; color: #cfcfcf; }
+        .perfil-nota { color: #b0b0b0; }
+        .material-grupo-titulo { color: #b0b0b0; }
+        .material-extra { color: #c4c4c4; }
+        .btn-saltar { color: #b0b0b0; }
+        .btn-saltar:hover { color: #c4c4c4; }
+        .sesion-card { background: #1c1c1e; }
+        .sesion-card .sesion-fecha { color: #b0b0b0; }
+        .sesion-card .sesion-info { color: #ececec; }
+        .sesion-tag.completada-si { background: #1b3320; color: #9fd8a6; }
+        .sesion-tag.completada-no { background: #3a1c1f; color: #f2a0a0; }
+        .sesion-tag.completada-medias { background: #3a2a14; color: #f0c48a; }
+        .sesion-tag.dif-facil { background: #1b3320; color: #9fd8a6; }
+        .sesion-card .sesion-molestia { color: #b0b0b0; }
+        .historial-vacio { color: #b0b0b0; }
+        .cargando-card { background: #1c1c1e; }
+        .cargando-spinner { border: 4px solid #2e2e33; }
+        .cargando-titulo { color: #ececec; }
+        .cargando-subtitulo { color: #b0b0b0; }
+        .tag.youtube-link { background: #3a1c1f; }
+        .ej-porque { color: #a6a6a6; }
+        .seccion-titulo { color: #b0b0b0; }
+        .ejercicio-card { background: #1c1c1e; }
+        .ej-explicacion { color: #b0b0b0; }
+        .extra-card { background: #1c1c1e; color: #cfcfcf; }
+        .extra-card .extra-titulo { color: #b0b0b0; }
+        .calendario { background: #1c1c1e; }
+        .cal-mes-label { color: #ececec; }
+        .cal-nav-btn { border: 2px solid #3a3a3e; }
+        .cal-dow { color: #b0b0b0; }
+        .cal-celda.dia-mes { color: #cfcfcf; }
+        .cal-celda.dia-mes:hover { background: #26262a; }
+        .diario-detalle { background: #1c1c1e; }
+        .dd-vacio { color: #b0b0b0; }
+        .dd-fecha { color: #b0b0b0; }
+        .dd-titulo { color: #ececec; }
+        .dd-badge { background: #0f0f11; color: #c4c4c4; }
+        .dd-badge.verde { background: #1b3320; color: #9fd8a6; }
+        .dd-badge.naranja { background: #3a2a14; }
+        .dd-badge.rojo { background: #3a1c1f; color: #f2a0a0; }
+        .dd-seccion-titulo { color: #b0b0b0; }
+        .dd-ej-nombre { color: #ececec; }
+        .dd-tag { background: #2a2a2e; color: #c4c4c4; }
+        .dd-feedback { color: #c4c4c4; }
+        .dd-sesion { border-bottom: 1px solid #2e2e33; }
+        .dd-tipo { color: #cfcfcf; }
+        .dd-mensaje { color: #b0b0b0; }
+        .dd-seccion-tit { color: #b0b0b0; }
+        .dd-lista { color: #cfcfcf; }
+        .dd-nota { color: #b0b0b0; }
+        .dd-nota-feedback { color: #c4c4c4; }
+        .dd-ej-nombre { color: #ececec; }
+        .chat-wrapper { background: #1c1c1e; }
+        .chat-burbuja.ia { background: #0f0f11; color: #ececec; }
+        .chat-input-area { border-top: 1px solid #2e2e33; background: #1c1c1e; }
+        .chat-input { border: 2px solid #3a3a3e; }
+        .chat-vacío { color: #b0b0b0; }
+        .chat-sug-btn { background: #0f0f11; color: #c4c4c4; }
+        .chat-sug-btn:hover { background: #4a2a1e; }
+        .rec-ejercicio { color: #c4c4c4; }
+        .rec-fecha { color: #b0b0b0; }
+        .prog-ejercicio { background: #1c1c1e; }
+        .prog-nombre { color: #ececec; }
+        .prog-entry { background: #0f0f11; }
+        .variantes-box { border-top: 1px solid #2e2e33; }
+        .variante { color: #a6a6a6; }
+        .variante b { color: #cfcfcf; }
+        .cfp { background: #1c1c1e; }
+        .cfp-burbuja.ia { background: #0f0f11; color: #ececec; }
+        .cfp-input-area { border-top: 1px solid #2e2e33; }
+        .cfp-input { border: 1.5px solid #3a3a3e; }
+        .peso-corp-widget { background: #1c1c1e; border: 1.5px solid #34343a; }
+        .peso-corp-widget h3 { color: #ececec; }
+        .peso-corp-row input { border: 1.5px solid #3a3a3e; }
+        .peso-corp-ultimo { color: #b0b0b0; }
+        .prog-hint { background: #3a2a14; }
+        .ctx-semana-textarea { border: 1.5px solid #34343a; color: #e6e6e6; background: #232326; }
+        .ctx-foto-btn { background: #3a2a14; }
+        .ctx-foto-thumb { border: 2px solid #34343a; }
+        .gym-user-box { background: #1c1c1e; }
+        .gym-user-box h2 { color: #ececec; }
+        .gym-user-box p { color: #b0b0b0; }
+        .gym-user-list button { border: 1.5px solid #3a3a3e; background: #232326; color: #ececec; }
+        .gym-user-list button:hover { background: #3a2219; }
+        .gym-user-input { border: 1.5px solid #3a3a3e; }
+        .gym-user-note { color: #b0b0b0; }
+        .gym-pin-error { color: #ef9a9a; }
+        .gym-pin-volver { color: #b0b0b0; }
+        body { background: #0f0f11; color: #e6e6e6; }
+        input, textarea, select { background: #232326; color: #ececec; border-color: #3a3a3e; }
+        input::placeholder, textarea::placeholder { color: #7d7d84; }
+        .gym-user-box { background: #1c1c1e; color: #ececec; }
+        .gym-user-box h2 { color: #ececec; }
+        .gym-user-box p, .gym-user-note { color: #a6a6a6; }
+        .gym-user-list button { background: #26262a; color: #ececec; border-color: #3a3a3e; }
+        .groq-pasos { color: #d0d0d0; }
+        .groq-pasos a { color: #ff8a65; }
+        .st-fila input { background: #1c1c1e; color: #ececec; border-color: #3a3a3e; }
+        .st-fila.hecha { background: #1b3320; }
+        .st-ok { background: #1c1c1e; border-color: #46464c; }
+        .chip, .cal-dias .chip, .st-rir .chip { background: #26262a; color: #ececec; border-color: #46464c; }
+        .chip.activo, .cal-dias .chip.activo, .st-rir .chip.activo { background: #ff5722; border-color: #ff5722; color: white; }
+        .btn-op.activo, .material-item.activo { background: #ff5722; color: white; border-color: #ff5722; }
+        .tag[style*="background"], .sesion-tag[style*="background"] { background: #2a2a2e !important; color: #dddddd !important; }
+        .cal-celda.hoy { background: #3a2219; }
+        .dd-feedback-box, .dd-ej-card { background: #232326; }
+        .tag.peso { background: #3a2414; color: #ffab76; }
+        .plan-dia-tipo.descanso { background: #1b3320; color: #81c784; }
+        #feedback-ejercicio-duro { background: #232326 !important; border-color: #3a3a3e !important; }
+        #evaluacion-pregunta { color: #c4c4c4 !important; }
+        .grupo-card { background: #1c1c1e; }
+        .grupo-card p, .gr-dato, .gr-salir { color: #b0b0b0; }
+        .gr-fila { background: #26262a; }
+        .gr-fila.yo { background: #3a2219; outline-color: #6b3a24; }
+        .ej-foto { background: #26262a; }
+        .empezar-rapido { background: #1c1c1e; }
+        .empezar-rapido button { background: #2e1e18; border-color: #6b3a24; color: #ececec; }
+        .empezar-rapido button span, .er-titulo span { color: #a6a6a6; }
+        .tabs-progreso { background: #1c1c1e; }
+        .tabs-progreso button { color: #a6a6a6; }
+        .tabs-progreso button.activo { background: #2e2e33; color: #ececec; }
+        .ayuda-pantalla, .ts-letra, .ts-tipo, .ob-progreso, .ob-nota, .ob-atras { color: #a6a6a6; }
+        .tira-semana, .btn-chat-entrenar { background: #1c1c1e; color: #ececec; border-color: #3a3a3e; }
+        .ts-dia { background: #26262a; }
+        .ts-dia.hecho { background: #1b3320; }
+        .ts-marca { color: #ececec; }
+        .ts-dia.hecho .ts-marca { color: #81c784; }
+        .ts-cab button { color: #ff8a65; }
+        .ob-hola p { color: #c4c4c4; }
+        .ob-progreso div { background: #2e2e33; }
+        .ob-chips .chip { background: #26262a; color: #ececec; border-color: #46464c; }
+        .ob-chips .chip.activo { background: #ff5722; border-color: #ff5722; color: white; }
+        }
+</style>
 </head>
 <body>
 
@@ -2505,20 +2805,11 @@
         <button class="nav-item activo" id="nav-entrenar" onclick="mostrarFormulario()">
             <span class="nav-ico">🏋️</span> Entrenar
         </button>
-        <button class="nav-item" id="nav-temporizadores" onclick="mostrarTemporizadores()">
-            <span class="nav-ico">⏱</span> Temporizadores
-        </button>
-        <button class="nav-item" id="nav-diario" onclick="mostrarDiario()">
-            <span class="nav-ico">📅</span> Diario
-        </button>
         <button class="nav-item" id="nav-progreso" onclick="mostrarProgreso()">
             <span class="nav-ico">📊</span> Progreso
         </button>
-        <button class="nav-item" id="nav-chat" onclick="mostrarChat()">
-            <span class="nav-ico">💬</span> Chat IA
-        </button>
-        <button class="nav-item" id="nav-plan" onclick="mostrarPlan()">
-            <span class="nav-ico">📋</span> Plan semana
+        <button class="nav-item" id="nav-temporizadores" onclick="mostrarTemporizadores()">
+            <span class="nav-ico">⏱</span> Temporizadores
         </button>
         <button class="nav-item" id="nav-perfil" onclick="mostrarPerfil()">
             <span class="nav-ico">👤</span> Perfil
@@ -2541,11 +2832,14 @@
 
 
     <!-- ===================== PANTALLA PERFIL ===================== -->
+    <!-- ===================== PRIMER DÍA (presentación + 4 pasos) ===================== -->
+    <div id="pantalla-inicio" style="display:none"></div>
+
     <div id="pantalla-perfil" style="display:none">
 
         <div class="perfil-intro">
-            <h2>Cuéntanos sobre ti</h2>
-            <p>Solo necesitamos unos datos básicos para adaptar las rutinas a ti. Solo se hace una vez.</p>
+            <h2>Tu perfil</h2>
+            <p>Cambia lo que quieras. Cuanto más completo, mejor se adapta tu entrenador a ti.</p>
         </div>
 
         <!-- Datos personales -->
@@ -2594,7 +2888,7 @@
                 <button class="btn-op" data-valor="5" onclick="elegirPerfil('diasSemana', this)">5</button>
                 <button class="btn-op" data-valor="6" onclick="elegirPerfil('diasSemana', this)">6</button>
             </div>
-            <p style="font-size:0.8rem;color:#999;margin-top:10px">La app ajusta cada día la intensidad según cómo te vaya; esto es tu punto de partida.</p>
+            <p style="font-size:0.8rem;color:#666;margin-top:10px">La app ajusta cada día la intensidad según cómo te vaya; esto es tu punto de partida.</p>
         </div>
 
         <!-- Objetivo a largo plazo -->
@@ -2605,8 +2899,8 @@
 
         <!-- Deportes habituales -->
         <div class="card">
-            <div class="card-label">Deportes que practicas habitualmente <span style="font-weight:400;color:#aaa;font-size:0.78rem">(opcional)</span></div>
-            <p style="font-size:0.82rem;color:#999;margin-bottom:12px">La app los recordará y adaptará el gimnasio a tu semana deportiva.</p>
+            <div class="card-label">Deportes que practicas habitualmente <span style="font-weight:400;color:#666;font-size:0.78rem">(opcional)</span></div>
+            <p style="font-size:0.82rem;color:#666;margin-bottom:12px">La app los recordará y adaptará el gimnasio a tu semana deportiva.</p>
             <div class="btn-group zonas-group" id="perfil-deportes-group"></div>
             <div class="input-label" style="margin-top:12px">¿Otro? Escríbelo (separa varios con comas)</div>
             <input type="text" id="perfil-deportes-otros" placeholder="Ej: Golf, Remo">
@@ -2631,18 +2925,35 @@
             <div id="material-zona" style="margin-top:16px"></div>
         </div>
 
-        <button class="btn-generar" onclick="guardarPerfil()">Guardar y empezar →</button>
+        <button class="btn-generar" onclick="guardarPerfil()">Guardar</button>
+
+        <div class="card" id="card-instalar" style="margin-top:20px;display:none">
+            <div class="card-label">📲 Instalar la app</div>
+            <div id="instalar-contenido"></div>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+            <div class="card-label">👤 Usuario</div>
+            <p style="font-size:0.83rem;color:#666;margin-bottom:14px">Has entrado como <b id="perfil-usuario-actual"></b>. Si otra persona usa este móvil, puede entrar con su nombre.</p>
+            <button class="btn-copia" onclick="openGymUserModal()">Cambiar de usuario</button>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+            <div class="card-label">🔑 Clave de la IA (Groq)</div>
+            <p style="font-size:0.83rem;color:#666;margin-bottom:14px" id="groq-estado-perfil"></p>
+            <button class="btn-copia" onclick="pedirClaveGroq(true)">Cambiar la clave</button>
+        </div>
 
         <div class="card" style="margin-top:20px;">
             <div class="card-label">🔒 PIN de tu perfil</div>
-            <p style="font-size:0.83rem;color:#999;margin-bottom:14px">Tus datos en la nube están protegidos con tu PIN de 6 cifras. Cada móvil lo pide una sola vez.</p>
+            <p style="font-size:0.83rem;color:#666;margin-bottom:14px">Tus datos en la nube están protegidos con tu PIN de 6 cifras. Cada móvil lo pide una sola vez.</p>
             <button class="btn-copia" onclick="cambiarMiPin()">Cambiar mi PIN</button>
             <div id="pin-estado" style="display:none;font-size:0.82rem;margin-top:10px"></div>
         </div>
 
         <div class="card" style="margin-top:20px;">
             <div class="card-label">Copia de seguridad</div>
-            <p style="font-size:0.83rem;color:#999;margin-bottom:14px">Guarda en un archivo tu perfil, sesiones, récords y planes. Si algo se pierde, lo recuperas desde aquí. Tu clave de Groq no se incluye.</p>
+            <p style="font-size:0.83rem;color:#666;margin-bottom:14px">Guarda en un archivo tu perfil, sesiones, récords y planes. Si algo se pierde, lo recuperas desde aquí. Tu clave de Groq no se incluye.</p>
             <div class="copia-botones">
                 <button class="btn-copia" onclick="descargarCopia()">⬇️ Descargar mis datos</button>
                 <label class="btn-copia">⬆️ Recuperar una copia
@@ -2654,7 +2965,7 @@
 
         <div class="card" style="margin-top:20px;border:2px solid #ffebee;">
             <div class="card-label" style="color:#c62828">Zona peligrosa</div>
-            <p style="font-size:0.83rem;color:#999;margin-bottom:14px">Borra el historial de sesiones para que la IA empiece desde cero. No se puede deshacer.</p>
+            <p style="font-size:0.83rem;color:#666;margin-bottom:14px">Borra el historial de sesiones para que la IA empiece desde cero. No se puede deshacer.</p>
             <button class="btn-resetear-historial" onclick="resetearHistorial()">🗑 Borrar historial y empezar de cero</button>
         </div>
 
@@ -2672,6 +2983,8 @@
         <!-- Semana de descarga y resumen semanal -->
         <div id="aviso-descarga"></div>
         <div id="resumen-semana-pasada"></div>
+        <div id="tira-semana"></div>
+        <div id="empezar-rapido"></div>
 
         <!-- Banner perfil -->
         <div class="perfil-banner" id="perfil-banner">
@@ -2712,7 +3025,7 @@
         </div>
 
         <div class="card">
-            <div class="card-label">Zonas a trabajar <span style="font-weight:400;color:#aaa;font-size:0.78rem">(opcional — deja vacío para cuerpo completo)</span></div>
+            <div class="card-label">Zonas a trabajar <span style="font-weight:400;color:#666;font-size:0.78rem">(opcional — deja vacío para cuerpo completo)</span></div>
             <div class="btn-group zonas-group" id="zonas-group">
                 <button class="btn-op" onclick="toggleZona('fullbody', this)">Full body</button>
                 <button class="btn-op" onclick="toggleZona('pecho', this)">Pecho</button>
@@ -2728,7 +3041,7 @@
         <details class="mas-opciones" id="mas-opciones">
             <summary>Más opciones <span class="mas-opciones-resumen" id="mas-opciones-resumen">(deporte de la semana, notas, fotos)</span></summary>
         <div class="card">
-            <div class="card-label">Cuéntale algo a la IA <span style="font-weight:400;color:#aaa;font-size:0.78rem">(opcional — sueño, dolor, cómo va la semana…)</span></div>
+            <div class="card-label">Cuéntale algo a la IA <span style="font-weight:400;color:#666;font-size:0.78rem">(opcional — sueño, dolor, cómo va la semana…)</span></div>
             <textarea class="ctx-semana-textarea" id="ctx-semana-texto" oninput="actualizarResumenMasOpciones()"
                 placeholder="Ej: Esta semana he dormido mal, me duele un poco el hombro derecho, estoy en racha de motivación…"></textarea>
             <label class="ctx-foto-btn" for="ctx-fotos-input">
@@ -2740,14 +3053,14 @@
         </div>
 
         <div class="card">
-            <div class="card-label">Deporte hecho esta semana <span style="font-weight:400;color:#aaa;font-size:0.78rem">(opcional)</span></div>
+            <div class="card-label">Deporte hecho esta semana <span style="font-weight:400;color:#666;font-size:0.78rem">(opcional)</span></div>
             <div class="btn-group zonas-group" id="deporte-hecho-group">
             </div>
             <div id="deporte-hecho-detalles"></div>
         </div>
 
         <div class="card">
-            <div class="card-label">Deporte previsto esta semana <span style="font-weight:400;color:#aaa;font-size:0.78rem">(opcional)</span></div>
+            <div class="card-label">Deporte previsto esta semana <span style="font-weight:400;color:#666;font-size:0.78rem">(opcional)</span></div>
             <div class="btn-group zonas-group" id="deporte-previsto-group">
             </div>
             <div id="deporte-previsto-detalles"></div>
@@ -2756,6 +3069,7 @@
         </details>
 
         <button class="btn-generar" onclick="generarRutina()">Generar rutina →</button>
+        <button class="btn-chat-entrenar" onclick="mostrarChat()">💬 Pregunta a tu entrenador</button>
         <div class="error" id="error">Por favor, completa todas las opciones antes de continuar.</div>
         <div class="error-ia" id="error-ia"></div>
 
@@ -2772,7 +3086,7 @@
         <div id="lista-ejercicios"></div>
         <button class="btn-generar btn-terminar" onclick="irAFeedback()">✓ Terminar entreno</button>
         <button class="btn-secundario btn-modificar-ia" onclick="abrirChatModificar()" style="margin-top:6px;">💬 Modificar rutina con IA</button>
-        <button class="btn-secundario" style="margin-top:6px; color:#aaa; border-color:#eee;" onclick="resetear()">← Crear otra rutina</button>
+        <button class="btn-secundario" style="margin-top:6px; color:#666; border-color:#eee;" onclick="resetear()">← Crear otra rutina</button>
     </div>
 
     <!-- ===================== MODO GUIADO ===================== -->
@@ -2870,12 +3184,12 @@
 
     <!-- ===================== PANTALLA PROGRESO ===================== -->
     <div id="pantalla-historial">
-        <div class="rutina-header">
-            <h2>Mi progreso</h2>
-            <p>Récords, evolución y sesiones</p>
+        <div class="tabs-progreso">
+            <button data-tab="progreso" onclick="mostrarProgreso()">📊 Progreso</button>
+            <button data-tab="historial" onclick="mostrarDiario()">📅 Historial</button>
         </div>
+
         <div id="contenido-progreso"></div>
-        <button class="btn-secundario" onclick="mostrarFormulario()">← Volver</button>
     </div>
 
     <!-- ===================== PANTALLA PLAN SEMANAL ===================== -->
@@ -2930,10 +3244,11 @@
 
     <!-- ===================== PANTALLA DIARIO ===================== -->
     <div id="pantalla-diario">
-        <div class="rutina-header" style="margin-bottom:20px">
-            <h2>Diario de entrenos</h2>
-            <p id="diario-subtitulo">Tu historial: toca un día del calendario para ver esa sesión</p>
+        <div class="tabs-progreso">
+            <button data-tab="progreso" onclick="mostrarProgreso()">📊 Progreso</button>
+            <button data-tab="historial" onclick="mostrarDiario()">📅 Historial</button>
         </div>
+        <p class="ayuda-pantalla" id="diario-subtitulo">Toca un día del calendario para ver esa sesión.</p>
         <div class="diario-layout">
             <div>
                 <div class="calendario">
@@ -2960,20 +3275,11 @@
     <button class="bnav-item activo" id="bnav-entrenar" onclick="mostrarFormulario()">
         <span class="bnav-ico">🏋️</span><span>Entrenar</span>
     </button>
-    <button class="bnav-item" id="bnav-temporizadores" onclick="mostrarTemporizadores()">
-        <span class="bnav-ico">⏱</span><span>Reloj</span>
-    </button>
-    <button class="bnav-item" id="bnav-diario" onclick="mostrarDiario()">
-        <span class="bnav-ico">📅</span><span>Diario</span>
-    </button>
     <button class="bnav-item" id="bnav-progreso" onclick="mostrarProgreso()">
         <span class="bnav-ico">📊</span><span>Progreso</span>
     </button>
-    <button class="bnav-item" id="bnav-chat" onclick="mostrarChat()">
-        <span class="bnav-ico">💬</span><span>Chat IA</span>
-    </button>
-    <button class="bnav-item" id="bnav-plan" onclick="mostrarPlan()">
-        <span class="bnav-ico">📋</span><span>Plan</span>
+    <button class="bnav-item" id="bnav-temporizadores" onclick="mostrarTemporizadores()">
+        <span class="bnav-ico">⏱</span><span>Reloj</span>
     </button>
     <button class="bnav-item" id="bnav-perfil" onclick="mostrarPerfil()">
         <span class="bnav-ico">👤</span><span>Perfil</span>
@@ -3109,6 +3415,7 @@ function guardarPerfil() {
         deportesOtros: limpiarDeportesOtros(val('perfil-deportes-otros')),
         nivel: _perfilSel.nivel, objetivoTipo: _perfilSel.objetivoTipo,
         diasSemana: parseInt(_perfilSel.diasSemana) || null,
+        compartirActividad: !!anterior.compartirActividad,
         lugar,
         pesasKg: document.getElementById('perfil-pesas-kg') ? val('perfil-pesas-kg') : (anterior.pesasKg || ''),
         materialOtro: document.getElementById('perfil-material-otro') ? val('perfil-material-otro') : (anterior.materialOtro || ''),
@@ -3258,16 +3565,17 @@ function init() {
     if (perfil) {
         mostrarFormulario();
     } else {
-        mostrarPerfil();
+        mostrarBienvenida(); // primer día: presentación y 4 pasos
     }
 }
 
 function ocultarTodas() {
     ['pantalla-perfil','pantalla-form','pantalla-rutina',
      'pantalla-feedback','pantalla-historial','pantalla-cargando','pantalla-diario','pantalla-chat','pantalla-plan',
-     'pantalla-temporizadores']
+     'pantalla-temporizadores', 'pantalla-inicio']
         .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
     document.body.classList.remove('en-rutina');
+    if (!_ob) document.body.classList.remove('primer-dia');
     if (cfpAbierto) toggleChatFlotante();
     const mg = document.getElementById('modo-guiado');
     if (mg && mg.style.display !== 'none') {
@@ -3277,6 +3585,10 @@ function ocultarTodas() {
         _mgPararBloque();
         soltarPantalla('guiado');
     }
+}
+
+function marcarPestanaProgreso(tab) {
+    document.querySelectorAll('.tabs-progreso button').forEach(b => b.classList.toggle('activo', b.dataset.tab === tab));
 }
 
 function activarNavItem(id) {
@@ -3322,6 +3634,11 @@ function mostrarPerfil() {
     const perfil = cargarPerfil() || {};
     const pon = (id, v) => { document.getElementById(id).value = v ?? ''; };
     // El nombre ya se escribió al entrar: no pedirlo otra vez
+    document.getElementById('perfil-usuario-actual').textContent = _currentGymUser || '—';
+    renderizarInstalar();
+    document.getElementById('groq-estado-perfil').textContent = localStorage.getItem('gym_groq_key')
+        ? '✅ Tienes una clave guardada en este móvil. Solo se usa aquí, nunca se sube a la nube.'
+        : 'Aún no has puesto tu clave. Te la pediremos al crear tu primera rutina con IA.';
     pon('perfil-nombre', perfil.nombre || (_currentGymUser ? _currentGymUser.charAt(0).toUpperCase() + _currentGymUser.slice(1) : ''));
     pon('perfil-anio', perfil.anioNacimiento || (perfil.edad ? new Date().getFullYear() - parseInt(perfil.edad) : ''));
     pon('perfil-peso', pesoActual(perfil) || '');
@@ -3359,6 +3676,8 @@ function mostrarFormulario() {
     renderizarAvisoDescarga();
     if (document.getElementById('aviso-descarga').innerHTML.trim()) document.getElementById('resumen-semana-pasada').innerHTML = '';
     else renderizarResumenSemanaPasada();
+    renderizarTiraSemana();
+    renderizarEmpezarRapido();
 
     // Actualizar banner perfil
     const perfil   = cargarPerfil();
@@ -3415,6 +3734,146 @@ function mostrarFormulario() {
 // Ajustes que se guardan solo en este dispositivo pero son de cada usuario (si
 // dos personas comparten móvil, no se mezclan): se guardan con el nombre añadido.
 const claveLocal = nombre => `${nombre}:${_currentGymUser || ''}`;
+
+// ===================== PRIMER DÍA =====================
+// Presentación y 4 pasos cortos (objetivo, nivel y días, dónde entrenas, lesiones).
+// Lo demás se completa cuando se quiera en el Perfil.
+let _ob = null;
+const OB_MATERIAL_RAPIDO = ['pesas', 'barras', 'press_banca', 'barra_dominadas', 'paralelas', 'gomas', 'kettlebell', 'esterilla'];
+
+function mostrarBienvenida() {
+    const nombre = _currentGymUser ? _currentGymUser.charAt(0).toUpperCase() + _currentGymUser.slice(1) : '';
+    _ob = { paso: 0, nombre, objetivoTipo: null, nivel: 'medio', diasSemana: 3, lugar: null, material: [], pesasKg: '', lesiones: '', anio: '' };
+    ocultarTodas();
+    document.body.classList.add('primer-dia');
+    document.getElementById('pantalla-inicio').style.display = 'block';
+    renderBienvenida();
+}
+
+function _obGuardarCampos() {
+    const v = id => document.getElementById(id) ? document.getElementById(id).value.trim() : null;
+    if (v('ob-nombre') !== null) _ob.nombre = v('ob-nombre');
+    if (v('ob-kg') !== null) _ob.pesasKg = v('ob-kg');
+    if (v('ob-lesiones') !== null) _ob.lesiones = v('ob-lesiones');
+    if (v('ob-anio') !== null) _ob.anio = v('ob-anio');
+}
+function obElegir(campo, valor) {
+    _obGuardarCampos();
+    _ob[campo] = valor;
+    if (campo === 'lugar' && valor === 'parque' && !_ob.material.length) _ob.material = ['barra_dominadas', 'paralelas'];
+    renderBienvenida();
+}
+function obMaterial(id) {
+    _obGuardarCampos();
+    _ob.material = _ob.material.includes(id) ? _ob.material.filter(m => m !== id) : [..._ob.material, id];
+    renderBienvenida();
+}
+function obIr(paso) {
+    _obGuardarCampos();
+    _ob.paso = paso;
+    renderBienvenida();
+    window.scrollTo(0, 0);
+}
+
+function renderBienvenida() {
+    const c = document.getElementById('pantalla-inicio');
+    const op = (campo, valor, texto) => `<button class="btn-op${String(_ob[campo]) === String(valor) ? ' activo' : ''}" onclick="obElegir('${campo}', ${typeof valor === 'number' ? valor : `'${valor}'`})">${texto}</button>`;
+    const barra = _ob.paso ? `<div class="ob-progreso"><div><i style="width:${_ob.paso * 25}%"></i></div><span>Paso ${_ob.paso} de 4</span></div>` : '';
+    const atras = _ob.paso ? `<button class="ob-atras" onclick="obIr(${_ob.paso - 1})">← Atrás</button>` : '';
+    let html = '';
+    if (_ob.paso === 0) {
+        html = `<div class="ob-hola">
+            <div class="ob-logo">🏋️</div>
+            <h1>Hola${_ob.nombre ? ', ' + escaparHTML(_ob.nombre) : ''} 👋</h1>
+            <p>HassanGym es tu entrenador personal: cada día te prepara una rutina a tu medida.</p>
+            <ul>
+                <li>🧠 <b>Rutinas creadas para ti</b>, según tu objetivo, tu material y cómo te encuentras.</li>
+                <li>📈 <b>Sube el peso solo cuando estás listo</b>: apunta tus series y la app decide.</li>
+                <li>🩹 <b>Cuida tus lesiones</b> y se adapta a tus otros deportes.</li>
+            </ul>
+            <button class="btn-generar" onclick="obIr(1)">Empezar · 1 minuto →</button>
+        </div>`;
+    } else if (_ob.paso === 1) {
+        html = `<h2>¿Qué buscas en el gimnasio?</h2>
+            <div class="card"><div class="input-label">¿Cómo te llamas?</div><input type="text" id="ob-nombre" value="${escaparHTML(_ob.nombre)}" placeholder="Tu nombre"></div>
+            <div class="btn-group ob-grande">${op('objetivoTipo', 'fuerza', '💪 Fuerza y músculo')}${op('objetivoTipo', 'peso', '🔥 Perder peso')}${op('objetivoTipo', 'mantener', '🙂 Estar en forma')}</div>
+            <button class="btn-generar" onclick="obIr(2)" ${_ob.objetivoTipo ? '' : 'disabled'}>Siguiente →</button>`;
+    } else if (_ob.paso === 2) {
+        html = `<h2>Tu nivel y tu semana</h2>
+            <div class="card"><div class="card-label">¿Cuánta experiencia tienes?</div>
+                <div class="btn-group">${op('nivel', 'principiante', 'Empiezo')}${op('nivel', 'medio', 'Algo de experiencia')}${op('nivel', 'avanzado', 'Mucha')}</div></div>
+            <div class="card"><div class="card-label">¿Cuántos días a la semana puedes entrenar?</div>
+                <div class="btn-group">${[2, 3, 4, 5, 6].map(d => op('diasSemana', d, String(d))).join('')}</div></div>
+            <button class="btn-generar" onclick="obIr(3)">Siguiente →</button>`;
+    } else if (_ob.paso === 3) {
+        const conMaterial = _ob.lugar && _ob.lugar !== 'gimnasio';
+        html = `<h2>¿Dónde entrenas?</h2>
+            <div class="btn-group ob-grande">${Object.entries(LUGARES).map(([id, t]) => op('lugar', id, t)).join('')}</div>
+            ${_ob.lugar === 'gimnasio' ? '<p class="ob-nota">Perfecto: en un gimnasio tienes todo el material.</p>' : ''}
+            ${conMaterial ? `<div class="card"><div class="card-label">¿Qué material tienes${_ob.lugar === 'mezcla' ? ' fuera del gimnasio' : ''}?</div>
+                <div class="ob-chips">${OB_MATERIAL_RAPIDO.map(id => `<button class="chip${_ob.material.includes(id) ? ' activo' : ''}" onclick="obMaterial('${id}')">${MATERIAL_INFO[id].ico} ${MATERIAL_INFO[id].nombre}</button>`).join('')}</div>
+                ${_ob.material.includes('pesas') ? `<div class="material-extra">🏋️ Mancuernas: hasta <input type="number" id="ob-kg" min="1" max="100" step="0.5" placeholder="kg" value="${escaparHTML(_ob.pesasKg)}"> kg cada una</div>` : ''}
+                <p class="ob-nota">Si no tienes nada, no pasa nada: hay rutinas con tu propio peso. Puedes añadir más material luego en tu Perfil.</p></div>` : ''}
+            <button class="btn-generar" onclick="obIr(4)" ${_ob.lugar ? '' : 'disabled'}>Siguiente →</button>`;
+    } else {
+        html = `<h2>Último paso</h2>
+            <div class="card"><div class="card-label">¿Alguna lesión o molestia? <span class="opcional">(opcional)</span></div>
+                <textarea id="ob-lesiones" placeholder="Ej: rodilla derecha, lumbar...">${escaparHTML(_ob.lesiones)}</textarea></div>
+            <div class="card"><div class="card-label">Año de nacimiento <span class="opcional">(opcional)</span></div>
+                <input type="number" id="ob-anio" inputmode="numeric" min="1920" max="2015" placeholder="Ej: 1985" value="${escaparHTML(_ob.anio)}"></div>
+            <button class="btn-generar" onclick="terminarBienvenida()">Crear mi perfil →</button>`;
+    }
+    c.innerHTML = `<div class="ob">${barra}${html}${atras}</div>`;
+}
+
+function terminarBienvenida() {
+    _obGuardarCampos();
+    const anio = parseInt(_ob.anio) || null;
+    const perfil = {
+        nombre: _ob.nombre, anioNacimiento: anio, edad: anio ? String(new Date().getFullYear() - anio) : '',
+        peso: '', altura: '', lesiones: _ob.lesiones, evitar: '', objetivo: '',
+        deportesHabituales: [], deportesOtros: [],
+        nivel: _ob.nivel, objetivoTipo: _ob.objetivoTipo || 'mantener', diasSemana: _ob.diasSemana,
+        lugar: _ob.lugar || 'casa', pesasKg: _ob.material.includes('pesas') ? _ob.pesasKg : '', materialOtro: '',
+    };
+    const material = perfil.lugar === 'gimnasio' ? ['gimnasio'] : _ob.material;
+    localStorage.setItem('gym_perfil', JSON.stringify(perfil));
+    localStorage.setItem('gym_material', JSON.stringify(material));
+    scheduleSyncGym();
+    document.body.classList.remove('primer-dia');
+    _ob = null;
+    mostrarFormulario();
+    avisoRapido('✅ Perfil listo. Puedes completarlo cuando quieras en "Perfil".');
+}
+
+// ===================== TU SEMANA (tira en Entrenar) =====================
+// Lunes a domingo: ✓ los días entrenados, lo que toca según el plan y hoy marcado.
+function renderizarTiraSemana() {
+    const cont = document.getElementById('tira-semana');
+    if (!cont) return;
+    const lunes = lunesDeSemana(0);
+    const fechas = Array.from({ length: 7 }, (_, k) => new Date(lunes.getTime() + k * _DIA_MS));
+    const hechas = new Set(cargarSesiones().map(x => x.fecha));
+    let plan = null;
+    try { plan = JSON.parse(localStorage.getItem('gym_plan_semanal') || 'null'); } catch {}
+    const nombres = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+    const delPlan = k => plan && Array.isArray(plan.semana) ? plan.semana.find(d => d && _sinAcentos(d.dia) === nombres[k]) : null;
+    const hoy = _fechaHoy();
+    const corto = t => { const x = String(t || '').split(/[\s—–(,]/)[0]; return x.length > 8 ? x.slice(0, 7) + '.' : x; };
+    cont.innerHTML = `<div class="tira-semana">
+        <div class="ts-cab"><b>Tu semana</b><button onclick="mostrarPlan()">${plan ? 'Ver plan →' : '＋ Crear plan semanal'}</button></div>
+        <div class="ts-dias">${fechas.map((d, k) => {
+            const f = d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const p = delPlan(k);
+            const hecho = hechas.has(f);
+            return `<div class="ts-dia${hecho ? ' hecho' : ''}${f === hoy ? ' hoy' : ''}${p && p.descanso ? ' descanso' : ''}">
+                <span class="ts-letra">${'LMXJVSD'[k]}</span>
+                <span class="ts-marca">${hecho ? '✓' : d.getDate()}</span>
+                <span class="ts-tipo">${p ? escaparHTML(p.descanso ? 'Desc.' : corto(p.tipo)) : ''}</span>
+            </div>`;
+        }).join('')}</div>
+    </div>`;
+}
 
 // ===================== DEPORTE DE LA SEMANA =====================
 // Lo marcado en "Deporte hecho / previsto" vale para toda la semana: se guarda al
@@ -3844,13 +4303,47 @@ const bd = {
 // ===================== GROQ IA =====================
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
-function getGroqKey() {
-    let k = localStorage.getItem('gym_groq_key') || '';
-    if (!k) {
-        k = prompt('Para crear rutinas con la IA, pega tu clave de Groq (empieza por gsk_).\n\nEs gratis: entra en console.groq.com, inicia sesión con Google, ve a «API Keys» → «Create API Key» y copia la clave.\n\nSolo hace falta una vez en este móvil.');
-        if (k && k.trim()) localStorage.setItem('gym_groq_key', k.trim());
-    }
-    return k ? k.trim() : null;
+// Clave de Groq: la consigue cada usuario (gratis). Antes se pedía con una ventanita
+// del navegador; ahora con una pantalla que explica paso a paso cómo conseguirla.
+async function getGroqKey() {
+    const k = (localStorage.getItem('gym_groq_key') || '').trim();
+    return k || await pedirClaveGroq(false);
+}
+
+function pedirClaveGroq(cambiar) {
+    return new Promise(resolve => {
+        const ov = document.createElement('div');
+        ov.className = 'gym-user-overlay';
+        ov.innerHTML = `<div class="gym-user-box groq-box">
+            <div style="font-size:2.4rem">🔑</div>
+            <h2>${cambiar ? 'Cambiar la clave de la IA' : 'Último paso: tu clave de la IA'}</h2>
+            <p>Las rutinas las crea una IA gratuita (Groq). Cada persona necesita su propia clave. Se consigue en 2 minutos y solo se pide una vez en este móvil.</p>
+            <ol class="groq-pasos">
+                <li>Abre <a href="https://console.groq.com/keys" target="_blank" rel="noopener"><b>console.groq.com/keys</b></a> e inicia sesión (con Google es lo más rápido).</li>
+                <li>Pulsa <b>«Create API Key»</b>, ponle un nombre (por ejemplo, <i>gym</i>) y pulsa <b>Submit</b>.</li>
+                <li>Pulsa <b>Copy</b> y pégala aquí abajo. Empieza por <b>gsk_</b>.</li>
+            </ol>
+            <input type="text" class="gym-user-input groq-input" placeholder="gsk_..." autocomplete="off" spellcheck="false" style="text-transform:none">
+            <div class="gym-pin-error groq-error"></div>
+            <button class="gym-user-enter groq-ok">Guardar clave</button>
+            <button class="gym-pin-volver groq-cancelar">Ahora no</button>
+            <p class="gym-user-note">Tu clave solo se guarda en este móvil. Nunca se sube a la nube.</p>
+        </div>`;
+        document.body.appendChild(ov);
+        const q = sel => ov.querySelector(sel);
+        setTimeout(() => q('.groq-input').focus(), 50);
+        const fin = v => { ov.remove(); resolve(v); };
+        q('.groq-ok').onclick = () => {
+            const v = q('.groq-input').value.trim();
+            if (!/^gsk_\S{20,}$/.test(v)) { q('.groq-error').textContent = 'No parece una clave de Groq: debe empezar por gsk_ y ser larga.'; return; }
+            localStorage.setItem('gym_groq_key', v);
+            if (cambiar && document.getElementById('groq-estado-perfil'))
+                document.getElementById('groq-estado-perfil').textContent = '✅ Clave guardada en este móvil.';
+            fin(v);
+        };
+        q('.groq-cancelar').onclick = () => fin(null);
+        q('.groq-input').onkeydown = e => { if (e.key === 'Enter') q('.groq-ok').click(); };
+    });
 }
 
 // Modelos de Groq por orden de preferencia. Groq retira modelos cada pocos meses:
@@ -3879,8 +4372,8 @@ async function _groqModelosDisponibles(key) {
 // json: true pide a Groq que responda solo con un objeto JSON válido (modo JSON).
 // Si el modelo no lo admite o falla al generarlo, se repite una vez sin él.
 async function groqChat({ messages, temperature = 0.7, maxTokens = 2000, vision = false, json = false }) {
-    const key = getGroqKey();
-    if (!key) throw new Error('Falta la clave de Groq. Pulsa otra vez el botón y pégala en la ventanita (se consigue gratis en console.groq.com → API Keys).');
+    const key = await getGroqKey();
+    if (!key) throw new Error('Para crear rutinas con IA hace falta tu clave de Groq (gratis). Pulsa otra vez «Generar rutina» y sigue los pasos. Mientras tanto puedes usar «Empezar ya» o repetir una rutina.');
 
     const tipo = vision ? 'vision' : 'texto';
     let candidatos = [...new Set([_groqModeloActivo[tipo], ...(vision ? GROQ_MODELOS_VISION : GROQ_MODELOS_TEXTO)].filter(Boolean))];
@@ -4163,7 +4656,7 @@ ${contextoSemana ? `\nCONTEXTO ADICIONAL DEL USUARIO (muy importante, adáptate 
 INSTRUCCIONES OBLIGATORIAS:
 1. ESTRUCTURA: calentamiento (3-4 ejercicios), rutina principal (exactamente ${numEj} ejercicios) y estiramientos (3-4 ejercicios).
 2. CAMPOS: cada ejercicio de las tres secciones lleva siempre todos los campos de la plantilla de abajo.
-3. MÚSCULO: "grupo_muscular" es el músculo PRINCIPAL y debe ser EXACTAMENTE uno de: ${GRUPOS_MUSCULARES.join(', ')}.
+3. NOMBRES: "nombre" en español; "nombre_en" en inglés, como se llama en las bases de datos de ejercicios (ej: "Barbell Bench Press - Medium Grip", "Pullups", "Dumbbell Lunges"). "grupo_muscular" es el músculo PRINCIPAL y debe ser EXACTAMENTE uno de: ${GRUPOS_MUSCULARES.join(', ')}.
 4. PESOS: sigue la sección PESOS de tus instrucciones. Los ejercicios con progresión calculada llevan ese peso; el calentamiento y los estiramientos van sin peso (null).
 5. INTENSIDAD SEGÚN EL HISTORIAL: si la última sesión fue "muy difícil" o no la completó, baja el volumen; si fue "fácil", súbelo un poco. Ten en cuenta la energía de hoy.
 6. MOLESTIAS: evita las zonas con molestias recientes y propón alternativas. Si una molestia está marcada como REPETIDA, nada de carga directa en esa zona y menciónalo en "mensaje" recomendando fisioterapeuta o médico.
@@ -4187,7 +4680,7 @@ Responde ÚNICAMENTE con este JSON válido, sin texto antes ni después:
     { "nombre": "", "grupo_muscular": "", "explicacion": "", "series": 2, "reps": "30 seg", "descanso_series": "20s", "descanso_ejercicios": "15s", "peso": null, "alternativa": "", "variante_facil": "", "variante_avanzada": "", "youtube": "" }
   ],
   "ejercicios": [
-    { "nombre": "", "grupo_muscular": "", "explicacion": "", "tipo": "normal", "series": 3, "reps": "12", "descanso_series": "60s", "descanso_ejercicios": "90s", "peso": "20 kg", "alternativa": "", "variante_facil": "", "variante_avanzada": "", "youtube": "" }
+    { "nombre": "", "nombre_en": "", "grupo_muscular": "", "explicacion": "", "tipo": "normal", "series": 3, "reps": "12", "descanso_series": "60s", "descanso_ejercicios": "90s", "peso": "20 kg", "alternativa": "", "variante_facil": "", "variante_avanzada": "", "youtube": "" }
   ],
   "estiramientos": [
     { "nombre": "", "grupo_muscular": "", "explicacion": "", "series": 1, "reps": "30 seg", "descanso_series": "10s", "descanso_ejercicios": "15s", "peso": null, "alternativa": "", "variante_facil": "", "variante_avanzada": "", "youtube": "" }
@@ -4222,7 +4715,8 @@ async function llamarIA(prompt) {
         const tipofinal = (tipo === 'circuito' && /^\d+$/.test(String(ej.reps || '').trim()))
             ? 'normal' : tipo;
         const peso = forzarSinPeso ? null : sanitizarPeso(ej.peso);
-        return { ...ej, tipo: tipofinal, peso, grupo_muscular: normalizarGrupo(ej.grupo_muscular) };
+        return { ...ej, tipo: tipofinal, peso, grupo_muscular: normalizarGrupo(ej.grupo_muscular),
+                 imagen: buscarFoto(ej.nombre_en, ej.nombre) };
     });
 
     // En la rutina principal: mismo nombre que en el historial y, si ya se hizo con
@@ -4318,6 +4812,128 @@ async function ctxAnalizarConIA() {
     }
 }
 
+// Empieza una sesión con una rutina (de la IA, repetida o del plan) y la muestra
+function empezarSesion(resultado, tiempo, nivel, objetivo) {
+    resultadosBloques = {};
+    registroSeries = {};
+    recordsAlEmpezar = cargarRecords();
+    recordsAvisados = {};
+    sesionActual = {
+        nivel, objetivo, tiempo,
+        inicio: Date.now(),   // para medir cuánto dura la sesión de verdad
+        energia: elegido.energia || null,
+        calentamiento: resultado.calentamiento || [],
+        ejercicios:    resultado.ejercicios    || [],
+        estiramientos: resultado.estiramientos || [],
+        tipo_entrenamiento: resultado.tipo_entrenamiento || '',
+        mensaje: resultado.mensaje || '',
+        origen: resultado.origen || 'ia',
+        deporteHecho:    [...elegido.deporteHecho],
+        deportePrevisto: [...elegido.deportePrevisto],
+    };
+    ultimaEvaluacion = resultado.evaluacion || null;
+    // Los récords se guardan al terminar la sesión con los pesos reales,
+    // no aquí con los pesos propuestos.
+    mostrarRutinaIA(resultado, tiempo, nivel, objetivo);
+}
+
+// ===================== EMPEZAR RÁPIDO (sin IA) =====================
+// Repetir la última rutina o hacer la del plan de hoy: no gasta IA y funciona
+// sin conexión. Los pesos los pone la progresión, como siempre.
+const _SIN_CARGA = /plancha|flexi|dominada|burpee|abdominal|crunch|salto|comba|estiramiento|movilidad|puente|rotaci|fondos|mountain|jumping|plank/i;
+
+// Peso de hoy para un ejercicio: el de la progresión (con el tope de mancuernas en casa)
+function pesoDeHoy(nombre) {
+    const p = calcularProgresion(nombre);
+    if (!p) return null;
+    const perfil = cargarPerfil() || {};
+    const maxKg = parseFloat(perfil.pesasKg);
+    const enCasa = lugarPerfil(perfil) !== 'gimnasio' && elegido.lugarHoy !== 'gimnasio';
+    return enCasa && maxKg > 0 && /mancuern/i.test(nombre) ? Math.min(p.siguienteKg, maxKg) : p.siguienteKg;
+}
+
+// Copia limpia de un ejercicio ya hecho (sin lo apuntado aquel día)
+function limpiarEjercicio(e, conPeso) {
+    const { pesoUsado, seriesHechas, repsHechas, rir, resultado, pesoSugerido, ...base } = e;
+    const kg = conPeso && tipoBloque(e) === 'normal' ? pesoDeHoy(e.nombre) : null;
+    base.imagen = base.imagen || buscarFoto(base.nombre_en, base.nombre); // sesiones de antes no tenían foto
+    if (kg) return { ...base, peso: `${kg} kg`, pesoLibre: false };
+    return { ...base, peso: pesoSugerido ?? base.peso ?? null };
+}
+
+function sesionParaRepetir() {
+    return cargarSesiones().slice().reverse().find(x => (x.ejercicios || []).length && !x.descarga) || null;
+}
+
+function repetirUltimaRutina() {
+    const s = sesionParaRepetir();
+    if (!s) return;
+    const { nivel, objetivoTipo } = nivelYObjetivo();
+    const dia = parseFechaES(s.fecha).toLocaleDateString('es-ES', { weekday: 'long' });
+    empezarSesion({
+        tipo_entrenamiento: s.tipo_entrenamiento || 'Rutina repetida',
+        mensaje: `Repetimos tu rutina del ${dia}. Los pesos ya vienen ajustados a cómo te fue.`,
+        calentamiento: (s.calentamiento || []).map(e => limpiarEjercicio(e, false)),
+        ejercicios: (s.ejercicios || []).map(e => limpiarEjercicio(e, true)),
+        estiramientos: (s.estiramientos || []).map(e => limpiarEjercicio(e, false)),
+        origen: 'repetida',
+    }, parseInt(s.tiempo) > 0 ? String(parseInt(s.tiempo)) : '45', s.nivel && s.nivel !== '—' ? s.nivel : nivel, s.objetivo && s.objetivo !== '—' ? s.objetivo : objetivoTipo);
+}
+
+// Lo que toca hoy según el plan semanal (si es de los últimos 7 días y no es descanso)
+function planDeHoy() {
+    let plan = null;
+    try { plan = JSON.parse(localStorage.getItem('gym_plan_semanal') || 'null'); } catch {}
+    const creado = plan && plan.creado ? parseFechaES(plan.creado) : null;
+    if (!creado || isNaN(creado) || Date.now() - creado.getTime() > 7 * _DIA_MS || !Array.isArray(plan.semana)) return null;
+    const hoy = _sinAcentos(new Date().toLocaleDateString('es-ES', { weekday: 'long' }));
+    const d = plan.semana.find(x => x && _sinAcentos(x.dia) === hoy);
+    return d && !d.descanso && Array.isArray(d.ejercicios) && d.ejercicios.length ? d : null;
+}
+
+// "Sentadilla 4x8" → { nombre: 'Sentadilla', series: 4, reps: '8' }
+function ejercicioDelPlan(texto) {
+    const m = String(texto).match(/^(.*?)[\s:-]+(\d+)\s*[x×]\s*([\d\-–]+(?:\s*(?:seg|s|min))?)/i);
+    const nombre = nombreConocido((m ? m[1] : texto).trim());
+    const kg = _SIN_CARGA.test(nombre) ? null : pesoDeHoy(nombre);
+    return {
+        nombre, grupo_muscular: normalizarGrupo(nombre), tipo: 'normal',
+        series: m ? parseInt(m[2]) : 3, reps: m ? m[3] : '10',
+        descanso_series: '90s', descanso_ejercicios: '2 min',
+        peso: kg ? `${kg} kg` : null, pesoLibre: !kg && !_SIN_CARGA.test(nombre),
+        explicacion: '', youtube: nombre, imagen: buscarFoto(null, nombre),
+    };
+}
+
+function empezarRutinaDelPlan() {
+    const d = planDeHoy();
+    if (!d) return;
+    const { nivel, objetivoTipo } = nivelYObjetivo();
+    let tiempo = '45';
+    try { tiempo = localStorage.getItem(claveLocal('gym_ultimo_tiempo')) || '45'; } catch {}
+    empezarSesion({
+        tipo_entrenamiento: d.tipo || 'Rutina del plan',
+        mensaje: `Hoy toca ${d.tipo || 'la rutina de tu plan'}. Calienta 5 minutos antes de empezar.${d.nota ? ' ' + d.nota : ''}`,
+        calentamiento: [], estiramientos: [],
+        ejercicios: d.ejercicios.map(ejercicioDelPlan),
+        origen: 'plan',
+    }, tiempo, nivel, objetivoTipo);
+}
+
+function renderizarEmpezarRapido() {
+    const cont = document.getElementById('empezar-rapido');
+    if (!cont) return;
+    const s = sesionParaRepetir();
+    const p = planDeHoy();
+    if (!s && !p) { cont.innerHTML = ''; return; }
+    const dia = s ? parseFechaES(s.fecha).toLocaleDateString('es-ES', { weekday: 'long' }) : '';
+    cont.innerHTML = `<div class="empezar-rapido">
+        <div class="er-titulo">⚡ Empezar ya <span>sin esperar a la IA</span></div>
+        ${p ? `<button onclick="empezarRutinaDelPlan()"><b>📋 Hoy toca: ${escaparHTML(p.tipo || 'tu plan')}</b><span>${p.ejercicios.length} ejercicios de tu plan semanal</span></button>` : ''}
+        ${s ? `<button onclick="repetirUltimaRutina()"><b>🔁 Repetir: ${escaparHTML(s.tipo_entrenamiento || 'última rutina')}</b><span>La del ${dia}, con los pesos ajustados</span></button>` : ''}
+    </div>`;
+}
+
 async function generarRutina() {
     const tiempo = document.getElementById('tiempo').value;
     // Nivel y objetivo vienen del perfil (ya no se preguntan cada día)
@@ -4363,32 +4979,7 @@ async function generarRutina() {
         const prompt   = construirPrompt(perfil, material, sesiones, tiempo, nivel, objetivo, contextoSemana);
         const resultado = await llamarIA(prompt);
 
-        const todosEjercicios = [
-        ...(resultado.calentamiento || []),
-        ...(resultado.ejercicios    || []),
-        ...(resultado.estiramientos || [])
-    ];
-    resultadosBloques = {};
-    registroSeries = {};
-    recordsAlEmpezar = cargarRecords();
-    recordsAvisados = {};
-    sesionActual = {
-        nivel, objetivo, tiempo,
-        inicio: Date.now(),   // para medir cuánto dura la sesión de verdad
-        energia: elegido.energia || null,
-        calentamiento: resultado.calentamiento || [],
-        ejercicios:    resultado.ejercicios    || [],
-        estiramientos: resultado.estiramientos || [],
-        tipo_entrenamiento: resultado.tipo_entrenamiento || '',
-        mensaje: resultado.mensaje || '',
-        deporteHecho:    [...elegido.deporteHecho],
-        deportePrevisto: [...elegido.deportePrevisto],
-    };
-    ultimaEvaluacion = resultado.evaluacion || null;
-
-    // Los récords se guardan al terminar la sesión con los pesos reales,
-    // no aquí con los pesos que sugiere la IA.
-        mostrarRutinaIA(resultado, tiempo, nivel, objetivo);
+        empezarSesion(resultado, tiempo, nivel, objetivo);
 
     } catch (err) {
         console.error(err);
@@ -4799,6 +5390,1000 @@ const TIPO_INFO = {
     circuito: { label: '🔄 CIRCUITO', cls: 'badge-circuito', especial: true, desc: 'Pasa de un ejercicio al siguiente sin descanso — el descanso llega al terminar la vuelta completa' },
 };
 
+// ===================== ENTRE AMIGOS =====================
+// Opcional: compartir con el grupo SOLO cuántas sesiones llevas esta semana, tu racha
+// y el día del último entreno. Nada de pesos, lesiones ni datos personales.
+function actividadPublica() {
+    const perfil = cargarPerfil() || {};
+    if (!perfil.compartirActividad) return null;
+    const r = resumenSemana(0);
+    const ultima = ultimaSesion();
+    return { semana: _claveSemana(), sesiones: r.sesiones, racha: calcularStats().racha, ultima: ultima ? ultima.fecha : '' };
+}
+
+function cambiarCompartirActividad(activar) {
+    const perfil = cargarPerfil() || {};
+    perfil.compartirActividad = !!activar;
+    localStorage.setItem('gym_perfil', JSON.stringify(perfil));
+    syncGymUser().then(() => renderizarGrupo());
+}
+
+async function renderizarGrupo() {
+    const cont = document.getElementById('grupo-amigos');
+    if (!cont) return;
+    const perfil = cargarPerfil() || {};
+    if (!perfil.compartirActividad) {
+        cont.innerHTML = `<div class="grupo-card">
+            <div class="gr-titulo">👥 Entrena con tus amigos</div>
+            <p>Mira cuántas veces ha entrenado cada uno esta semana y su racha. Solo se comparte eso: ni pesos, ni lesiones, ni nada más.</p>
+            <button class="btn-copia" onclick="cambiarCompartirActividad(true)">Compartir mi actividad y ver la del grupo</button>
+        </div>`;
+        return;
+    }
+    cont.innerHTML = '<div class="grupo-card"><div class="gr-titulo">👥 Tu grupo esta semana</div><p>Cargando…</p></div>';
+    let grupo = null, servidorAntiguo = false;
+    try {
+        const ctrl = new AbortController();
+        setTimeout(() => ctrl.abort(), 6000);
+        const r = await fetch(`${GYM_WORKER}/grupo`, { signal: ctrl.signal });
+        if (r.ok) grupo = await r.json(); else servidorAntiguo = r.status === 400;
+    } catch {}
+    const semana = _claveSemana();
+    const lista = Array.isArray(grupo) ? grupo.map(g => ({ ...g, sesiones: g.semana === semana ? g.sesiones : 0 })) : null;
+    const yo = _currentGymUser;
+    cont.innerHTML = `<div class="grupo-card">
+        <div class="gr-titulo">👥 Tu grupo esta semana</div>
+        ${lista === null ? (servidorAntiguo ? '<p>Tu actividad ya se comparte. La lista del grupo aparecerá en cuanto se active en el servidor.</p>' : '<p>No se ha podido cargar ahora (¿sin conexión?).</p>')
+          : lista.length <= 1 ? '<p>De momento solo estás tú. Cuando tus amigos activen esta opción, aparecerán aquí.</p>' : ''}
+        ${lista && lista.length ? `<div class="gr-lista">${lista.sort((a, b) => b.sesiones - a.sesiones || b.racha - a.racha).map((g, i) => `
+            <div class="gr-fila${g.nombre === yo ? ' yo' : ''}">
+                <span class="gr-pos">${i === 0 && g.sesiones ? '🥇' : i + 1}</span>
+                <span class="gr-nombre">${escaparHTML(g.nombre)}${g.nombre === yo ? ' (tú)' : ''}</span>
+                <span class="gr-dato"><b>${g.sesiones}</b> ${g.sesiones === 1 ? 'sesión' : 'sesiones'}</span>
+                <span class="gr-dato">🔥 ${g.racha} sem.</span>
+            </div>`).join('')}</div>` : ''}
+        <button class="gr-salir" onclick="cambiarCompartirActividad(false)">Dejar de compartir</button>
+    </div>`;
+}
+
+// ===================== FOTOS DE LOS EJERCICIOS =====================
+// Biblioteca libre "Free Exercise DB" (dominio público, github.com/yuhonas/free-exercise-db):
+// 873 ejercicios con 2 fotos (posición inicial y final). Aquí solo va el índice de
+// nombres; las fotos se cargan de internet al abrir cada ejercicio.
+// Formato: "Nombre en inglés" o "Nombre en inglés|Carpeta" si la carpeta es distinta.
+const FOTOS_URL = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
+const FOTOS_INDICE = `3/4 Sit-Up|3_4_Sit-Up
+90/90 Hamstring|90_90_Hamstring
+Ab Crunch Machine
+Ab Roller
+Adductor
+Adductor/Groin|Adductor_Groin
+Advanced Kettlebell Windmill
+Air Bike
+All Fours Quad Stretch
+Alternate Hammer Curl
+Alternate Heel Touchers
+Alternate Incline Dumbbell Curl
+Alternate Leg Diagonal Bound
+Alternating Cable Shoulder Press
+Alternating Deltoid Raise
+Alternating Floor Press
+Alternating Hang Clean
+Alternating Kettlebell Press
+Alternating Kettlebell Row
+Alternating Renegade Row
+Ankle Circles
+Ankle On The Knee
+Anterior Tibialis-SMR
+Anti-Gravity Press
+Arm Circles
+Arnold Dumbbell Press
+Around The Worlds
+Atlas Stone Trainer
+Atlas Stones
+Axle Deadlift
+Back Flyes - With Bands
+Backward Drag
+Backward Medicine Ball Throw
+Balance Board
+Ball Leg Curl
+Band Assisted Pull-Up
+Band Good Morning
+Band Good Morning (Pull Through)|Band_Good_Morning_Pull_Through
+Band Hip Adductions
+Band Pull Apart
+Band Skull Crusher
+Barbell Ab Rollout
+Barbell Ab Rollout - On Knees
+Barbell Bench Press - Medium Grip
+Barbell Curl
+Barbell Curls Lying Against An Incline
+Barbell Deadlift
+Barbell Full Squat
+Barbell Glute Bridge
+Barbell Guillotine Bench Press
+Barbell Hack Squat
+Barbell Hip Thrust
+Barbell Incline Bench Press - Medium Grip
+Barbell Incline Shoulder Raise
+Barbell Lunge
+Barbell Rear Delt Row
+Barbell Rollout from Bench
+Barbell Seated Calf Raise
+Barbell Shoulder Press
+Barbell Shrug
+Barbell Shrug Behind The Back
+Barbell Side Bend
+Barbell Side Split Squat
+Barbell Squat
+Barbell Squat To A Bench
+Barbell Step Ups
+Barbell Walking Lunge
+Battling Ropes
+Bear Crawl Sled Drags
+Behind Head Chest Stretch
+Bench Dips
+Bench Jump
+Bench Press - Powerlifting
+Bench Press - With Bands
+Bench Press with Chains
+Bench Sprint
+Bent-Arm Barbell Pullover
+Bent-Arm Dumbbell Pullover
+Bent-Knee Hip Raise
+Bent Over Barbell Row
+Bent Over Dumbbell Rear Delt Raise With Head On Bench
+Bent Over Low-Pulley Side Lateral
+Bent Over One-Arm Long Bar Row
+Bent Over Two-Arm Long Bar Row
+Bent Over Two-Dumbbell Row
+Bent Over Two-Dumbbell Row With Palms In
+Bent Press
+Bicycling
+Bicycling, Stationary|Bicycling_Stationary
+Board Press
+Body-Up
+Body Tricep Press
+Bodyweight Flyes
+Bodyweight Mid Row
+Bodyweight Squat
+Bodyweight Walking Lunge
+Bosu Ball Cable Crunch With Side Bends
+Bottoms-Up Clean From The Hang Position
+Bottoms Up
+Box Jump (Multiple Response)|Box_Jump_Multiple_Response
+Box Skip
+Box Squat
+Box Squat with Bands
+Box Squat with Chains
+Brachialis-SMR
+Bradford/Rocky Presses|Bradford_Rocky_Presses
+Butt-Ups
+Butt Lift (Bridge)|Butt_Lift_Bridge
+Butterfly
+Cable Chest Press
+Cable Crossover
+Cable Crunch
+Cable Deadlifts
+Cable Hammer Curls - Rope Attachment
+Cable Hip Adduction
+Cable Incline Pushdown
+Cable Incline Triceps Extension
+Cable Internal Rotation
+Cable Iron Cross
+Cable Judo Flip
+Cable Lying Triceps Extension
+Cable One Arm Tricep Extension
+Cable Preacher Curl
+Cable Rear Delt Fly
+Cable Reverse Crunch
+Cable Rope Overhead Triceps Extension
+Cable Rope Rear-Delt Rows
+Cable Russian Twists
+Cable Seated Crunch
+Cable Seated Lateral Raise
+Cable Shoulder Press
+Cable Shrugs
+Cable Wrist Curl
+Calf-Machine Shoulder Shrug
+Calf Press
+Calf Press On The Leg Press Machine
+Calf Raise On A Dumbbell
+Calf Raises - With Bands
+Calf Stretch Elbows Against Wall
+Calf Stretch Hands Against Wall
+Calves-SMR
+Car Deadlift
+Car Drivers
+Carioca Quick Step
+Cat Stretch
+Catch and Overhead Throw
+Chain Handle Extension
+Chain Press
+Chair Leg Extended Stretch
+Chair Lower Back Stretch
+Chair Squat
+Chair Upper Body Stretch
+Chest And Front Of Shoulder Stretch
+Chest Push from 3 point stance
+Chest Push (multiple response)|Chest_Push_multiple_response
+Chest Push (single response)|Chest_Push_single_response
+Chest Push with Run Release
+Chest Stretch on Stability Ball
+Child's Pose|Childs_Pose
+Chin-Up
+Chin To Chest Stretch
+Circus Bell
+Clean
+Clean Deadlift
+Clean Pull
+Clean Shrug
+Clean and Jerk
+Clean and Press
+Clean from Blocks
+Clock Push-Up
+Close-Grip Barbell Bench Press
+Close-Grip Dumbbell Press
+Close-Grip EZ-Bar Curl with Band
+Close-Grip EZ-Bar Press
+Close-Grip EZ Bar Curl
+Close-Grip Front Lat Pulldown
+Close-Grip Push-Up off of a Dumbbell
+Close-Grip Standing Barbell Curl
+Cocoons
+Conan's Wheel|Conans_Wheel
+Concentration Curls
+Cross-Body Crunch
+Cross Body Hammer Curl
+Cross Over - With Bands
+Crossover Reverse Lunge
+Crucifix
+Crunch - Hands Overhead
+Crunch - Legs On Exercise Ball
+Crunches
+Cuban Press
+Dancer's Stretch|Dancers_Stretch
+Dead Bug
+Deadlift with Bands
+Deadlift with Chains
+Decline Barbell Bench Press
+Decline Close-Grip Bench To Skull Crusher
+Decline Crunch
+Decline Dumbbell Bench Press
+Decline Dumbbell Flyes
+Decline Dumbbell Triceps Extension
+Decline EZ Bar Triceps Extension
+Decline Oblique Crunch
+Decline Push-Up
+Decline Reverse Crunch
+Decline Smith Press
+Deficit Deadlift
+Depth Jump Leap
+Dip Machine
+Dips - Chest Version
+Dips - Triceps Version
+Donkey Calf Raises
+Double Kettlebell Alternating Hang Clean
+Double Kettlebell Jerk
+Double Kettlebell Push Press
+Double Kettlebell Snatch
+Double Kettlebell Windmill
+Double Leg Butt Kick
+Downward Facing Balance
+Drag Curl
+Drop Push
+Dumbbell Alternate Bicep Curl
+Dumbbell Bench Press
+Dumbbell Bench Press with Neutral Grip
+Dumbbell Bicep Curl
+Dumbbell Clean
+Dumbbell Floor Press
+Dumbbell Flyes
+Dumbbell Incline Row
+Dumbbell Incline Shoulder Raise
+Dumbbell Lunges
+Dumbbell Lying One-Arm Rear Lateral Raise
+Dumbbell Lying Pronation
+Dumbbell Lying Rear Lateral Raise
+Dumbbell Lying Supination
+Dumbbell One-Arm Shoulder Press
+Dumbbell One-Arm Triceps Extension
+Dumbbell One-Arm Upright Row
+Dumbbell Prone Incline Curl
+Dumbbell Raise
+Dumbbell Rear Lunge
+Dumbbell Scaption
+Dumbbell Seated Box Jump
+Dumbbell Seated One-Leg Calf Raise
+Dumbbell Shoulder Press
+Dumbbell Shrug
+Dumbbell Side Bend
+Dumbbell Squat
+Dumbbell Squat To A Bench
+Dumbbell Step Ups
+Dumbbell Tricep Extension -Pronated Grip
+Dynamic Back Stretch
+Dynamic Chest Stretch
+EZ-Bar Curl
+EZ-Bar Skullcrusher
+Elbow Circles
+Elbow to Knee
+Elbows Back
+Elevated Back Lunge
+Elevated Cable Rows
+Elliptical Trainer
+Exercise Ball Crunch
+Exercise Ball Pull-In
+Extended Range One-Arm Kettlebell Floor Press
+External Rotation
+External Rotation with Band
+External Rotation with Cable
+Face Pull
+Farmer's Walk|Farmers_Walk
+Fast Skipping
+Finger Curls
+Flat Bench Cable Flyes
+Flat Bench Leg Pull-In
+Flat Bench Lying Leg Raise
+Flexor Incline Dumbbell Curls
+Floor Glute-Ham Raise
+Floor Press
+Floor Press with Chains
+Flutter Kicks
+Foot-SMR
+Forward Drag with Press
+Frankenstein Squat
+Freehand Jump Squat
+Frog Hops
+Frog Sit-Ups
+Front Barbell Squat
+Front Barbell Squat To A Bench
+Front Box Jump
+Front Cable Raise
+Front Cone Hops (or hurdle hops)|Front_Cone_Hops_or_hurdle_hops
+Front Dumbbell Raise
+Front Incline Dumbbell Raise
+Front Leg Raises
+Front Plate Raise
+Front Raise And Pullover
+Front Squat (Clean Grip)|Front_Squat_Clean_Grip
+Front Squats With Two Kettlebells
+Front Two-Dumbbell Raise
+Full Range-Of-Motion Lat Pulldown
+Gironda Sternum Chins
+Glute Ham Raise
+Glute Kickback
+Goblet Squat
+Good Morning
+Good Morning off Pins
+Gorilla Chin/Crunch|Gorilla_Chin_Crunch
+Groin and Back Stretch
+Groiners
+Hack Squat
+Hammer Curls
+Hammer Grip Incline DB Bench Press
+Hamstring-SMR
+Hamstring Stretch
+Handstand Push-Ups
+Hang Clean
+Hang Clean - Below the Knees
+Hang Snatch
+Hang Snatch - Below Knees
+Hanging Bar Good Morning
+Hanging Leg Raise
+Hanging Pike
+Heaving Snatch Balance
+Heavy Bag Thrust
+High Cable Curls
+Hip Circles (prone)|Hip_Circles_prone
+Hip Extension with Bands
+Hip Flexion with Band
+Hip Lift with Band
+Hug A Ball
+Hug Knees To Chest
+Hurdle Hops
+Hyperextensions (Back Extensions)|Hyperextensions_Back_Extensions
+Hyperextensions With No Hyperextension Bench
+IT Band and Glute Stretch
+Iliotibial Tract-SMR
+Inchworm
+Incline Barbell Triceps Extension
+Incline Bench Pull
+Incline Cable Chest Press
+Incline Cable Flye
+Incline Dumbbell Bench With Palms Facing In
+Incline Dumbbell Curl
+Incline Dumbbell Flyes
+Incline Dumbbell Flyes - With A Twist
+Incline Dumbbell Press
+Incline Hammer Curls
+Incline Inner Biceps Curl
+Incline Push-Up
+Incline Push-Up Close-Grip
+Incline Push-Up Depth Jump
+Incline Push-Up Medium
+Incline Push-Up Reverse Grip
+Incline Push-Up Wide
+Intermediate Groin Stretch
+Intermediate Hip Flexor and Quad Stretch
+Internal Rotation with Band
+Inverted Row
+Inverted Row with Straps
+Iron Cross
+Iron Crosses (stretch)|Iron_Crosses_stretch
+Isometric Chest Squeezes
+Isometric Neck Exercise - Front And Back
+Isometric Neck Exercise - Sides
+Isometric Wipers
+JM Press
+Jackknife Sit-Up
+Janda Sit-Up
+Jefferson Squats
+Jerk Balance
+Jerk Dip Squat
+Jogging, Treadmill|Jogging_Treadmill
+Keg Load
+Kettlebell Arnold Press
+Kettlebell Dead Clean
+Kettlebell Figure 8
+Kettlebell Hang Clean
+Kettlebell One-Legged Deadlift
+Kettlebell Pass Between The Legs
+Kettlebell Pirate Ships
+Kettlebell Pistol Squat
+Kettlebell Seated Press
+Kettlebell Seesaw Press
+Kettlebell Sumo High Pull
+Kettlebell Thruster
+Kettlebell Turkish Get-Up (Lunge style)|Kettlebell_Turkish_Get-Up_Lunge_style
+Kettlebell Turkish Get-Up (Squat style)|Kettlebell_Turkish_Get-Up_Squat_style
+Kettlebell Windmill
+Kipping Muscle Up
+Knee Across The Body
+Knee Circles
+Knee/Hip Raise On Parallel Bars|Knee_Hip_Raise_On_Parallel_Bars
+Knee Tuck Jump
+Kneeling Arm Drill
+Kneeling Cable Crunch With Alternating Oblique Twists
+Kneeling Cable Triceps Extension
+Kneeling Forearm Stretch
+Kneeling High Pulley Row
+Kneeling Hip Flexor
+Kneeling Jump Squat
+Kneeling Single-Arm High Pulley Row
+Kneeling Squat
+Landmine 180's|Landmine_180s
+Landmine Linear Jammer
+Lateral Bound
+Lateral Box Jump
+Lateral Cone Hops
+Lateral Raise - With Bands
+Latissimus Dorsi-SMR
+Leg-Over Floor Press
+Leg-Up Hamstring Stretch
+Leg Extensions
+Leg Lift
+Leg Press
+Leg Pull-In
+Leverage Chest Press
+Leverage Deadlift
+Leverage Decline Chest Press
+Leverage High Row
+Leverage Incline Chest Press
+Leverage Iso Row
+Leverage Shoulder Press
+Leverage Shrug
+Linear 3-Part Start Technique
+Linear Acceleration Wall Drill
+Linear Depth Jump
+Log Lift
+London Bridges
+Looking At Ceiling
+Low Cable Crossover
+Low Cable Triceps Extension
+Low Pulley Row To Neck
+Lower Back-SMR
+Lower Back Curl
+Lunge Pass Through
+Lunge Sprint
+Lying Bent Leg Groin
+Lying Cable Curl
+Lying Cambered Barbell Row
+Lying Close-Grip Bar Curl On High Pulley
+Lying Close-Grip Barbell Triceps Extension Behind The Head
+Lying Close-Grip Barbell Triceps Press To Chin
+Lying Crossover
+Lying Dumbbell Tricep Extension
+Lying Face Down Plate Neck Resistance
+Lying Face Up Plate Neck Resistance
+Lying Glute
+Lying Hamstring
+Lying High Bench Barbell Curl
+Lying Leg Curls
+Lying Machine Squat
+Lying One-Arm Lateral Raise
+Lying Prone Quadriceps
+Lying Rear Delt Raise
+Lying Supine Dumbbell Curl
+Lying T-Bar Row
+Lying Triceps Press
+Machine Bench Press
+Machine Bicep Curl
+Machine Preacher Curls
+Machine Shoulder (Military) Press|Machine_Shoulder_Military_Press
+Machine Triceps Extension
+Medicine Ball Chest Pass
+Medicine Ball Full Twist
+Medicine Ball Scoop Throw
+Middle Back Shrug
+Middle Back Stretch
+Mixed Grip Chin
+Monster Walk
+Mountain Climbers
+Moving Claw Series
+Muscle Snatch
+Muscle Up
+Narrow Stance Hack Squats
+Narrow Stance Leg Press
+Narrow Stance Squats
+Natural Glute Ham Raise
+Neck-SMR
+Neck Press
+Oblique Crunches
+Oblique Crunches - On The Floor
+Olympic Squat
+On-Your-Back Quad Stretch
+On Your Side Quad Stretch
+One-Arm Dumbbell Row
+One-Arm Flat Bench Dumbbell Flye
+One-Arm High-Pulley Cable Side Bends
+One-Arm Incline Lateral Raise
+One-Arm Kettlebell Clean
+One-Arm Kettlebell Clean and Jerk
+One-Arm Kettlebell Floor Press
+One-Arm Kettlebell Jerk
+One-Arm Kettlebell Military Press To The Side
+One-Arm Kettlebell Para Press
+One-Arm Kettlebell Push Press
+One-Arm Kettlebell Row
+One-Arm Kettlebell Snatch
+One-Arm Kettlebell Split Jerk
+One-Arm Kettlebell Split Snatch
+One-Arm Kettlebell Swings
+One-Arm Long Bar Row
+One-Arm Medicine Ball Slam
+One-Arm Open Palm Kettlebell Clean
+One-Arm Overhead Kettlebell Squats
+One-Arm Side Deadlift
+One-Arm Side Laterals
+One-Legged Cable Kickback
+One Arm Against Wall
+One Arm Chin-Up
+One Arm Dumbbell Bench Press
+One Arm Dumbbell Preacher Curl
+One Arm Floor Press
+One Arm Lat Pulldown
+One Arm Pronated Dumbbell Triceps Extension
+One Arm Supinated Dumbbell Triceps Extension
+One Half Locust
+One Handed Hang
+One Knee To Chest
+One Leg Barbell Squat
+Open Palm Kettlebell Clean
+Otis-Up
+Overhead Cable Curl
+Overhead Lat
+Overhead Slam
+Overhead Squat
+Overhead Stretch
+Overhead Triceps
+Pallof Press
+Pallof Press With Rotation
+Palms-Down Dumbbell Wrist Curl Over A Bench
+Palms-Down Wrist Curl Over A Bench
+Palms-Up Barbell Wrist Curl Over A Bench
+Palms-Up Dumbbell Wrist Curl Over A Bench
+Parallel Bar Dip
+Pelvic Tilt Into Bridge
+Peroneals-SMR
+Peroneals Stretch
+Physioball Hip Bridge
+Pin Presses
+Piriformis-SMR
+Plank
+Plate Pinch
+Plate Twist
+Platform Hamstring Slides
+Plie Dumbbell Squat
+Plyo Kettlebell Pushups
+Plyo Push-up
+Posterior Tibialis Stretch
+Power Clean
+Power Clean from Blocks
+Power Jerk
+Power Partials
+Power Snatch
+Power Snatch from Blocks
+Power Stairs
+Preacher Curl
+Preacher Hammer Dumbbell Curl
+Press Sit-Up
+Prone Manual Hamstring
+Prowler Sprint
+Pull Through
+Pullups
+Push-Up Wide
+Push-Ups - Close Triceps Position
+Push-Ups With Feet Elevated
+Push-Ups With Feet On An Exercise Ball
+Push Press
+Push Press - Behind the Neck
+Push Up to Side Plank
+Pushups
+Pushups (Close and Wide Hand Positions)|Pushups_Close_and_Wide_Hand_Positions
+Pyramid
+Quad Stretch
+Quadriceps-SMR
+Quick Leap
+Rack Delivery
+Rack Pull with Bands
+Rack Pulls
+Rear Leg Raises
+Recumbent Bike
+Return Push from Stance
+Reverse Band Bench Press
+Reverse Band Box Squat
+Reverse Band Deadlift
+Reverse Band Power Squat
+Reverse Band Sumo Deadlift
+Reverse Barbell Curl
+Reverse Barbell Preacher Curls
+Reverse Cable Curl
+Reverse Crunch
+Reverse Flyes
+Reverse Flyes With External Rotation
+Reverse Grip Bent-Over Rows
+Reverse Grip Triceps Pushdown
+Reverse Hyperextension
+Reverse Machine Flyes
+Reverse Plate Curls
+Reverse Triceps Bench Press
+Rhomboids-SMR
+Rickshaw Carry
+Rickshaw Deadlift
+Ring Dips
+Rocket Jump
+Rocking Standing Calf Raise
+Rocky Pull-Ups/Pulldowns|Rocky_Pull-Ups_Pulldowns
+Romanian Deadlift
+Romanian Deadlift from Deficit
+Rope Climb
+Rope Crunch
+Rope Jumping
+Rope Straight-Arm Pulldown
+Round The World Shoulder Stretch
+Rowing, Stationary|Rowing_Stationary
+Runner's Stretch|Runners_Stretch
+Running, Treadmill|Running_Treadmill
+Russian Twist
+Sandbag Load
+Scapular Pull-Up
+Scissor Kick
+Scissors Jump
+Seated Band Hamstring Curl
+Seated Barbell Military Press
+Seated Barbell Twist
+Seated Bent-Over One-Arm Dumbbell Triceps Extension
+Seated Bent-Over Rear Delt Raise
+Seated Bent-Over Two-Arm Dumbbell Triceps Extension
+Seated Biceps
+Seated Cable Rows
+Seated Cable Shoulder Press
+Seated Calf Raise
+Seated Calf Stretch
+Seated Close-Grip Concentration Barbell Curl
+Seated Dumbbell Curl
+Seated Dumbbell Inner Biceps Curl
+Seated Dumbbell Palms-Down Wrist Curl
+Seated Dumbbell Palms-Up Wrist Curl
+Seated Dumbbell Press
+Seated Flat Bench Leg Pull-In
+Seated Floor Hamstring Stretch
+Seated Front Deltoid
+Seated Glute
+Seated Good Mornings
+Seated Hamstring
+Seated Hamstring and Calf Stretch
+Seated Head Harness Neck Resistance
+Seated Leg Curl
+Seated Leg Tucks
+Seated One-Arm Dumbbell Palms-Down Wrist Curl
+Seated One-Arm Dumbbell Palms-Up Wrist Curl
+Seated One-arm Cable Pulley Rows
+Seated Overhead Stretch
+Seated Palm-Up Barbell Wrist Curl
+Seated Palms-Down Barbell Wrist Curl
+Seated Side Lateral Raise
+Seated Triceps Press
+Seated Two-Arm Palms-Up Low-Pulley Wrist Curl
+See-Saw Press (Alternating Side Press)|See-Saw_Press_Alternating_Side_Press
+Shotgun Row
+Shoulder Circles
+Shoulder Press - With Bands
+Shoulder Raise
+Shoulder Stretch
+Side-Lying Floor Stretch
+Side Bridge
+Side Hop-Sprint
+Side Jackknife
+Side Lateral Raise
+Side Laterals to Front Raise
+Side Leg Raises
+Side Lying Groin Stretch
+Side Neck Stretch
+Side Standing Long Jump
+Side To Side Chins
+Side Wrist Pull
+Side to Side Box Shuffle
+Single-Arm Cable Crossover
+Single-Arm Linear Jammer
+Single-Arm Push-Up
+Single-Cone Sprint Drill
+Single-Leg High Box Squat
+Single-Leg Hop Progression
+Single-Leg Lateral Hop
+Single-Leg Leg Extension
+Single-Leg Stride Jump
+Single Dumbbell Raise
+Single Leg Butt Kick
+Single Leg Glute Bridge
+Single Leg Push-off
+Sit-Up
+Sit Squats
+Skating
+Sled Drag - Harness
+Sled Overhead Backward Walk
+Sled Overhead Triceps Extension
+Sled Push
+Sled Reverse Flye
+Sled Row
+Sledgehammer Swings
+Smith Incline Shoulder Raise
+Smith Machine Behind the Back Shrug
+Smith Machine Bench Press
+Smith Machine Bent Over Row
+Smith Machine Calf Raise
+Smith Machine Close-Grip Bench Press
+Smith Machine Decline Press
+Smith Machine Hang Power Clean
+Smith Machine Hip Raise
+Smith Machine Incline Bench Press
+Smith Machine Leg Press
+Smith Machine One-Arm Upright Row
+Smith Machine Overhead Shoulder Press
+Smith Machine Pistol Squat
+Smith Machine Reverse Calf Raises
+Smith Machine Squat
+Smith Machine Stiff-Legged Deadlift
+Smith Machine Upright Row
+Smith Single-Leg Split Squat
+Snatch
+Snatch Balance
+Snatch Deadlift
+Snatch Pull
+Snatch Shrug
+Snatch from Blocks
+Speed Band Overhead Triceps
+Speed Box Squat
+Speed Squats
+Spell Caster
+Spider Crawl
+Spider Curl
+Spinal Stretch
+Split Clean
+Split Jerk
+Split Jump
+Split Snatch
+Split Squat with Dumbbells
+Split Squats
+Squat Jerk
+Squat with Bands
+Squat with Chains
+Squat with Plate Movers
+Squats - With Bands
+Stairmaster
+Standing Alternating Dumbbell Press
+Standing Barbell Calf Raise
+Standing Barbell Press Behind Neck
+Standing Bent-Over One-Arm Dumbbell Triceps Extension
+Standing Bent-Over Two-Arm Dumbbell Triceps Extension
+Standing Biceps Cable Curl
+Standing Biceps Stretch
+Standing Bradford Press
+Standing Cable Chest Press
+Standing Cable Lift
+Standing Cable Wood Chop
+Standing Calf Raises
+Standing Concentration Curl
+Standing Dumbbell Calf Raise
+Standing Dumbbell Press
+Standing Dumbbell Reverse Curl
+Standing Dumbbell Straight-Arm Front Delt Raise Above Head
+Standing Dumbbell Triceps Extension
+Standing Dumbbell Upright Row
+Standing Elevated Quad Stretch
+Standing Front Barbell Raise Over Head
+Standing Gastrocnemius Calf Stretch
+Standing Hamstring and Calf Stretch
+Standing Hip Circles
+Standing Hip Flexors
+Standing Inner-Biceps Curl
+Standing Lateral Stretch
+Standing Leg Curl
+Standing Long Jump
+Standing Low-Pulley Deltoid Raise
+Standing Low-Pulley One-Arm Triceps Extension
+Standing Military Press
+Standing Olympic Plate Hand Squeeze
+Standing One-Arm Cable Curl
+Standing One-Arm Dumbbell Curl Over Incline Bench
+Standing One-Arm Dumbbell Triceps Extension
+Standing Overhead Barbell Triceps Extension
+Standing Palm-In One-Arm Dumbbell Press
+Standing Palms-In Dumbbell Press
+Standing Palms-Up Barbell Behind The Back Wrist Curl
+Standing Pelvic Tilt
+Standing Rope Crunch
+Standing Soleus And Achilles Stretch
+Standing Toe Touches
+Standing Towel Triceps Extension
+Standing Two-Arm Overhead Throw
+Star Jump
+Step-up with Knee Raise
+Step Mill
+Stiff-Legged Barbell Deadlift
+Stiff-Legged Dumbbell Deadlift
+Stiff Leg Barbell Good Morning
+Stomach Vacuum
+Straight-Arm Dumbbell Pullover
+Straight-Arm Pulldown
+Straight Bar Bench Mid Rows
+Straight Raises on Incline Bench
+Stride Jump Crossover
+Sumo Deadlift
+Sumo Deadlift with Bands
+Sumo Deadlift with Chains
+Superman
+Supine Chest Throw
+Supine One-Arm Overhead Throw
+Supine Two-Arm Overhead Throw
+Suspended Fallout
+Suspended Push-Up
+Suspended Reverse Crunch
+Suspended Row
+Suspended Split Squat
+Svend Press
+T-Bar Row with Handle
+Tate Press
+The Straddle
+Thigh Abductor
+Thigh Adductor
+Tire Flip
+Toe Touchers
+Torso Rotation
+Trail Running/Walking|Trail_Running_Walking
+Trap Bar Deadlift
+Tricep Dumbbell Kickback
+Tricep Side Stretch
+Triceps Overhead Extension with Rope
+Triceps Pushdown
+Triceps Pushdown - Rope Attachment
+Triceps Pushdown - V-Bar Attachment
+Triceps Stretch
+Tuck Crunch
+Two-Arm Dumbbell Preacher Curl
+Two-Arm Kettlebell Clean
+Two-Arm Kettlebell Jerk
+Two-Arm Kettlebell Military Press
+Two-Arm Kettlebell Row
+Underhand Cable Pulldowns
+Upper Back-Leg Grab
+Upper Back Stretch
+Upright Barbell Row
+Upright Cable Row
+Upright Row - With Bands
+Upward Stretch
+V-Bar Pulldown
+V-Bar Pullup
+Vertical Swing
+Walking, Treadmill|Walking_Treadmill
+Weighted Ball Hyperextension
+Weighted Ball Side Bend
+Weighted Bench Dip
+Weighted Crunches
+Weighted Jump Squat
+Weighted Pull Ups
+Weighted Sissy Squat
+Weighted Sit-Ups - With Bands
+Weighted Squat
+Wide-Grip Barbell Bench Press
+Wide-Grip Decline Barbell Bench Press
+Wide-Grip Decline Barbell Pullover
+Wide-Grip Lat Pulldown
+Wide-Grip Pulldown Behind The Neck
+Wide-Grip Rear Pull-Up
+Wide-Grip Standing Barbell Curl
+Wide Stance Barbell Squat
+Wide Stance Stiff Legs
+Wind Sprints
+Windmills
+World's Greatest Stretch|Worlds_Greatest_Stretch
+Wrist Circles
+Wrist Roller
+Wrist Rotations with Straight Bar
+Yoke Walk
+Zercher Squats
+Zottman Curl
+Zottman Preacher Curl`;
+let _fotosLista = null;
+const _PALABRAS_VACIAS_EN = new Set(['the', 'a', 'with', 'on', 'to', 'of', 'and', 'grip', 'medium', 'style', 'version', 'exercise', 'arm']);
+// "Push-ups", "push ups" y "pushups" son lo mismo
+const _tokensEn = t => _sinAcentos(t).replace(/\b(push|pull|chin|sit)[\s-]*ups?\b/g, '$1up').replace(/[^a-z0-9 ]/g, ' ').split(/\s+/)
+    .map(w => w.endsWith('s') && w.length > 3 && !w.endsWith('ss') ? w.slice(0, -1) : w).filter(w => w && !_PALABRAS_VACIAS_EN.has(w));
+function _listaFotos() {
+    if (!_fotosLista) _fotosLista = FOTOS_INDICE.split('\n').map(l => {
+        const [nombre, carpeta] = l.split('|');
+        return { nombre, carpeta: carpeta || nombre.replace(/ /g, '_'), tokens: new Set(_tokensEn(nombre)) };
+    });
+    return _fotosLista;
+}
+// Términos en español → inglés, para rutinas sin nombre en inglés (repetidas, del plan)
+const _ES_EN = [
+    [/remo con barra/, 'bent over barbell row'], [/remo con mancuernas?/, 'bent over two dumbbell row'], [/elevaciones? laterales?/, 'side lateral raise'], [/jalon/, 'wide grip lat pulldown'],
+    [/press (de )?banca|press banca/, 'bench press'], [/press militar|press de hombros?/, 'shoulder press'], [/sentadilla goblet/, 'goblet squat'],
+    [/sentadilla/, 'squat'], [/peso muerto rumano/, 'romanian deadlift'], [/peso muerto/, 'deadlift'], [/dominadas?/, 'pullup'],
+    [/jalon/, 'pulldown'], [/remo/, 'row'], [/zancadas?/, 'lunge'], [/plancha lateral/, 'side bridge'], [/plancha/, 'plank'], [/flexiones?/, 'pushup'],
+    [/fondos?/, 'dip'], [/elevaciones? laterales?/, 'lateral raise'], [/elevaciones? frontales?/, 'front raise'], [/curl (de )?martillo/, 'hammer curl'],
+    [/curl femoral/, 'leg curl'], [/curl/, 'curl'], [/extension(es)? de (cuadriceps|piernas?)/, 'leg extension'], [/extension(es)? de triceps|triceps/, 'triceps extension'],
+    [/hip thrust|empuje de cadera/, 'hip thrust'], [/puente de gluteos?/, 'glute bridge'], [/prensa/, 'leg press'], [/aperturas?/, 'fly'],
+    [/gemelos|elevacion(es)? de talones/, 'calf raise'], [/abdominales?|crunch/, 'crunch'], [/swings?/, 'swing'], [/burpees?/, 'burpee'],
+    [/mancuernas?/, 'dumbbell'], [/barra z/, 'ez bar'], [/barra/, 'barbell'], [/polea|cables?/, 'cable'], [/kettlebell|pesa rusa/, 'kettlebell'],
+    [/inclinad[oa]/, 'incline'], [/declinad[oa]/, 'decline'], [/sentad[oa]/, 'seated'], [/de pie/, 'standing'], [/maquina/, 'machine'],
+];
+function nombreEnIngles(nombreEs) {
+    const t = _sinAcentos(nombreEs);
+    return _ES_EN.filter(([re]) => re.test(t)).map(([, en]) => en).join(' ');
+}
+// Foto más parecida: por coincidencia de palabras (al menos una que no sea solo material)
+const _MATERIAL_EN = new Set(['dumbbell', 'barbell', 'cable', 'machine', 'kettlebell', 'band', 'ez', 'bar', 'smith', 'body', 'only']);
+// Variantes poco habituales que solo se eligen si se piden
+const _VARIANTES_RARAS = new Set(['band', 'machine', 'cable', 'smith', 'one', 'single', 'alternating', 'alternate', 'lying', 'kneeling', 'powerlifting', 'reverse', 'close', 'leverage', 'sled', 'chain', 'bosu', 'ball', 'upright', 'incline', 'decline', 'on']);
+function buscarFoto(nombreEn, nombreEs) {
+    const q = new Set(_tokensEn(nombreEn || nombreEnIngles(nombreEs || '')));
+    if (!q.size) return null;
+    let mejor = null, mejorNota = 0;
+    for (const f of _listaFotos()) {
+        let comunes = 0, utiles = 0;
+        q.forEach(w => { if (f.tokens.has(w)) { comunes++; if (!_MATERIAL_EN.has(w)) utiles++; } });
+        if (!utiles) continue;
+        // Se prefiere la versión sin material ni variantes que no se han pedido (gomas, máquina, un brazo...)
+        let extra = 0;
+        f.tokens.forEach(w => { if (!q.has(w) && _VARIANTES_RARAS.has(w)) extra++; });
+        const nota = comunes / (q.size + f.tokens.size - comunes) - extra * 0.04 + (nombreEn && _sinAcentos(f.nombre) === _sinAcentos(nombreEn) ? 1 : 0);
+        if (nota > mejorNota) { mejorNota = nota; mejor = f; }
+    }
+    return mejor && mejorNota >= 0.3 ? mejor.carpeta : null;
+}
+// Las dos fotos alternándose (como un gif), si hay foto
+function htmlFotoEjercicio(ej) {
+    if (!ej.imagen) return '';
+    const base = FOTOS_URL + encodeURI(ej.imagen);
+    return `<div class="ej-foto" aria-hidden="true">
+        <img src="${base}/0.jpg" loading="lazy" alt="" onerror="this.closest('.ej-foto').remove()">
+        <img src="${base}/1.jpg" loading="lazy" alt="" class="ej-foto-2" onerror="this.remove()">
+    </div>`;
+}
+
 // ===================== REGISTRO DE SERIES =====================
 // Lo que se hace en cada serie, como en Hevy o Strong: peso, repeticiones y ✓.
 // Lo comparten la lista de la rutina y el modo guiado, y es lo que se guarda.
@@ -5016,6 +6601,7 @@ function cambiarPorAlternativa(card, numero) {
             variante_facil: '',
             variante_avanzada: '',
             youtube: nombre,
+            nombre_en: '', imagen: buscarFoto(null, nombre),
             explicacion: `En lugar de "${viejo.nombre}". ${viejo.alternativa}`,
             peso: prog ? `${prog.siguienteKg} kg` : null,
             // Ejercicio con carga pero sin peso conocido: casilla vacía para apuntarlo
@@ -5065,6 +6651,7 @@ function crearTarjetaEjercicio(ej, numero, seccion = 'Rutina principal') {
             <span class="ej-flecha" aria-hidden="true">›</span>
         </button>
         <div class="ej-cuerpo">
+            ${htmlFotoEjercicio(ej)}
             ${ej.grupo_muscular ? `<div class="ej-grupo">${escaparHTML(ej.grupo_muscular)}</div>` : ''}
             ${info ? `<div class="tipo-explicacion">${info.desc}</div>` : ''}
             ${principal && !esEspecial ? hintProgresion(ej.nombre) : ''}
@@ -5126,7 +6713,7 @@ function mostrarRutinaIA(resultado, tiempo, nivel, objetivo) {
     document.getElementById('rutina-titulo').textContent =
         resultado.tipo_entrenamiento || `${textoNivel[nivel]} — ${textoObjetivo[objetivo]}`;
     document.getElementById('rutina-subtitulo').textContent =
-        `${tiempo} min · ${(resultado.ejercicios || []).length} ejercicios · ${textoNivel[nivel] || ''}`;
+        `${tiempo} min · ${(resultado.ejercicios || []).length} ${(resultado.ejercicios || []).length === 1 ? 'ejercicio' : 'ejercicios'} · ${textoNivel[nivel] || ''}`;
 
     const contenedor = document.getElementById('lista-ejercicios');
     pararTemporizadoresRutina();
@@ -5196,6 +6783,74 @@ function resumenRegistro() {
     return { totales, hechas, volumen: Math.round(volumen), records: Object.values(recordsAvisados) };
 }
 
+// ===================== COMPARTIR EL ENTRENO =====================
+// Imagen del resumen (como Hevy/Strong) para mandarla por WhatsApp o Instagram.
+let _ultimoResumen = null;
+
+function dibujarImagenResumen(r) {
+    const W = 1080, H = 1350, c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const x = c.getContext('2d');
+    const g = x.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, '#141414'); g.addColorStop(1, '#2b2b2b');
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#ff5722'; x.fillRect(0, 0, W, 14);
+    const texto = (t, y, tam, color = 'white', peso = '800', align = 'center') => {
+        x.font = `${peso} ${tam}px -apple-system, "Segoe UI", system-ui, sans-serif`;
+        x.fillStyle = color; x.textAlign = align; x.fillText(t, align === 'center' ? W / 2 : 90, y);
+    };
+    const corta = (t, max) => t.length > max ? t.slice(0, max - 1) + '…' : t;
+    // Logo: HASSAN en blanco y GYM en naranja, centrados juntos
+    x.textAlign = 'center';
+    x.font = '900 54px -apple-system, "Segoe UI", system-ui, sans-serif';
+    const anchoH = x.measureText('HASSAN').width, anchoG = x.measureText('GYM').width;
+    x.fillStyle = 'white'; x.fillText('HASSAN', W / 2 - anchoG / 2, 150);
+    x.fillStyle = '#ff5722'; x.fillText('GYM', W / 2 + anchoH / 2, 150);
+    texto('🎉 ¡Entreno terminado!', 300, 72);
+    texto(corta(r.tipo, 30), 380, 44, '#bbbbbb', '600');
+    if (r.nombre) texto(r.nombre, 440, 38, '#ff8a65', '700');
+    const cajas = [[r.minutos, 'minutos'], [r.series, 'series'], [r.volumen ? r.volumen.toLocaleString('es-ES') : null, 'kg movidos']].filter(([v]) => v);
+    const anchoCaja = 280, hueco = 30, total = cajas.length * anchoCaja + (cajas.length - 1) * hueco;
+    cajas.forEach(([v, l], i) => {
+        const cx = (W - total) / 2 + i * (anchoCaja + hueco);
+        x.fillStyle = 'rgba(255,255,255,0.08)';
+        x.beginPath(); x.roundRect ? x.roundRect(cx, 520, anchoCaja, 220, 28) : x.rect(cx, 520, anchoCaja, 220); x.fill();
+        x.textAlign = 'center'; x.fillStyle = 'white'; x.font = '900 86px -apple-system, "Segoe UI", system-ui, sans-serif';
+        x.fillText(String(v), cx + anchoCaja / 2, 650);
+        x.fillStyle = '#bbbbbb'; x.font = '600 36px -apple-system, "Segoe UI", system-ui, sans-serif';
+        x.fillText(l, cx + anchoCaja / 2, 705);
+    });
+    let y = 830;
+    r.records.slice(0, 3).forEach(t => { texto('🏆 ' + corta(t, 34), y, 44, '#ffd740', '800'); y += 70; });
+    r.bloques.slice(0, 2).forEach(t => { texto('🔥 ' + corta(t, 36), y, 40, 'white', '700'); y += 64; });
+    const sitio = Math.max(0, Math.floor((H - 160 - y) / 60));
+    const ejs = (r.ejercicios || []).slice(0, sitio);
+    if (ejs.length) { y += 10; ejs.forEach(t => { texto(corta(t, 40), y, 36, '#dddddd', '600'); y += 60; }); }
+    texto('Entrenado con HassanGym', H - 80, 34, '#888888', '600');
+    return c;
+}
+
+async function compartirResumen() {
+    if (!_ultimoResumen) return;
+    const canvas = dibujarImagenResumen(_ultimoResumen);
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+    if (!blob) return;
+    const archivo = new File([blob], 'mi-entreno-hassangym.png', { type: 'image/png' });
+    try {
+        if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+            await navigator.share({ files: [archivo], title: 'Mi entreno', text: `💪 ${_ultimoResumen.tipo} — HassanGym` });
+            return;
+        }
+    } catch (e) { if (e && e.name === 'AbortError') return; }
+    // Ordenador o navegador sin "compartir": se descarga la imagen
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = archivo.name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    avisoRapido('📥 Imagen descargada: ya puedes enviarla.');
+}
+
 function irAFeedback() {
     cerrarDescanso();
     pararTemporizadoresRutina();
@@ -5241,7 +6896,23 @@ function irAFeedback() {
         </div>
         ${res.records.length ? `<div class="rf-records">${res.records.map(r => `🏆 <b>${escaparHTML(r.nombre)}</b>: ${r.antes} → ${r.kg} kg`).join('<br>')}</div>` : ''}
         ${dif !== null ? `<div class="rf-comparacion">${dif >= 0 ? '📈' : '📉'} ${dif >= 0 ? '+' : ''}${dif} % de kg movidos respecto a tu último entreno de este tipo</div>` : ''}
-        ${bloques ? `<div class="rf-bloques">${bloques}</div>` : ''}`;
+        ${bloques ? `<div class="rf-bloques">${bloques}</div>` : ''}
+        <button class="rf-compartir" onclick="compartirResumen()">📤 Compartir mi entreno</button>`;
+    _ultimoResumen = {
+        tipo: sesionActual.tipo_entrenamiento || 'Entreno',
+        minutos: minutos && minutos <= 180 ? minutos : null,
+        series: res.hechas, volumen: res.volumen,
+        records: res.records.map(r => `${r.nombre}: ${r.antes} → ${r.kg} kg`),
+        bloques: (sesionActual.ejercicios || []).filter(e => resultadosBloques[e.nombre]).map(e => `${e.nombre}: ${resultadosBloques[e.nombre]}`),
+        // Ejercicios hechos: "Press de banca · 3 × 32 kg" (o "3 × 10 reps" sin peso)
+        ejercicios: (sesionActual.ejercicios || []).map(e => {
+            const hechas = (registroSeries[e.nombre]?.series || []).filter(x => x.hecho);
+            if (!hechas.length) return null;
+            const kg = Math.max(...hechas.map(x => _num(x.kg) || 0));
+            return `${e.nombre} · ${hechas.length} × ${kg ? kg + ' kg' : (hechas[hechas.length - 1].reps || '?') + ' reps'}`;
+        }).filter(Boolean),
+        nombre: (cargarPerfil() || {}).nombre || '',
+    };
 
     const evalCard = document.getElementById('evaluacion-card');
     if (ultimaEvaluacion) {
@@ -5264,7 +6935,12 @@ function elegirFeedback(tipo, valor, btn) {
     btn.classList.add('activo');
 }
 
+let _guardandoSesion = false;
 function guardarFeedback() {
+    // Dos toques seguidos en "Guardar" guardaban la sesión dos veces
+    if (_guardandoSesion) return;
+    _guardandoSesion = true;
+    setTimeout(() => { _guardandoSesion = false; }, 1500);
     const res = resumenRegistro();
     const sinRegistro = res.hechas === 0;
     const sesionCompletada = feedbackElegido.completada === 'si';
@@ -5473,6 +7149,7 @@ function evolucionEjercicios(minPuntos = 2) {
 function mostrarProgreso() {
     ocultarTodas();
     activarNavItem('nav-progreso');
+    marcarPestanaProgreso('progreso');
     document.getElementById('pantalla-historial').style.display = 'block';
     document.getElementById('btn-header-perfil').style.display = 'none';
     document.getElementById('btn-header-historial').style.display = 'none';
@@ -5487,6 +7164,8 @@ function mostrarProgreso() {
     resumenWrap.innerHTML = htmlResumenSemana(resumenSemana(0), '📅 Esta semana', resumenSemana(1))
         + `<div class="rs-linea rs-gris">🔥 Racha: <b>${stats.racha} ${stats.racha === 1 ? 'semana seguida' : 'semanas seguidas'}</b> · ${_txtSesiones(stats.estesMes)} este mes · ${stats.total} en total</div>`;
     contenedor.appendChild(resumenWrap);
+    contenedor.insertAdjacentHTML('beforeend', '<div id="grupo-amigos"></div>');
+    renderizarGrupo();
 
     // — PESO CORPORAL —
     const pesoReg = cargarPesoCorporal();
@@ -5587,7 +7266,7 @@ function mostrarProgreso() {
     }
 
     // El historial de sesiones está en el Diario
-    contenedor.insertAdjacentHTML('beforeend', `<button class="btn-ir-diario" onclick="mostrarDiario()">📅 Ver todas tus sesiones en el Diario →</button>`);
+    contenedor.insertAdjacentHTML('beforeend', `<button class="btn-ir-diario" onclick="mostrarDiario()">📅 Ver todas tus sesiones en el Historial →</button>`);
 
     window.scrollTo(0, 0);
 }
@@ -5598,7 +7277,8 @@ let calAnioActual = new Date().getFullYear();
 
 function mostrarDiario() {
     ocultarTodas();
-    activarNavItem('nav-diario');
+    activarNavItem('nav-progreso');
+    marcarPestanaProgreso('historial');
     document.getElementById('pantalla-diario').style.display = 'block';
     document.getElementById('btn-header-perfil').style.display = 'none';
     document.getElementById('btn-header-historial').style.display = 'none';
@@ -5793,7 +7473,7 @@ let chatHistorial = []; // [{ role: 'user'|'assistant', content: '...' }]
 
 function mostrarChat() {
     ocultarTodas();
-    activarNavItem('nav-chat');
+    activarNavItem('nav-entrenar');
     document.getElementById('pantalla-chat').style.display = 'block';
     document.getElementById('btn-header-perfil').style.display = 'none';
     document.getElementById('btn-header-historial').style.display = 'none';
@@ -6233,7 +7913,7 @@ async function cfpEnviar() {
 // ===================== PLAN SEMANAL =====================
 function mostrarPlan() {
     ocultarTodas();
-    activarNavItem('nav-plan');
+    activarNavItem('nav-entrenar');
     document.getElementById('pantalla-plan').style.display = 'block';
     document.getElementById('btn-header-perfil').style.display = 'none';
     document.getElementById('btn-header-historial').style.display = 'none';
@@ -7276,6 +8956,7 @@ function _mgRenderEjercicio() {
             ${ej.descanso_series ? `<span class="mg-tag">Descanso: ${ej.descanso_series}</span>` : ''}
         </div>
         <div class="mg-serie-info">Serie ${_mg.serie} de ${series}</div>
+        ${_mg.serie === 1 ? htmlFotoEjercicio(ej) : ''}
         ${progHtml}
         ${ej.explicacion ? `<div class="mg-explicacion">${ej.explicacion}</div>` : ''}
         ${pesoRow}
@@ -7670,6 +9351,7 @@ async function syncGymUser() {
             gym_peso_corporal:  JSON.parse(localStorage.getItem('gym_peso_corporal')  || '[]'),
             gym_descarga:       JSON.parse(localStorage.getItem('gym_descarga')       || 'null'),
             gym_groq_key:       undefined, // borra de la nube la clave que se subía antes
+            _publico:           actividadPublica(), // solo si el usuario ha decidido compartirla
         };
         await fetch(`${GYM_WORKER}/user?name=${encodeURIComponent(_currentGymUser)}`, {
             method: 'POST',
@@ -7699,12 +9381,12 @@ async function selectGymUser(name) {
     if (estado.servidorConPin) {
         if (!estado.tienePin) {
             const pin = await pedirPin(name, 'crear');
-            if (!pin) return; // "Volver": se queda en "¿Quién entrena hoy?"
+            if (!pin) { openGymUserModal(); return; } // "Volver": se queda en "¿Quién entrena hoy?"
             guardarPin(name, pin);
             nuevoPin = true;
         } else if (!pinGuardado(name)) {
             const pin = await pedirPin(name, 'entrar');
-            if (!pin) return;
+            if (!pin) { openGymUserModal(); return; }
             guardarPin(name, pin);
         }
     }
@@ -7717,7 +9399,7 @@ async function selectGymUser(name) {
             ? `Demasiados intentos. Perfil bloqueado ${res.minutos || 15} minutos.`
             : (res.intentosRestantes ? `PIN incorrecto. Te quedan ${res.intentosRestantes} intentos.` : 'Escribe tu PIN.');
         const pin = await pedirPin(name, 'entrar', aviso);
-        if (!pin) return;
+        if (!pin) { openGymUserModal(); return; }
         guardarPin(name, pin);
         res = await loadGymUserData(name);
     }
@@ -7747,20 +9429,59 @@ if (_gymInp) _gymInp.addEventListener('keydown', e => {
     if (e.key === 'Enter') selectGymUser(_gymInp.value);
 });
 
+// ===================== APP INSTALABLE =====================
+// Service worker (abrir sin conexión) y botón "Instalar" / pasos para iPhone.
+const enModoApp = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+let _avisoInstalar = null;
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').then(reg => reg.update()).catch(e => console.warn('Service worker:', e));
+    });
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); _avisoInstalar = e; renderizarInstalar(); });
+window.addEventListener('appinstalled', () => { _avisoInstalar = null; renderizarInstalar(); avisoRapido('✅ HassanGym instalada en tu pantalla de inicio.'); });
+
+function renderizarInstalar() {
+    const card = document.getElementById('card-instalar');
+    if (!card) return;
+    if (enModoApp() || !location.protocol.startsWith('http')) { card.style.display = 'none'; return; }
+    const ua = navigator.userAgent;
+    const iPhone = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const cont = document.getElementById('instalar-contenido');
+    card.style.display = '';
+    if (_avisoInstalar) {
+        cont.innerHTML = `<p class="perfil-nota" style="font-size:0.85rem;margin-bottom:12px">Tenla en tu pantalla de inicio: se abre a pantalla completa, más rápida y funciona sin conexión.</p>
+            <button class="btn-copia" onclick="instalarApp()">📲 Instalar HassanGym</button>`;
+    } else if (iPhone) {
+        cont.innerHTML = `<p class="perfil-nota" style="font-size:0.85rem;margin-bottom:8px">Tenla en tu pantalla de inicio como una app. En Safari:</p>
+            <ol class="groq-pasos"><li>Pulsa el botón <b>Compartir</b> (el cuadrado con la flecha hacia arriba).</li>
+            <li>Elige <b>«Añadir a pantalla de inicio»</b> y pulsa <b>Añadir</b>.</li></ol>
+            <p class="perfil-nota">La primera vez que la abras desde el icono te pedirá otra vez tu PIN y tu clave de Groq: el iPhone guarda la app aparte de Safari. Tus entrenos no se pierden, están en la nube.</p>`;
+    } else {
+        cont.innerHTML = `<p class="perfil-nota" style="font-size:0.85rem">En el menú del navegador (⋮), elige <b>«Instalar aplicación»</b> o <b>«Añadir a pantalla de inicio»</b>.</p>`;
+    }
+}
+async function instalarApp() {
+    if (!_avisoInstalar) return;
+    _avisoInstalar.prompt();
+    await _avisoInstalar.userChoice.catch(() => {});
+    _avisoInstalar = null;
+    renderizarInstalar();
+}
+
 // ===================== ARRANQUE =====================
-// Siempre mostramos "¿Quién entrena hoy?" para que cada usuario
-// confirme quién entrena ese día (app multi-usuario).
+// Si este móvil ya tiene usuario, se entra directamente (con su PIN guardado, si lo
+// tiene); "¿Quién entrena hoy?" solo sale la primera vez o al cambiar de usuario.
 try {
-    openGymUserModal();
-    // Pre-rellenar el input con el último usuario para acceso rápido
     if (_currentGymUser) {
-        const inp = document.getElementById('gym-user-input');
-        if (inp) inp.value = _currentGymUser;
         updateSidebarUser();
+        selectGymUser(_currentGymUser);
+    } else {
+        openGymUserModal();
     }
 } catch(e) {
     console.error('Error en arranque:', e);
-    document.getElementById('pantalla-perfil').style.display = 'block';
+    openGymUserModal();
 }
 
 </script>
