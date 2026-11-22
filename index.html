@@ -805,6 +805,83 @@
         .mas-opciones-resumen { font-weight: 500; color: #999; font-size: 0.8rem; }
         .mas-opciones[open] > summary { margin-bottom: 10px; }
 
+
+        /* ---- FASE A: tarjeta compacta, series, descanso y resumen ---- */
+        .ejercicio-card.compacta { padding: 0; gap: 0; overflow: hidden; }
+        .ej-fila { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; background: none; border: none; text-align: left; cursor: pointer; color: inherit; font: inherit; }
+        .ej-fila .num { width: 34px; height: 34px; font-size: 0.9rem; }
+        .ej-fila-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .ej-nombre { font-weight: 800; font-size: 0.98rem; }
+        .ej-resumen { font-size: 0.82rem; color: #666; }
+        .ejercicio-card.especial .ej-resumen { color: #bbb; }
+        .ej-progreso { font-weight: 900; color: #2e7d32; font-size: 0.9rem; min-width: 28px; text-align: right; }
+        .ej-flecha { font-size: 1.4rem; color: #bbb; transition: transform 0.2s; }
+        .ejercicio-card.abierta .ej-flecha { transform: rotate(90deg); }
+        .ejercicio-card.completa .num { background: #2e7d32; }
+        .ej-cuerpo { display: none; padding: 0 14px 14px; flex-direction: column; gap: 10px; }
+        .ejercicio-card.abierta .ej-cuerpo { display: flex; }
+        .ej-acciones { display: flex; gap: 8px; flex-wrap: wrap; }
+        .ej-variantes summary { cursor: pointer; font-size: 0.85rem; font-weight: 700; color: #555; }
+        .series-tabla { display: flex; flex-direction: column; gap: 6px; }
+        .st-cab, .st-fila { display: grid; grid-template-columns: 34px 1fr 72px 62px 44px; gap: 6px; align-items: center; }
+        .st-cab.sin-peso, .st-fila.sin-peso { grid-template-columns: 34px 1fr 72px 44px; }
+        .st-cab { font-size: 0.72rem; font-weight: 800; color: #666; text-transform: uppercase; }
+        .st-fila { background: #f7f7f7; border-radius: 10px; padding: 6px; }
+        .st-fila.hecha { background: #e8f5e9; }
+        .st-n { font-weight: 900; text-align: center; }
+        .st-ant { font-size: 0.82rem; color: #666; }
+        .st-fila input { width: 100%; padding: 8px 4px; border: 2px solid #e0e0e0; border-radius: 8px; text-align: center; font-size: 1rem; font-weight: 800; background: white; }
+        .st-fila input::placeholder, .mg-serie-campos input::placeholder { color: #bbb; font-weight: 500; }
+        .st-ok { height: 38px; border-radius: 10px; border: 2px solid #ccc; background: white; font-size: 1.1rem; font-weight: 900; color: #999; cursor: pointer; }
+        .st-fila.hecha .st-ok { background: #2e7d32; border-color: #2e7d32; color: white; }
+        .st-rir { font-size: 0.85rem; color: #444; margin-top: 4px; }
+        .st-rir span { color: #888; }
+        .st-rir-ops, .mg-rir div { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+        .st-rir .chip, .mg-rir .chip { padding: 6px 10px; border-radius: 16px; border: 1.5px solid #ddd; background: white; font-weight: 700; cursor: pointer; }
+        .st-rir .chip.activo, .mg-rir .chip.activo { background: #ff5722; border-color: #ff5722; color: white; }
+        .btn-hecho { padding: 10px; border-radius: 10px; border: 2px solid #ccc; background: white; font-weight: 800; cursor: pointer; }
+        .btn-hecho.activo { background: #2e7d32; border-color: #2e7d32; color: white; }
+        .circuito-kg { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
+        .circuito-kg input { width: 80px; padding: 6px; border-radius: 8px; border: 2px solid #444; text-align: center; }
+        .rutina-ayuda { font-size: 0.82rem; color: #666; text-align: center; margin-bottom: 12px; }
+        .btn-terminar { margin-top: 14px; background: #2e7d32; }
+        #pantalla-rutina { padding-bottom: 90px; }
+        .expl-rutina, .consejos-rutina { margin-top: 10px; font-style: normal; }
+        .expl-rutina summary, .consejos-rutina summary { cursor: pointer; font-weight: 800; }
+        .consejos-rutina { background: white; border-radius: 14px; padding: 14px; margin-top: 12px; font-size: 0.9rem; }
+        .consejos-rutina p { margin-top: 8px; }
+        #descanso-flotante { position: fixed; left: 12px; right: 12px; bottom: 16px; z-index: 450; background: #111; color: white; border-radius: 16px; padding: 12px 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.35); max-width: 560px; margin: 0 auto; }
+        #descanso-flotante[hidden] { display: none; }
+        .df-info { flex: 1; display: flex; flex-direction: column; }
+        .df-texto { font-size: 0.78rem; color: #bbb; }
+        .df-tiempo { font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+        .df-barra { flex-basis: 100%; order: 3; height: 5px; background: #333; border-radius: 3px; overflow: hidden; }
+        .df-barra i { display: block; height: 100%; background: #69f0ae; }
+        .df-botones { display: flex; gap: 6px; }
+        .df-botones button { padding: 10px 12px; border-radius: 10px; border: none; background: #2a2a2a; color: white; font-weight: 800; cursor: pointer; }
+        @media (max-width: 767px) { #descanso-flotante { bottom: calc(72px + env(safe-area-inset-bottom, 0px)); } }
+        body.descansando #chat-flotante { display: none !important; }
+        #aviso-rapido { position: fixed; top: 16px; left: 50%; transform: translate(-50%, -150%); z-index: 2000; background: #111; color: #ffd740; font-weight: 800; padding: 12px 18px; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s; max-width: 90vw; text-align: center; }
+        #aviso-rapido.visible { transform: translate(-50%, 0); }
+        .mg-serie-campos { display: flex; gap: 10px; }
+        .mg-serie-campos label { flex: 1; display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; color: #aaa; }
+        .mg-serie-campos input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #444; background: #222; color: white; font-size: 1.4rem; font-weight: 900; text-align: center; }
+        .mg-anterior { font-size: 0.85rem; color: #bbb; margin-top: 6px; }
+        .mg-rir { font-size: 0.85rem; color: #ccc; margin-top: 8px; }
+        .mg-rir span { color: #888; }
+        .resumen-final { background: linear-gradient(135deg, #111, #333); color: white; border-radius: 18px; padding: 20px; margin-bottom: 14px; text-align: center; }
+        .rf-titulo { font-size: 1.4rem; font-weight: 900; }
+        .rf-sub { color: #bbb; font-size: 0.85rem; margin-bottom: 12px; }
+        .rf-numeros { display: flex; gap: 8px; justify-content: center; }
+        .rf-numeros > div { flex: 1; background: rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 6px; }
+        .rf-numeros b { font-size: 1.4rem; display: block; }
+        .rf-numeros span { font-size: 0.75rem; color: #bbb; }
+        .rf-records, .rf-comparacion, .rf-bloques { margin-top: 12px; font-size: 0.9rem; line-height: 1.5; }
+        .rf-records { color: #ffd740; }
+        .fb-caras .btn-op { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 14px 6px; }
+        .fb-caras .btn-op span { font-size: 1.8rem; }
+        .opcional { font-weight: 400; color: #888; text-transform: none; letter-spacing: 0; }
+
         /* ---- TEMPORIZADORES ---- */
         .tz-titulo { font-size: 1.3rem; margin: 4px 0 14px; }
         .tz-modos { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
@@ -2690,9 +2767,10 @@
             <h2 id="rutina-titulo"></h2>
             <p id="rutina-subtitulo"></p>
         </div>
-        <button class="btn-generar" onclick="iniciarModoGuiado()" style="margin-bottom:10px">▶ Iniciar sesión guiada</button>
+        <button class="btn-generar" onclick="iniciarModoGuiado()" style="margin-bottom:6px">▶ Empezar entreno</button>
+        <p class="rutina-ayuda">Paso a paso, serie a serie. O toca cada ejercicio y marca ✓ al terminar cada serie.</p>
         <div id="lista-ejercicios"></div>
-        <button class="btn-secundario" onclick="irAFeedback()">Terminar sesión →</button>
+        <button class="btn-generar btn-terminar" onclick="irAFeedback()">✓ Terminar entreno</button>
         <button class="btn-secundario btn-modificar-ia" onclick="abrirChatModificar()" style="margin-top:6px;">💬 Modificar rutina con IA</button>
         <button class="btn-secundario" style="margin-top:6px; color:#aaa; border-color:#eee;" onclick="resetear()">← Crear otra rutina</button>
     </div>
@@ -2712,63 +2790,65 @@
     <!-- ===================== PANTALLA FEEDBACK ===================== -->
     <div id="pantalla-feedback">
 
-        <div class="feedback-header">
-            <h2>¿Cómo fue la sesión?</h2>
-            <p>Tu respuesta ayuda a adaptar la siguiente rutina</p>
-        </div>
+        <!-- Resumen del entreno (duración, series, kg, récords) -->
+        <div class="resumen-final" id="resumen-final"></div>
 
-        <div class="card">
-            <div class="card-label">¿Completaste la sesión?</div>
+        <!-- Solo si no se marcó ninguna serie -->
+        <div class="card" id="fb-sin-series" style="display:none">
+            <div class="card-label">No has marcado ninguna serie. ¿Hiciste la rutina?</div>
             <div class="btn-group">
-                <button class="btn-op" onclick="elegirFeedback('completada', 'si', this)">Sí</button>
+                <button class="btn-op" onclick="elegirFeedback('completada', 'si', this)">Sí, entera</button>
                 <button class="btn-op" onclick="elegirFeedback('completada', 'medias', this)">A medias</button>
                 <button class="btn-op" onclick="elegirFeedback('completada', 'no', this)">No</button>
             </div>
         </div>
 
         <div class="card">
-            <div class="card-label">¿Cómo te resultó?</div>
-            <div class="btn-group">
-                <button class="btn-op" onclick="elegirFeedback('dificultad', 'facil', this)">Fácil</button>
-                <button class="btn-op" onclick="elegirFeedback('dificultad', 'normal', this)">Normal</button>
-                <button class="btn-op" onclick="elegirFeedback('dificultad', 'dificil', this)">Difícil</button>
-            </div>
-        </div>
-
-        <div class="card" id="fb-pesos-card">
-            <div class="card-label">¿Cómo fueron los pesos?</div>
-            <div class="btn-group">
-                <button class="btn-op" onclick="elegirFeedback('pesos_feedback', 'ligeros', this)">Muy ligeros</button>
-                <button class="btn-op" onclick="elegirFeedback('pesos_feedback', 'bien', this)">Perfectos</button>
-                <button class="btn-op" onclick="elegirFeedback('pesos_feedback', 'pesados', this)">Muy pesados</button>
+            <div class="card-label">¿Cómo ha ido?</div>
+            <div class="btn-group fb-caras">
+                <button class="btn-op" onclick="elegirFeedback('dificultad', 'facil', this)"><span>😌</span>Fácil</button>
+                <button class="btn-op" onclick="elegirFeedback('dificultad', 'normal', this)"><span>💪</span>Bien</button>
+                <button class="btn-op" onclick="elegirFeedback('dificultad', 'dificil', this)"><span>🔥</span>Duro</button>
             </div>
         </div>
 
         <div class="card">
-            <div class="card-label">¿Qué ejercicio te costó más? (opcional)</div>
-            <select id="feedback-ejercicio-duro" style="width:100%;padding:10px;border-radius:8px;border:1.5px solid #eee;font-size:0.95rem;background:#fafafa">
-                <option value="">— Ninguno en especial —</option>
-            </select>
-        </div>
-
-        <div class="card">
-            <div class="card-label">¿Alguna molestia? (opcional)</div>
+            <div class="card-label">¿Alguna molestia? <span class="opcional">(opcional)</span></div>
             <input type="text" id="feedback-molestia" placeholder="Ej: rodilla, lumbar, hombro...">
         </div>
 
-        <!-- Evaluación rápida de la IA -->
-        <div class="card" id="evaluacion-card" style="display:none">
-            <div class="card-label">Evaluación rápida</div>
-            <p id="evaluacion-pregunta" style="font-size:0.9rem;color:#555;margin-bottom:12px;line-height:1.5"></p>
-            <input type="text" id="evaluacion-respuesta" placeholder="Tu respuesta...">
-        </div>
+        <details class="mas-opciones" id="fb-mas">
+            <summary>Más detalles <span class="mas-opciones-resumen">(opcional)</span></summary>
 
-        <div class="card">
-            <div class="card-label">Comentario libre (opcional)</div>
-            <textarea id="feedback-comentario" placeholder="Lo que quieras anotar..."></textarea>
-        </div>
+            <div class="card" id="fb-pesos-card">
+                <div class="card-label">¿Cómo fueron los pesos?</div>
+                <div class="btn-group">
+                    <button class="btn-op" onclick="elegirFeedback('pesos_feedback', 'ligeros', this)">Muy ligeros</button>
+                    <button class="btn-op" onclick="elegirFeedback('pesos_feedback', 'bien', this)">Perfectos</button>
+                    <button class="btn-op" onclick="elegirFeedback('pesos_feedback', 'pesados', this)">Muy pesados</button>
+                </div>
+            </div>
 
-        <button class="btn-generar" onclick="guardarFeedback()">Guardar y continuar →</button>
+            <div class="card">
+                <div class="card-label">¿Qué ejercicio te costó más?</div>
+                <select id="feedback-ejercicio-duro" style="width:100%;padding:10px;border-radius:8px;border:1.5px solid #eee;font-size:0.95rem;background:#fafafa">
+                    <option value="">— Ninguno en especial —</option>
+                </select>
+            </div>
+
+            <div class="card" id="evaluacion-card" style="display:none">
+                <div class="card-label">Pregunta de tu entrenador</div>
+                <p id="evaluacion-pregunta" style="font-size:0.9rem;color:#555;margin-bottom:12px;line-height:1.5"></p>
+                <input type="text" id="evaluacion-respuesta" placeholder="Tu respuesta...">
+            </div>
+
+            <div class="card">
+                <div class="card-label">Comentario libre</div>
+                <textarea id="feedback-comentario" placeholder="Lo que quieras anotar..."></textarea>
+            </div>
+        </details>
+
+        <button class="btn-generar" onclick="guardarFeedback()">Guardar entreno</button>
         <span class="btn-saltar" onclick="resetear()">Saltar sin guardar</span>
 
     </div>
@@ -3241,7 +3321,8 @@ function mostrarPerfil() {
 
     const perfil = cargarPerfil() || {};
     const pon = (id, v) => { document.getElementById(id).value = v ?? ''; };
-    pon('perfil-nombre', perfil.nombre);
+    // El nombre ya se escribió al entrar: no pedirlo otra vez
+    pon('perfil-nombre', perfil.nombre || (_currentGymUser ? _currentGymUser.charAt(0).toUpperCase() + _currentGymUser.slice(1) : ''));
     pon('perfil-anio', perfil.anioNacimiento || (perfil.edad ? new Date().getFullYear() - parseInt(perfil.edad) : ''));
     pon('perfil-peso', pesoActual(perfil) || '');
     pon('perfil-altura', perfil.altura);
@@ -3945,7 +4026,8 @@ function construirPrompt(perfil, material, sesiones, tiempo, nivel, objetivo, co
                 const ejPesos = s.ejercicios.filter(e => e.nombre).map(e => {
                     let txt = e.nombre;
                     if (e.resultado) txt += ` [resultado: ${e.resultado}]`;
-                    if (e.pesoUsado) txt += ` ${e.pesoUsado}kg${e.repsHechas ? '×' + e.repsHechas : ''}${(e.rir === 0 || e.rir > 0) ? ` sobraban ${e.rir >= 3 ? '3+' : e.rir}` : ''} HECHO`;
+                    if (e.seriesHechas && e.seriesHechas.length) txt += ` ${e.seriesHechas.map(x => `${x.kg ? x.kg + 'kg×' : ''}${x.reps || '?'}`).join(', ')}${(e.rir === 0 || e.rir > 0) ? ` (sobraban ${e.rir >= 3 ? '3+' : e.rir} en la última)` : ''} HECHO`;
+                    else if (e.pesoUsado) txt += ` ${e.pesoUsado}kg${e.repsHechas ? '×' + e.repsHechas : ''}${(e.rir === 0 || e.rir > 0) ? ` sobraban ${e.rir >= 3 ? '3+' : e.rir}` : ''} HECHO`;
                     else if (e.pesoSugerido || e.peso) txt += ` (sugerido ${e.pesoSugerido || e.peso}, sin confirmar)`;
                     return txt;
                 });
@@ -4287,6 +4369,9 @@ async function generarRutina() {
         ...(resultado.estiramientos || [])
     ];
     resultadosBloques = {};
+    registroSeries = {};
+    recordsAlEmpezar = cargarRecords();
+    recordsAvisados = {};
     sesionActual = {
         nivel, objetivo, tiempo,
         inicio: Date.now(),   // para medir cuánto dura la sesión de verdad
@@ -4684,7 +4769,12 @@ function tipoBloque(ej) {
 
 // Resultados de los bloques (AMRAP, EMOM, Tabata, circuito) de la sesión en curso
 let resultadosBloques = {};
-function registrarResultado(nombre, texto) { if (nombre) resultadosBloques[nombre] = texto; }
+function registrarResultado(nombre, texto) {
+    if (!nombre) return;
+    resultadosBloques[nombre] = texto;
+    const card = tarjetaDe(nombre);
+    if (card) { const el = card.querySelector('.ej-progreso'); if (el) el.textContent = '🔥'; card.classList.add('completa'); }
+}
 
 // Panel con temporizador para un bloque especial
 function crearPanelBloque(ej, tipo = tipoBloque(ej)) {
@@ -4709,10 +4799,187 @@ const TIPO_INFO = {
     circuito: { label: '🔄 CIRCUITO', cls: 'badge-circuito', especial: true, desc: 'Pasa de un ejercicio al siguiente sin descanso — el descanso llega al terminar la vuelta completa' },
 };
 
-// Desplegable "¿cuántas repeticiones más podías hacer?" (reserva)
-function opcionesRIR(valor) {
-    const ops = [['', '¿Te sobraban?'], ['0', '0 · al límite'], ['1', '1 más'], ['2', '2 más'], ['3', '3 o más']];
-    return ops.map(([v, t]) => `<option value="${v}"${String(valor ?? '') === v ? ' selected' : ''}>${t}</option>`).join('');
+// ===================== REGISTRO DE SERIES =====================
+// Lo que se hace en cada serie, como en Hevy o Strong: peso, repeticiones y ✓.
+// Lo comparten la lista de la rutina y el modo guiado, y es lo que se guarda.
+let registroSeries = {};    // nombre del ejercicio -> { series: [{kg, reps, hecho}], rir, hecho }
+let recordsAlEmpezar = {};  // récords antes de la sesión (para avisar de los nuevos)
+let recordsAvisados = {};   // clave del ejercicio -> { nombre, kg } ya celebrados
+
+const numSeries = ej => Math.min(10, Math.max(1, parseInt(ej.series) || 3));
+function pesoPropuesto(ej) {
+    const m = ej && ej.peso != null ? String(ej.peso).match(/[\d.,]+/) : null;
+    const v = m ? parseFloat(m[0].replace(',', '.')) : NaN;
+    return v > 0 ? v : null;
+}
+const usaPeso = ej => pesoPropuesto(ej) !== null || !!ej.pesoLibre;
+const _num = v => parseFloat(String(v ?? '').replace(',', '.'));
+
+function regEj(ej) {
+    if (!registroSeries[ej.nombre]) {
+        const kg = pesoPropuesto(ej);
+        registroSeries[ej.nombre] = {
+            series: Array.from({ length: numSeries(ej) }, () => ({ kg: kg ?? '', reps: '', hecho: false })),
+            rir: null, hecho: false,
+        };
+    }
+    return registroSeries[ej.nombre];
+}
+
+// Lo que se hizo la vez anterior en la serie i ("40×10"), o "—"
+function textoAnterior(ej, i) {
+    const h = ultimaVezEjercicio(ej.nombre);
+    if (!h) return '—';
+    const sh = h.seriesHechas && (h.seriesHechas[i] || h.seriesHechas[h.seriesHechas.length - 1]);
+    if (sh) return `${sh.kg ? sh.kg + '×' : ''}${sh.reps || '?'}`;
+    return `${h.pesoUsado}×${h.repsHechas || '?'}`;
+}
+
+// Aviso que aparece unos segundos arriba (récords, etc.)
+function avisoRapido(texto) {
+    let el = document.getElementById('aviso-rapido');
+    if (!el) { el = document.createElement('div'); el.id = 'aviso-rapido'; document.body.appendChild(el); }
+    el.textContent = texto;
+    el.classList.add('visible');
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove('visible'), 3500);
+}
+
+// ¿Este peso supera el récord que había al empezar? (la primera vez no cuenta: es una primera marca)
+function comprobarRecord(ej, kg) {
+    if (!(kg > 0)) return;
+    const clave = claveEjercicio(ej.nombre);
+    const previo = Object.entries(recordsAlEmpezar).find(([n]) => claveEjercicio(n) === clave);
+    if (!previo) return;
+    const yaAvisado = recordsAvisados[clave] ? recordsAvisados[clave].kg : 0;
+    if (kg > previo[1].kg && kg > yaAvisado) {
+        recordsAvisados[clave] = { nombre: ej.nombre, kg, antes: previo[1].kg };
+        avisoRapido(`🏆 ¡Nuevo récord en ${ej.nombre}: ${kg} kg!`);
+        avisoFinTimer([100, 60, 100, 60, 300]);
+    }
+}
+
+// Tabla de series dentro de la tarjeta: Serie · Anterior · kg · Reps · ✓
+function renderTablaSeries(cont, ej) {
+    const r = regEj(ej);
+    const rango = rangoReps(ej.reps);
+    const conPeso = usaPeso(ej);
+    const cls = conPeso ? '' : ' sin-peso';
+    cont.innerHTML = `<div class="st-cab${cls}"><span>Serie</span><span>Anterior</span>${conPeso ? '<span>kg</span>' : ''}<span>Reps</span><span></span></div>`
+        + r.series.map((sr, i) => `<div class="st-fila${sr.hecho ? ' hecha' : ''}${cls}" data-i="${i}">
+            <span class="st-n">${i + 1}</span>
+            <span class="st-ant">${escaparHTML(textoAnterior(ej, i))}</span>
+            ${conPeso ? `<input class="st-kg" type="number" inputmode="decimal" step="0.5" min="0" value="${escaparHTML(sr.kg)}" placeholder="kg" aria-label="Kilos serie ${i + 1}">` : ''}
+            <input class="st-reps" type="number" inputmode="numeric" min="0" value="${escaparHTML(sr.reps)}" placeholder="${rango ? rango[1] : ''}" aria-label="Repeticiones serie ${i + 1}">
+            <button class="st-ok" aria-label="Marcar serie ${i + 1} como hecha">✓</button>
+        </div>`).join('')
+        + `<div class="st-rir"${r.series.every(x => x.hecho) ? '' : ' hidden'}>¿Cuántas reps más podías hacer en la última? <span>(opcional)</span>
+            <div class="st-rir-ops">${[0, 1, 2, 3].map(v => `<button class="chip${r.rir === v ? ' activo' : ''}" data-rir="${v}">${v === 3 ? '3 o más' : v === 0 ? '0 · al límite' : v}</button>`).join('')}</div></div>`;
+
+    cont.querySelectorAll('.st-fila').forEach(fila => {
+        const i = +fila.dataset.i, sr = r.series[i];
+        const kgInp = fila.querySelector('.st-kg'), repsInp = fila.querySelector('.st-reps');
+        if (kgInp) kgInp.addEventListener('input', () => {
+            sr.kg = kgInp.value;
+            // El peso nuevo se copia a las series siguientes que aún no se han hecho
+            r.series.forEach((sig, k) => {
+                if (k > i && !sig.hecho) {
+                    sig.kg = kgInp.value;
+                    const inp = cont.querySelector(`.st-fila[data-i="${k}"] .st-kg`);
+                    if (inp) inp.value = kgInp.value;
+                }
+            });
+        });
+        repsInp.addEventListener('input', () => { sr.reps = repsInp.value; });
+        fila.querySelector('.st-ok').addEventListener('click', () => marcarSerie(ej, i, cont));
+    });
+    cont.querySelectorAll('.st-rir .chip').forEach(b => b.addEventListener('click', () => {
+        r.rir = r.rir === +b.dataset.rir ? null : +b.dataset.rir;
+        cont.querySelectorAll('.st-rir .chip').forEach(x => x.classList.toggle('activo', r.rir === +x.dataset.rir));
+    }));
+}
+
+function marcarSerie(ej, i, cont) {
+    const r = regEj(ej), sr = r.series[i];
+    sr.hecho = !sr.hecho;
+    if (sr.hecho) {
+        // Si no se escriben las reps, se da por hecho el máximo del rango
+        if (!sr.reps) { const rango = rangoReps(ej.reps); if (rango) sr.reps = String(rango[1]); }
+        comprobarRecord(ej, _num(sr.kg));
+        const ultima = r.series.every(x => x.hecho);
+        const segs = ultima
+            ? (parsearDescanso(ej.descanso_ejercicios) || parsearDescanso(ej.descanso_series))
+            : parsearDescanso(ej.descanso_series);
+        iniciarDescanso(segs || 90, ultima ? 'Al siguiente ejercicio' : `Descanso · ${ej.nombre}`);
+    }
+    renderTablaSeries(cont, ej);
+    actualizarCabeceraTarjeta(ej);
+}
+
+function tarjetaDe(nombre) {
+    return [...document.querySelectorAll('#lista-ejercicios .ejercicio-card')].find(c => c.dataset.ejNombre === nombre) || null;
+}
+
+// "2/4" o "✓" en la fila de cada ejercicio
+function actualizarCabeceraTarjeta(ej, card = tarjetaDe(ej.nombre)) {
+    if (!card) return;
+    const el = card.querySelector('.ej-progreso');
+    const r = registroSeries[ej.nombre];
+    const hechas = r ? r.series.filter(x => x.hecho).length : 0;
+    const completo = (r && r.hecho) || (r && hechas === r.series.length && hechas > 0) || !!resultadosBloques[ej.nombre];
+    el.textContent = resultadosBloques[ej.nombre] ? '🔥' : completo ? '✓' : hechas ? `${hechas}/${r.series.length}` : '';
+    card.classList.toggle('completa', completo);
+}
+
+// Tras el modo guiado o un cambio: volver a pintar todas las tablas con el registro
+function refrescarTarjetas() {
+    ['calentamiento', 'ejercicios', 'estiramientos'].forEach(sec => (sesionActual[sec] || []).forEach(ej => {
+        const card = tarjetaDe(ej.nombre);
+        if (!card) return;
+        const tabla = card.querySelector('.series-tabla');
+        if (tabla) renderTablaSeries(tabla, ej);
+        const btn = card.querySelector('.btn-hecho');
+        if (btn) btn.classList.toggle('activo', !!(registroSeries[ej.nombre] && registroSeries[ej.nombre].hecho));
+        actualizarCabeceraTarjeta(ej, card);
+    }));
+}
+
+// ===================== DESCANSO AUTOMÁTICO =====================
+// Al marcar una serie arranca solo; barra abajo con +30 s y Saltar.
+const _desc = { fin: 0, total: 0, t: null, ultimoSeg: null };
+function iniciarDescanso(segs, texto) {
+    const bar = document.getElementById('descanso-flotante');
+    if (!bar) return;
+    _desc.fin = Date.now() + segs * 1000;
+    _desc.total = segs;
+    _desc.ultimoSeg = null;
+    bar.querySelector('.df-texto').textContent = texto;
+    bar.hidden = false;
+    document.body.classList.add('descansando');
+    mantenerPantallaEncendida('descanso');
+    clearInterval(_desc.t);
+    _desc.t = setInterval(tickDescanso, 200);
+    tickDescanso();
+}
+function tickDescanso() {
+    const bar = document.getElementById('descanso-flotante');
+    const resto = Math.max(0, Math.ceil((_desc.fin - Date.now()) / 1000));
+    bar.querySelector('.df-tiempo').textContent = `${Math.floor(resto / 60)}:${String(resto % 60).padStart(2, '0')}`;
+    bar.querySelector('.df-barra i').style.width = Math.min(100, resto / _desc.total * 100) + '%';
+    if (resto !== _desc.ultimoSeg) {
+        if (resto >= 1 && resto <= 3) pitido(660, 0.12, 40);
+        _desc.ultimoSeg = resto;
+    }
+    if (resto <= 0) { avisoFinTimer(); cerrarDescanso(); }
+}
+function descansoMas(segs) { _desc.fin += segs * 1000; _desc.total += segs; tickDescanso(); }
+function cerrarDescanso() {
+    clearInterval(_desc.t);
+    _desc.t = null;
+    const bar = document.getElementById('descanso-flotante');
+    if (bar) bar.hidden = true;
+    document.body.classList.remove('descansando');
+    soltarPantalla('descanso');
 }
 
 // La alternativa a veces es una frase ("Remo con mancuerna si te molesta la espalda"):
@@ -4739,7 +5006,9 @@ function cambiarPorAlternativa(card, numero) {
         const nombre = nombreConocido(nombreDeAlternativa(viejo.alternativa));
         // Si ya se ha hecho antes con peso real, se usa la progresión; si no, se deja
         // el peso a criterio del usuario (el del ejercicio anterior no sirve).
-        const prog = viejo.peso ? calcularProgresion(nombre) : null;
+        // ¿El ejercicio llevaba carga? (con peso propuesto o con la casilla de peso libre)
+        const conCarga = !!(viejo.peso || viejo.pesoLibre);
+        const prog = conCarga ? calcularProgresion(nombre) : null;
         const nuevo = {
             ...viejo,
             nombre,
@@ -4750,22 +5019,26 @@ function cambiarPorAlternativa(card, numero) {
             explicacion: `En lugar de "${viejo.nombre}". ${viejo.alternativa}`,
             peso: prog ? `${prog.siguienteKg} kg` : null,
             // Ejercicio con carga pero sin peso conocido: casilla vacía para apuntarlo
-            pesoLibre: !prog && !!viejo.peso,
+            pesoLibre: !prog && conCarga,
         };
         lista[i] = nuevo;
-        card.replaceWith(crearTarjetaEjercicio(nuevo, numero));
+        const nueva = crearTarjetaEjercicio(nuevo, numero, SECCION_DE[seccion]);
+        if (card.classList.contains('abierta')) nueva.classList.add('abierta');
+        card.replaceWith(nueva);
         return;
     }
 }
 
-function crearTarjetaEjercicio(ej, numero) {
-    const ytUrl   = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(ej.youtube || ej.nombre);
-    const pesoTag = ej.peso ? `<span class="tag peso">${ej.peso}</span>` : '';
-    // Tipo real (la IA a veces lo pone en el nombre o en las reps en vez del campo tipo)
-    const tipo    = tipoBloque(ej);
-    const info    = TIPO_INFO[tipo] || null;
+// Tarjeta de un ejercicio: una fila corta (nombre, series × reps, peso, progreso)
+// que al tocarla despliega los detalles y la tabla de series.
+const SECCION_DE = { calentamiento: 'Calentamiento', ejercicios: 'Rutina principal', estiramientos: 'Estiramientos' };
+
+function crearTarjetaEjercicio(ej, numero, seccion = 'Rutina principal') {
+    const ytUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(ej.youtube || ej.nombre);
+    const tipo = tipoBloque(ej);
+    const info = TIPO_INFO[tipo] || null;
     const esEspecial = !!info;
-    const esTab   = tipo === 'tabata';
+    const principal = seccion === 'Rutina principal';
 
     const variantes = [
         ej.alternativa       ? `<div class="variante"><b>Alternativa:</b> ${ej.alternativa}</div>` : '',
@@ -4773,49 +5046,38 @@ function crearTarjetaEjercicio(ej, numero) {
         ej.variante_avanzada ? `<div class="variante"><b>Más difícil:</b> ${ej.variante_avanzada}</div>` : '',
     ].filter(Boolean).join('');
 
+    const kg = pesoPropuesto(ej);
+    const resumen = esEspecial
+        ? `${info.label}${ej.reps ? ' · ' + escaparHTML(ej.reps) : ''}`
+        : `${numSeries(ej)} × ${escaparHTML(ej.reps || '')}${kg ? ` · ${kg} kg` : ''}`;
+
     const card = document.createElement('div');
-    card.className = 'ejercicio-card' + (esEspecial ? ' especial' : '');
+    card.className = 'ejercicio-card compacta' + (esEspecial ? ' especial' : '');
     card.dataset.ejNombre = ej.nombre;
-
-    // Badge de tipo especial
-    const badgeHtml = info
-        ? `<span class="ejercicio-tipo-badge ${info.cls}">${info.label}</span>
-           <div class="tipo-explicacion">${info.desc}</div>`
-        : '';
-
-    // Tags según tipo
-    let tagsHtml = '';
-    if (esTab) {
-        const rondas = parseInt(ej.series) || 8;
-        tagsHtml = `<span class="tag">${rondas} rondas · 20s trabajo / 10s descanso</span>`;
-    } else if (esEspecial) {
-        tagsHtml = `<span class="tag">${ej.series || ''} series</span>
-                    <span class="tag">${ej.reps || ''}</span>`;
-    } else {
-        tagsHtml = `<span class="tag">${ej.series} series</span>
-                    <span class="tag">${ej.reps} reps</span>
-                    <span class="tag descanso">Descanso series: ${ej.descanso_series || '—'}</span>
-                    <span class="tag descanso-ej">Descanso ejerc: ${ej.descanso_ejercicios || '—'}</span>`;
-    }
-
     card.innerHTML = `
-        <div class="ejercicio-top">
-            <div class="num">${numero}</div>
-            <div class="ej-info" style="flex:1">
-                ${badgeHtml}
-                <h3>${ej.nombre}</h3>
-                ${ej.grupo_muscular ? `<div class="ej-grupo">${ej.grupo_muscular}</div>` : ''}
-                ${hintProgresion(ej.nombre)}
-                <div class="tags">
-                    ${tagsHtml}
-                    ${pesoTag}
-                    <a class="tag youtube-link" href="${ytUrl}" target="_blank">▶ YouTube</a>
-                </div>
+        <button class="ej-fila" aria-expanded="false">
+            <span class="num">${numero}</span>
+            <span class="ej-fila-info">
+                <span class="ej-nombre">${escaparHTML(ej.nombre)}</span>
+                <span class="ej-resumen">${resumen}</span>
+            </span>
+            <span class="ej-progreso"></span>
+            <span class="ej-flecha" aria-hidden="true">›</span>
+        </button>
+        <div class="ej-cuerpo">
+            ${ej.grupo_muscular ? `<div class="ej-grupo">${escaparHTML(ej.grupo_muscular)}</div>` : ''}
+            ${info ? `<div class="tipo-explicacion">${info.desc}</div>` : ''}
+            ${principal && !esEspecial ? hintProgresion(ej.nombre) : ''}
+            ${ej.explicacion ? `<p class="ej-explicacion">${ej.explicacion}</p>` : ''}
+            <div class="ej-acciones">
+                <a class="tag youtube-link" href="${ytUrl}" target="_blank" rel="noopener">▶ Ver cómo se hace</a>
+                ${!esEspecial && ej.descanso_series ? `<span class="tag descanso">Descanso ${escaparHTML(ej.descanso_series)}</span>` : ''}
             </div>
-        </div>
-        ${ej.explicacion ? `<p class="ej-explicacion">${ej.explicacion}</p>` : ''}
-        ${variantes ? `<div class="variantes-box">${variantes}</div>` : ''}
-    `;
+            ${variantes ? `<details class="ej-variantes"><summary>Variantes y alternativa</summary><div class="variantes-box">${variantes}</div></details>` : ''}
+        </div>`;
+    const cuerpo = card.querySelector('.ej-cuerpo');
+    const fila = card.querySelector('.ej-fila');
+    fila.addEventListener('click', () => fila.setAttribute('aria-expanded', card.classList.toggle('abierta')));
 
     // Cambiar por la alternativa con un toque (máquina ocupada, molestia...)
     const nombreAlt = nombreDeAlternativa(ej.alternativa);
@@ -4824,74 +5086,47 @@ function crearTarjetaEjercicio(ej, numero) {
         btnCambiar.className = 'btn-cambiar-ej';
         btnCambiar.textContent = `🔄 Cambiar por: ${nombreAlt}`;
         btnCambiar.addEventListener('click', () => cambiarPorAlternativa(card, numero));
-        card.appendChild(btnCambiar);
+        cuerpo.appendChild(btnCambiar);
     }
 
-    // Panel según tipo
-    if (esTab || tipo === 'emom') {
-        card.appendChild(crearPanelBloque(ej, tipo));
-    } else if (tipo === 'circuito') {
-        // Peso si aplica
-        const _pesoStrC = ej.peso != null ? String(ej.peso).match(/[\d.,]+/) : null;
-        const pesoSugeridoC = _pesoStrC ? _pesoStrC[0] : '';
-        if (parseFloat(pesoSugeridoC.replace(',', '.')) > 0) {
-            const pesoRow = document.createElement('div');
-            pesoRow.className = 'peso-input-row';
-            pesoRow.innerHTML = `<label>Peso usado:</label>
-                <input type="number" class="peso-input" step="0.5" min="0"
-                    placeholder="${pesoSugeridoC}" value="${pesoSugeridoC}" data-sugerido="${pesoSugeridoC}">
-                <span class="u-kg">kg</span>`;
-            card.appendChild(pesoRow);
+    if (esEspecial) {
+        // Circuito con carga: el peso usado se apunta una vez
+        if (tipo === 'circuito' && usaPeso(ej)) {
+            const r = regEj(ej);
+            const kgRow = document.createElement('label');
+            kgRow.className = 'circuito-kg';
+            kgRow.innerHTML = `Peso usado <input type="number" inputmode="decimal" step="0.5" min="0" value="${escaparHTML(r.series[0].kg)}"> kg`;
+            kgRow.querySelector('input').addEventListener('input', e => { r.series[0].kg = e.target.value; });
+            cuerpo.appendChild(kgRow);
         }
-        card.appendChild(crearPanelBloque(ej, tipo));
-    } else if (tipo === 'amrap') {
-        card.appendChild(crearPanelBloque(ej, tipo));
+        cuerpo.appendChild(crearPanelBloque(ej, tipo));
+    } else if (principal) {
+        const tabla = document.createElement('div');
+        tabla.className = 'series-tabla';
+        cuerpo.appendChild(tabla);
+        renderTablaSeries(tabla, ej);
     } else {
-        // Ejercicio normal: peso + timer descanso
-        const _pesoStr = ej.peso != null ? String(ej.peso).match(/[\d.,]+/) : null;
-        const pesoSugerido = _pesoStr ? _pesoStr[0] : '';
-        const pesoNum = parseFloat(pesoSugerido.replace(',', '.'));
-        if (pesoNum > 0 || ej.pesoLibre) {
-            const pesoRow = document.createElement('div');
-            pesoRow.className = 'peso-input-row';
-            pesoRow.innerHTML = `<label>Peso usado:</label>
-                <input type="number" class="peso-input" step="0.5" min="0"
-                    placeholder="${pesoSugerido}" value="${pesoSugerido}" data-sugerido="${pesoSugerido}">
-                <span class="u-kg">kg</span>`;
-            card.appendChild(pesoRow);
-
-            const rango = rangoReps(ej.reps);
-            const repsRow = document.createElement('div');
-            repsRow.className = 'peso-input-row reps-row';
-            repsRow.innerHTML = `<label>Reps última serie:</label>
-                <input type="number" class="reps-input" step="1" min="0" inputmode="numeric"
-                    placeholder="${rango ? rango[1] : ''}">
-                <select class="rir-input">${opcionesRIR('')}</select>`;
-            card.appendChild(repsRow);
-        }
-
-        const descSegs = parsearDescanso(ej.descanso_series);
-        if (descSegs > 0) {
-            const actions = document.createElement('div');
-            actions.className = 'ej-actions';
-            actions.innerHTML = `<button class="btn-timer" onclick="iniciarTimer(${descSegs}, this)">⏱ ${ej.descanso_series}</button>
-                                 <span class="timer-display"></span>`;
-            card.appendChild(actions);
-        }
+        // Calentamiento y estiramientos: basta con marcarlos como hechos
+        const r = regEj(ej);
+        const btn = document.createElement('button');
+        btn.className = 'btn-hecho' + (r.hecho ? ' activo' : '');
+        btn.textContent = '✓ Hecho';
+        btn.addEventListener('click', () => { r.hecho = !r.hecho; btn.classList.toggle('activo', r.hecho); actualizarCabeceraTarjeta(ej, card); });
+        cuerpo.appendChild(btn);
     }
-
+    actualizarCabeceraTarjeta(ej, card);
     return card;
 }
 
-
 function mostrarRutinaIA(resultado, tiempo, nivel, objetivo) {
     const textoObjetivo = { fuerza: 'Fuerza', peso: 'Perder peso', mantener: 'Mantenerse' };
-    const textoNivel    = { principiante: 'Principiante', medio: 'Medio', avanzado: 'Avanzado' };
+    const textoNivel    = { principiante: 'Principiante', medio: 'Nivel medio', avanzado: 'Avanzado' };
 
+    // Título: el tipo de entreno ("Fuerza tren superior"); antes salía "Medio — Mantenerse"
     document.getElementById('rutina-titulo').textContent =
-        `${textoNivel[nivel]} — ${textoObjetivo[objetivo]}`;
+        resultado.tipo_entrenamiento || `${textoNivel[nivel]} — ${textoObjetivo[objetivo]}`;
     document.getElementById('rutina-subtitulo').textContent =
-        `${tiempo} minutos · ${(resultado.ejercicios || []).length} ejercicios`;
+        `${tiempo} min · ${(resultado.ejercicios || []).length} ejercicios · ${textoNivel[nivel] || ''}`;
 
     const contenedor = document.getElementById('lista-ejercicios');
     pararTemporizadoresRutina();
@@ -4901,11 +5136,8 @@ function mostrarRutinaIA(resultado, tiempo, nivel, objetivo) {
     const cabDiv = document.createElement('div');
     cabDiv.className = 'mensaje-ia';
     cabDiv.innerHTML = `
-        ${resultado.dia ? `<span class="dia-badge">${resultado.dia}</span>` : ''}
-        ${resultado.tipo_entrenamiento ? `<span class="dia-badge" style="background:#333;margin-left:6px">${resultado.tipo_entrenamiento}</span>` : ''}
-        ${resultado.duracion_estimada  ? `<span class="dia-badge" style="background:#555;margin-left:6px">${resultado.duracion_estimada}</span>` : ''}
-        ${resultado.objetivo_dia ? `<div style="margin-top:10px;font-style:normal;font-size:0.85rem;color:#ccc">${resultado.objetivo_dia}</div>` : ''}
-        ${resultado.mensaje ? `<div style="margin-top:8px">${resultado.mensaje}</div>` : ''}
+        ${resultado.mensaje ? `<div>${resultado.mensaje}</div>` : ''}
+        ${resultado.explicacion_rutina ? `<details class="expl-rutina"><summary>🧠 Por qué esta rutina</summary><div>${resultado.explicacion_rutina}</div></details>` : ''}
     `;
     contenedor.appendChild(cabDiv);
 
@@ -4920,13 +5152,6 @@ function mostrarRutinaIA(resultado, tiempo, nivel, objetivo) {
         + `<b>Si algo duele</b> (dolor, no cansancio): para y usa la alternativa del ejercicio. El dolor no se aguanta.`;
     contenedor.appendChild(segDiv);
 
-    // Explicación de por qué esta rutina
-    if (resultado.explicacion_rutina) {
-        const explDiv = document.createElement('div');
-        explDiv.className = 'explicacion-rutina-card';
-        explDiv.innerHTML = `<div class="expl-titulo">🧠 Por qué esta rutina</div>${resultado.explicacion_rutina}`;
-        contenedor.appendChild(explDiv);
-    }
 
     // Función auxiliar para añadir sección
     function añadirSeccion(titulo, lista) {
@@ -4935,27 +5160,22 @@ function mostrarRutinaIA(resultado, tiempo, nivel, objetivo) {
         tit.className = 'seccion-titulo';
         tit.textContent = titulo;
         contenedor.appendChild(tit);
-        lista.forEach((ej, i) => contenedor.appendChild(crearTarjetaEjercicio(ej, i + 1)));
+        lista.forEach((ej, i) => contenedor.appendChild(crearTarjetaEjercicio(ej, i + 1, titulo)));
     }
 
     añadirSeccion('Calentamiento', resultado.calentamiento);
     añadirSeccion('Rutina principal', resultado.ejercicios);
     añadirSeccion('Estiramientos', resultado.estiramientos);
 
-    // Extras finales
-    const extras = [
-        { key: 'cardio_sugerido',     titulo: '🚶 Cardio recomendado' },
-        { key: 'consejo_recuperacion',titulo: '🛌 Recuperación' },
-        { key: 'evaluacion',          titulo: '📊 Evaluación rápida' },
-    ];
-    extras.forEach(({ key, titulo }) => {
-        if (resultado[key]) {
-            const div = document.createElement('div');
-            div.className = 'extra-card';
-            div.innerHTML = `<div class="extra-titulo">${titulo}</div>${resultado[key]}`;
-            contenedor.appendChild(div);
-        }
-    });
+    // El primer ejercicio principal sale abierto, para que se vea cómo funciona
+    const primera = [...contenedor.querySelectorAll('.ejercicio-card')].find(c =>
+        (resultado.ejercicios || []).some(e => e.nombre === c.dataset.ejNombre));
+    if (primera) { primera.classList.add('abierta'); primera.querySelector('.ej-fila').setAttribute('aria-expanded', 'true'); }
+
+    // Consejos de la IA, plegados al final (la pregunta de evaluación va en la valoración)
+    const consejos = [['cardio_sugerido', '🚶 Cardio'], ['consejo_recuperacion', '🛌 Recuperación']]
+        .filter(([k]) => resultado[k]).map(([k, t]) => `<p><b>${t}:</b> ${resultado[k]}</p>`).join('');
+    if (consejos) contenedor.insertAdjacentHTML('beforeend', `<details class="consejos-rutina"><summary>💡 Consejos para hoy</summary>${consejos}</details>`);
 
     ocultarTodas();
     document.getElementById('pantalla-rutina').style.display = 'block';
@@ -4964,32 +5184,65 @@ function mostrarRutinaIA(resultado, tiempo, nivel, objetivo) {
 }
 
 // ===================== FEEDBACK =====================
+// Resumen de lo apuntado en la sesión: series hechas, kg movidos, récords
+function resumenRegistro() {
+    const principales = (sesionActual.ejercicios || []).filter(e => tipoBloque(e) === 'normal');
+    let totales = 0, hechas = 0, volumen = 0;
+    principales.forEach(ej => {
+        const r = registroSeries[ej.nombre];
+        totales += r ? r.series.length : numSeries(ej);
+        if (r) r.series.filter(x => x.hecho).forEach(x => { hechas++; volumen += (_num(x.kg) || 0) * (parseInt(x.reps) || 0); });
+    });
+    return { totales, hechas, volumen: Math.round(volumen), records: Object.values(recordsAvisados) };
+}
+
 function irAFeedback() {
+    cerrarDescanso();
+    pararTemporizadoresRutina();
     feedbackElegido.completada = null;
     feedbackElegido.dificultad = null;
     feedbackElegido.pesos_feedback = null;
     document.getElementById('feedback-molestia').value = '';
     document.getElementById('feedback-comentario').value = '';
+    document.getElementById('fb-mas').open = false;
     document.querySelectorAll('#pantalla-feedback .btn-op').forEach(b => b.classList.remove('activo'));
 
-    // Poblar dropdown con ejercicios de la sesión actual
     const selectEj = document.getElementById('feedback-ejercicio-duro');
     selectEj.innerHTML = '<option value="">— Ninguno en especial —</option>';
     (sesionActual.ejercicios || []).forEach(ej => {
-        if (ej.nombre) {
-            const opt = document.createElement('option');
-            opt.value = ej.nombre;
-            opt.textContent = ej.nombre;
-            selectEj.appendChild(opt);
-        }
+        if (ej.nombre) selectEj.insertAdjacentHTML('beforeend', `<option value="${escaparHTML(ej.nombre)}">${escaparHTML(ej.nombre)}</option>`);
     });
 
-    // "¿Cómo fueron los pesos?" solo hace falta si no se apuntaron repeticiones ni
-    // reserva en ningún ejercicio (con eso la app ya sabe si el peso era el adecuado)
-    const apuntadas = Object.values(recogerPesosDeTarjetas()).some(p => p.reps !== null || p.rir !== null);
-    document.getElementById('fb-pesos-card').style.display = apuntadas ? 'none' : '';
+    // Si se ha completado o no se deduce de las series marcadas
+    const res = resumenRegistro();
+    if (res.hechas > 0) feedbackElegido.completada = res.hechas / res.totales >= 0.9 ? 'si' : 'medias';
+    else if (res.totales === 0) feedbackElegido.completada = 'si'; // rutina solo de bloques (AMRAP, EMOM...)
+    document.getElementById('fb-sin-series').style.display = res.hechas === 0 && res.totales > 0 ? '' : 'none';
+    // "¿Cómo fueron los pesos?" solo si no se apuntó ninguna serie
+    document.getElementById('fb-pesos-card').style.display = res.hechas ? 'none' : '';
 
-    // Mostrar evaluación de la IA si hay una
+    // Resumen que motiva: duración, series, kg movidos, récords y comparación
+    const inicio = sesionActual.inicioGuiado || sesionActual.inicio;
+    const minutos = inicio ? Math.max(1, Math.round((Date.now() - inicio) / 60000)) : null;
+    // Solo se compara con el último entreno del mismo tipo (tren superior con tren superior...)
+    const tipoHoy = _sinAcentos(sesionActual.tipo_entrenamiento || '').trim();
+    const anterior = tipoHoy ? cargarSesiones().slice().reverse().find(x => x.volumenTotal > 0 && _sinAcentos(x.tipo_entrenamiento || '').trim() === tipoHoy) : null;
+    const dif = anterior && res.volumen ? Math.round((res.volumen / anterior.volumenTotal - 1) * 100) : null;
+    const bloques = (sesionActual.ejercicios || []).filter(e => resultadosBloques[e.nombre])
+        .map(e => `<div>🔥 ${escaparHTML(e.nombre)}: <b>${escaparHTML(resultadosBloques[e.nombre])}</b></div>`).join('');
+    const fmtKg = n => n.toLocaleString('es-ES');
+    document.getElementById('resumen-final').innerHTML = `
+        <div class="rf-titulo">🎉 ¡Entreno terminado!</div>
+        <div class="rf-sub">${escaparHTML(sesionActual.tipo_entrenamiento || '')}</div>
+        <div class="rf-numeros">
+            ${minutos && minutos <= 180 ? `<div><b>${minutos}</b><span>minutos</span></div>` : ''}
+            <div><b>${res.hechas}${res.totales ? '/' + res.totales : ''}</b><span>series</span></div>
+            ${res.volumen ? `<div><b>${fmtKg(res.volumen)}</b><span>kg movidos</span></div>` : ''}
+        </div>
+        ${res.records.length ? `<div class="rf-records">${res.records.map(r => `🏆 <b>${escaparHTML(r.nombre)}</b>: ${r.antes} → ${r.kg} kg`).join('<br>')}</div>` : ''}
+        ${dif !== null ? `<div class="rf-comparacion">${dif >= 0 ? '📈' : '📉'} ${dif >= 0 ? '+' : ''}${dif} % de kg movidos respecto a tu último entreno de este tipo</div>` : ''}
+        ${bloques ? `<div class="rf-bloques">${bloques}</div>` : ''}`;
+
     const evalCard = document.getElementById('evaluacion-card');
     if (ultimaEvaluacion) {
         document.getElementById('evaluacion-pregunta').textContent = ultimaEvaluacion;
@@ -5011,46 +5264,35 @@ function elegirFeedback(tipo, valor, btn) {
     btn.classList.add('activo');
 }
 
-function recogerPesosDeTarjetas() {
-    const pesos = {};
-    document.querySelectorAll('#lista-ejercicios .ejercicio-card').forEach(card => {
-        const nombre = card.dataset.ejNombre;
-        const inp = card.querySelector('.peso-input');
-        if (nombre && inp && inp.value) {
-            const v = parseFloat(inp.value.replace(',','.'));
-            if (!isNaN(v) && v > 0) {
-                // La casilla viene rellena con el peso que sugiere la IA. Solo es
-                // seguro que se usó si se cambió o se confirmó en el modo guiado.
-                const sugerido = parseFloat(String(inp.dataset.sugerido || '').replace(',','.'));
-                const repsInp = card.querySelector('.reps-input');
-                const rirInp  = card.querySelector('.rir-input');
-                const reps = repsInp && parseInt(repsInp.value) > 0 ? parseInt(repsInp.value) : null;
-                const rir  = rirInp && rirInp.value !== '' ? parseInt(rirInp.value) : null;
-                // Apuntar repeticiones o reserva también confirma que se usó ese peso
-                const confirmado = inp.dataset.confirmado === '1' || v !== sugerido || reps !== null || rir !== null;
-                pesos[nombre] = { kg: v, confirmado, reps, rir };
-            }
-        }
-    });
-    return pesos;
-}
-
 function guardarFeedback() {
-    // Recoger pesos anotados durante el entreno
-    const pesosAnotados = recogerPesosDeTarjetas();
+    const res = resumenRegistro();
+    const sinRegistro = res.hechas === 0;
     const sesionCompletada = feedbackElegido.completada === 'si';
 
-    // pesoSugerido = lo que propuso la IA; pesoUsado = lo que se levantó de verdad.
-    // Un peso sin tocar solo cuenta como real si la sesión se completó entera.
-    const ejConPeso = (lista) => (lista || []).map(ej => {
+    // pesoSugerido = lo que propuso la IA; pesoUsado = lo levantado de verdad (series con ✓).
+    // seriesHechas guarda cada serie. Si no se marcó ninguna serie pero se dice que se
+    // hizo entera, se da por bueno el peso propuesto (como antes).
+    const ejConPeso = (lista, principal) => (lista || []).map(ej => {
         const copia = {...ej, pesoSugerido: ej.peso ?? null};
-        const p = pesosAnotados[ej.nombre];
-        if (p && (p.confirmado || sesionCompletada)) {
-            copia.pesoUsado = p.kg;
-            copia.peso = p.kg + ' kg';
-            if (p.reps !== null) copia.repsHechas = p.reps;
-            if (p.rir  !== null) copia.rir = p.rir;
+        const r = registroSeries[ej.nombre];
+        const hechas = r ? r.series.filter(x => x.hecho) : [];
+        if (principal && tipoBloque(ej) === 'normal' && hechas.length) {
+            copia.seriesHechas = hechas.map(x => ({ kg: _num(x.kg) > 0 ? _num(x.kg) : null, reps: parseInt(x.reps) || null }));
+            const conKg = copia.seriesHechas.filter(x => x.kg > 0);
+            if (conKg.length) {
+                const top = conKg.reduce((m, x) => x.kg >= m.kg ? x : m, conKg[0]); // la serie más pesada (la última si empatan)
+                copia.pesoUsado = top.kg;
+                copia.peso = top.kg + ' kg';
+                if (top.reps) copia.repsHechas = top.reps;
+            } else {
+                const ult = copia.seriesHechas[copia.seriesHechas.length - 1];
+                if (ult.reps) copia.repsHechas = ult.reps;
+            }
+            if (r.rir !== null) copia.rir = r.rir;
+        } else if (principal && sinRegistro && sesionCompletada && tipoBloque(ej) === 'normal' && pesoPropuesto(ej)) {
+            copia.pesoUsado = pesoPropuesto(ej);
         }
+        if (tipoBloque(ej) === 'circuito' && resultadosBloques[ej.nombre] && r && _num(r.series[0].kg) > 0) copia.pesoUsado = _num(r.series[0].kg);
         if (resultadosBloques[ej.nombre]) copia.resultado = resultadosBloques[ej.nombre];
         return copia;
     });
@@ -5078,9 +5320,10 @@ function guardarFeedback() {
         comentario:        document.getElementById('feedback-comentario').value.trim(),
         evaluacion_pregunta:  ultimaEvaluacion || '',
         evaluacion_respuesta: document.getElementById('evaluacion-respuesta') ? document.getElementById('evaluacion-respuesta').value.trim() : '',
-        calentamiento: ejConPeso(sesionActual.calentamiento),
-        ejercicios:    ejConPeso(sesionActual.ejercicios),
-        estiramientos: ejConPeso(sesionActual.estiramientos),
+        calentamiento: ejConPeso(sesionActual.calentamiento, false),
+        ejercicios:    ejConPeso(sesionActual.ejercicios, true),
+        estiramientos: ejConPeso(sesionActual.estiramientos, false),
+        volumenTotal:  res.volumen || undefined,
         tipo_entrenamiento: sesionActual.tipo_entrenamiento || '',
         mensaje: sesionActual.mensaje || '',
         energia: sesionActual.energia || null,
@@ -5242,7 +5485,7 @@ function mostrarProgreso() {
     resumenWrap.className = 'resumen-semana';
     const stats = calcularStats();
     resumenWrap.innerHTML = htmlResumenSemana(resumenSemana(0), '📅 Esta semana', resumenSemana(1))
-        + `<div class="rs-linea rs-gris">🔥 Racha: <b>${stats.racha} ${stats.racha === 1 ? 'semana' : 'semanas'}</b> seguidas · ${stats.estesMes} sesiones este mes · ${stats.total} en total</div>`;
+        + `<div class="rs-linea rs-gris">🔥 Racha: <b>${stats.racha} ${stats.racha === 1 ? 'semana seguida' : 'semanas seguidas'}</b> · ${_txtSesiones(stats.estesMes)} este mes · ${stats.total} en total</div>`;
     contenedor.appendChild(resumenWrap);
 
     // — PESO CORPORAL —
@@ -5455,7 +5698,9 @@ function mostrarDetalleDia(fechaStr, sesiones) {
 
     function renderEjercicio(ej, i) {
         // Lo hecho de verdad (peso × reps, reserva) o el resultado del bloque; si no, lo propuesto
-        const hecho = ej.pesoUsado
+        const hecho = ej.seriesHechas && ej.seriesHechas.length
+            ? `<span class="tag peso">✓ ${ej.seriesHechas.map(x => `${x.kg ? x.kg + '×' : ''}${x.reps || '?'}`).join(' · ')}${(ej.rir === 0 || ej.rir > 0) ? ` (sobraban ${ej.rir >= 3 ? '3+' : ej.rir})` : ''}</span>`
+            : ej.pesoUsado
             ? `<span class="tag peso">✓ ${ej.pesoUsado} kg${ej.repsHechas ? ' × ' + ej.repsHechas : ''}${(ej.rir === 0 || ej.rir > 0) ? ` · sobraban ${ej.rir >= 3 ? '3+' : ej.rir}` : ''}</span>`
             : ej.resultado ? `<span class="tag peso">🔥 ${escaparHTML(ej.resultado)}</span>` : '';
         const peso = hecho || (ej.peso ? `<span class="tag" style="background:#f5f5f5">propuesto: ${ej.peso}</span>` : '');
@@ -5850,6 +6095,7 @@ function aplicarCambiosRutina(nuevaRutina) {
 function pararTemporizadoresRutina() {
     document.querySelectorAll('#lista-ejercicios .tabata-panel').forEach(p => { if (p._parar) p._parar(); });
     if (typeof _pararTimerDescanso === 'function') _pararTimerDescanso();
+    cerrarDescanso();
 }
 
 function resetear() {
@@ -6364,6 +6610,14 @@ function textoUltimaVez(p) {
     return `${p.kg} kg${p.reps ? ` × ${p.reps}` : ''}${p.rir !== null ? ` (sobraban ${p.rir >= 3 ? '3+' : p.rir})` : ''}`;
 }
 
+// Series que cuenta un ejercicio guardado: las marcadas de verdad si las hay; un
+// bloque (EMOM, Tabata, AMRAP) cuenta como 1 (antes sus 8 rondas contaban como 8 series)
+function seriesDe(e) {
+    if (Array.isArray(e.seriesHechas) && e.seriesHechas.length) return e.seriesHechas.length;
+    if (['emom', 'tabata', 'amrap'].includes(tipoBloque(e))) return 1;
+    return parseInt(e.series) || 0;
+}
+
 // ===================== VOLUMEN SEMANAL =====================
 // Series de la rutina principal de los últimos 7 días, por músculo (sin contar
 // las sesiones marcadas como no completadas).
@@ -6375,7 +6629,7 @@ function seriesSemanalesPorGrupo() {
         .forEach(s => (s.ejercicios || []).forEach(e => {
             const g = normalizarGrupo(e.grupo_muscular);
             if (!g || g === 'Cardio' || g === 'Movilidad') return;
-            cuenta[g] = (cuenta[g] || 0) + (parseInt(e.series) || 0);
+            cuenta[g] = (cuenta[g] || 0) + seriesDe(e);
         }));
     return cuenta;
 }
@@ -6563,7 +6817,7 @@ function resumenSemana(hace = 0) {
         minutos += parseInt(s.tiempo) || 0;
         if (s.completada === 'no') return;
         (s.ejercicios || []).forEach(e => {
-            const n = parseInt(e.series) || 0;
+            const n = seriesDe(e);
             series += n;
             const g = normalizarGrupo(e.grupo_muscular);
             if (g) porGrupo[g] = (porGrupo[g] || 0) + n;
@@ -6931,6 +7185,7 @@ function iniciarModoGuiado() {
     _mg.rirGuiado  = {};
     clearInterval(_mg.timerRef);
 
+    cerrarDescanso();
     document.getElementById('modo-guiado').style.display = 'block';
     document.body.style.overflow = 'hidden';
     mantenerPantallaEncendida('guiado');
@@ -6943,20 +7198,8 @@ function cerrarModoGuiado() {
     document.getElementById('modo-guiado').style.display = 'none';
     document.body.style.overflow = '';
     soltarPantalla('guiado');
-    // Volcar pesos anotados al DOM de las tarjetas
-    Object.entries(_mg.pesoGuiado).forEach(([nombre, kg]) => {
-        const cards = document.querySelectorAll('.ejercicio-card');
-        cards.forEach(card => {
-            if (card.dataset.ejNombre === nombre) {
-                const inp = card.querySelector('.peso-input');
-                if (inp) { inp.value = kg; inp.dataset.confirmado = '1'; }
-                const repsInp = card.querySelector('.reps-input');
-                if (repsInp && _mg.repsGuiado[nombre]) repsInp.value = _mg.repsGuiado[nombre];
-                const rirInp = card.querySelector('.rir-input');
-                if (rirInp && _mg.rirGuiado[nombre] !== undefined) rirInp.value = String(_mg.rirGuiado[nombre]);
-            }
-        });
-    });
+    // Lo apuntado en el modo guiado ya está en el registro: se refleja en la lista
+    refrescarTarjetas();
 }
 
 // Para el temporizador del bloque (AMRAP, EMOM...) que se estaba mostrando
@@ -6970,7 +7213,7 @@ function _mgRenderEjercicio() {
     _mgPararBloque();
     const total = _mg.lista.length;
     const ej    = _mg.lista[_mg.idx];
-    const series = parseInt(ej.series) || 3;
+    const series = numSeries(ej);
 
     document.getElementById('mg-progress').textContent =
         `Ejercicio ${_mg.idx + 1} de ${total}`;
@@ -7006,24 +7249,20 @@ function _mgRenderEjercicio() {
     const esPrincipal = ej._seccion === 'Rutina principal';
     const rangoMg = rangoReps(ej.reps);
 
-    const _mgPesoStr = ej.peso != null ? String(ej.peso).match(/[\d.,]+/) : null;
-    const pesoSugerido = _mgPesoStr ? _mgPesoStr[0] : (nextKg ? String(nextKg) : '');
-    const tienesPeso = parseFloat(pesoSugerido.replace(',', '.')) > 0 || !!ej.pesoLibre;
-
-    const pesoRow = tienesPeso ? `
-        <div class="mg-peso-row">
-            <label>Peso usado:</label>
-            <input type="number" id="mg-peso-inp" step="0.5" min="0"
-                value="${_mg.pesoGuiado[ej.nombre] || pesoSugerido || ''}"
-                placeholder="${pesoSugerido || '0'}">
-            <span>kg</span>
+    // Las mismas series que la tabla de la rutina (registroSeries)
+    const reg = regEj(ej);
+    const iSerie = Math.min(_mg.serie, reg.series.length) - 1;
+    const serieAct = reg.series[iSerie];
+    const conPeso = esPrincipal && usaPeso(ej);
+    const anterior = esPrincipal ? textoAnterior(ej, iSerie) : '—';
+    const pesoRow = esPrincipal ? `
+        <div class="mg-serie-campos">
+            ${conPeso ? `<label>kg<input type="number" id="mg-peso-inp" inputmode="decimal" step="0.5" min="0" value="${escaparHTML(serieAct.kg)}"></label>` : ''}
+            <label>Reps<input type="number" id="mg-reps-inp" inputmode="numeric" min="0" value="${escaparHTML(serieAct.reps)}" placeholder="${rangoMg ? rangoMg[1] : ''}"></label>
         </div>
-        ${esPrincipal ? `<div class="mg-peso-row">
-            <label>Reps de esta serie:</label>
-            <input type="number" id="mg-reps-inp" step="1" min="0" inputmode="numeric"
-                value="${_mg.repsGuiado[ej.nombre] || ''}" placeholder="${rangoMg ? rangoMg[1] : ''}">
-            <select id="mg-rir-inp">${opcionesRIR(_mg.rirGuiado[ej.nombre])}</select>
-        </div>` : ''}` : '';
+        ${anterior !== '—' ? `<div class="mg-anterior">La vez anterior: <b>${escaparHTML(anterior)}</b></div>` : ''}
+        ${iSerie === reg.series.length - 1 ? `<div class="mg-rir">¿Cuántas más podías hacer? <span>(opcional)</span><div>
+            ${[0, 1, 2, 3].map(v => `<button class="chip${reg.rir === v ? ' activo' : ''}" onclick="_mgRir(${v}, this)">${v === 3 ? '3+' : v}</button>`).join('')}</div></div>` : ''}` : '';
 
     const descSegs = parsearDescanso(ej.descanso_series) || 0;
 
@@ -7041,7 +7280,7 @@ function _mgRenderEjercicio() {
         ${ej.explicacion ? `<div class="mg-explicacion">${ej.explicacion}</div>` : ''}
         ${pesoRow}
         <button class="mg-btn-serie" onclick="_mgCompletarSerie(${series}, ${descSegs})">
-            ✓ Serie completada
+            ✓ Serie hecha
         </button>
         ${_mg.idx < _mg.lista.length - 1 || _mg.serie < series
             ? `<button class="mg-btn-saltar" onclick="_mgSaltarEjercicio()">Saltar ejercicio →</button>` : ''}
@@ -7050,15 +7289,26 @@ function _mgRenderEjercicio() {
     document.getElementById('modo-guiado').scrollTo(0, 0);
 }
 
+// "✓ Serie hecha" en el modo guiado: se apunta en el mismo registro que la tabla
 function _mgGuardarPeso() {
-    const ej  = _mg.lista[_mg.idx];
-    const inp = document.getElementById('mg-peso-inp');
-    if (inp && inp.value) _mg.pesoGuiado[ej.nombre] = parseFloat(inp.value);
-    // Se guarda lo de cada serie: al final queda lo de la última
-    const repsInp = document.getElementById('mg-reps-inp');
-    if (repsInp && parseInt(repsInp.value) > 0) _mg.repsGuiado[ej.nombre] = parseInt(repsInp.value);
-    const rirInp = document.getElementById('mg-rir-inp');
-    if (rirInp && rirInp.value !== '') _mg.rirGuiado[ej.nombre] = parseInt(rirInp.value);
+    const ej = _mg.lista[_mg.idx];
+    if (!ej || tipoBloque(ej) !== 'normal') return;
+    const reg = regEj(ej);
+    const i = Math.min(_mg.serie, reg.series.length) - 1;
+    const sr = reg.series[i];
+    const kgInp = document.getElementById('mg-peso-inp'), repsInp = document.getElementById('mg-reps-inp');
+    if (kgInp) sr.kg = kgInp.value;
+    if (repsInp) sr.reps = repsInp.value || String((rangoReps(ej.reps) || [])[1] || '');
+    sr.hecho = true;
+    if (ej._seccion !== 'Rutina principal') reg.hecho = reg.series.every(x => x.hecho);
+    // El peso se copia a las series siguientes que aún no se han hecho
+    reg.series.forEach((sig, k) => { if (k > i && !sig.hecho && kgInp) sig.kg = sr.kg; });
+    if (ej._seccion === 'Rutina principal') comprobarRecord(ej, _num(sr.kg));
+}
+function _mgRir(v, btn) {
+    const reg = regEj(_mg.lista[_mg.idx]);
+    reg.rir = reg.rir === v ? null : v;
+    btn.parentElement.querySelectorAll('.chip').forEach(b => b.classList.toggle('activo', b === btn && reg.rir !== null));
 }
 
 function _mgCompletarSerie(totalSeries, descSegs) {
@@ -7083,7 +7333,6 @@ function _mgCompletarSerie(totalSeries, descSegs) {
 }
 
 function _mgSaltarEjercicio() {
-    _mgGuardarPeso();
     clearInterval(_mg.timerRef);
     _mg.serie = 1;
     if (_mg.idx < _mg.lista.length - 1) {
@@ -7515,6 +7764,16 @@ try {
 }
 
 </script>
+
+<!-- ===================== DESCANSO AUTOMÁTICO ===================== -->
+<div id="descanso-flotante" hidden>
+    <div class="df-info"><span class="df-texto">Descanso</span><b class="df-tiempo">1:30</b></div>
+    <div class="df-barra"><i></i></div>
+    <div class="df-botones">
+        <button onclick="descansoMas(30)">+30 s</button>
+        <button onclick="cerrarDescanso()">Saltar</button>
+    </div>
+</div>
 
 <!-- ===================== CHAT FLOTANTE ===================== -->
 <div id="chat-flotante">
