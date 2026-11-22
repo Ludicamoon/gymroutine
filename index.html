@@ -13,6 +13,16 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="HassanGym">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <script>
+        // Tema elegido en el Perfil (solo en este dispositivo): se aplica antes de pintar
+        try {
+            var t = localStorage.getItem('gym_tema');
+            if (t === 'claro' || t === 'oscuro') {
+                document.documentElement.setAttribute('data-tema', t);
+                document.documentElement.style.colorScheme = t === 'oscuro' ? 'dark' : 'light';
+            }
+        } catch (e) {}
+    </script>
     <title>HassanGym</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -2520,225 +2530,439 @@
         @media (hover: hover) { .sidebar-switch-user:hover { background: rgba(255,87,34,0.28); } }
 
     
-        /* ===================== MODO OSCURO (automático, según el móvil) =====================
-           Generado a partir de los colores claros: fondos claros → oscuros, textos oscuros → claros. */
+        /* MODO OSCURO: automático según el móvil, salvo que se elija "Claro" en el Perfil */
         @media (prefers-color-scheme: dark) {
-        body { background: #0f0f11; color: #ececec; }
-        .card { background: #1c1c1e; }
-        .card-label { color: #b0b0b0; }
-        select, input[type="number"], input[type="text"], textarea { border: 2px solid #3a3a3e; color: #ececec; background: #1c1c1e; }
-        .input-label { color: #b0b0b0; }
-        .deporte-detalle-item { background: #232326; }
-        .deporte-detalle-nombre { color: #cfcfcf; }
-        .chip { border: 1.5px solid #3f3f44; background: #1c1c1e; color: #c4c4c4; }
-        .cf-label { color: #b0b0b0; }
-        .btn-copia { background: #1c1c1e; color: #dddddd; border: 2px solid #3a3a3e; }
-        .btn-resetear-historial { background: #1c1c1e; color: #ef9a9a; border: 2px solid #7a3535; }
-        .btn-resetear-historial:hover { background: #3a1c1f; }
-        .cf-dia-bloque { border-top: 1px solid #34343a; }
-        .btn-op { border: 2px solid #3a3a3e; background: #1c1c1e; color: #cfcfcf; }
-        .material-item { border: 2px solid #3a3a3e; }
-        .material-item .mat-nombre { color: #e6e6e6; }
-        .btn-secundario { background: #1c1c1e; color: #ececec; border: 2px solid #3f3f44; }
-        .chat-aplicar-banner { background: #1b3320; }
-        .chat-aplicar-banner strong { color: #81c784; }
-        .ejercicio-card { background: #1c1c1e; }
-        .ej-info h3 { color: #ececec; }
-        .tag { background: #0f0f11; color: #c4c4c4; }
-        .tag.descanso { background: #3a2219; }
-        .peso-input { border: 2px solid #3a3a3e; }
-        .btn-cambiar-ej { background: #26262a; color: #cfcfcf; border: 1px dashed #46464c; }
-        .primeras-marcas span { background: #1c1c1e; border: 1px solid #34343a; }
-        .btn-ir-diario { background: #1c1c1e; border: 2px solid #3a3a3e; }
-        .grafica-resumen { color: #b0b0b0; }
-        .grafica-leyenda { color: #a6a6a6; }
-        .resumen-semana { background: #1c1c1e; border: 1px solid #34343a; }
-        .rs-fecha { color: #b0b0b0; }
-        .rs-numeros > div { background: #232326; }
-        .rs-sube { color: #81c784; }
-        .rs-baja { color: #ef9a9a; }
-        .rs-gris { color: #b0b0b0; }
-        .rs-cerrar { color: #b0b0b0; }
-        .descarga-card { background: #1a2438; border: 1px solid #2f4570; color: #9db9f0; }
-        .descarga-card.activa { background: #1b3320; border-color: #2f5a35; color: #9fd8a6; }
-        .aviso-seguridad { background: #3a3214; border: 1px solid #6b5a20; color: #f0d58a; }
-        .aviso-seguridad.fuerte { background: #3a1c1f; border-color: #7a3535; color: #f2a0a0; }
-        .reps-input, .rir-input { border: 2px solid #3a3a3e; background: #1c1c1e; }
-        .btn-timer { background: #3a2219; }
-        .mas-opciones > summary { background: #1c1c1e; border: 1px solid #34343a; color: #dddddd; }
-        .mas-opciones-resumen { color: #b0b0b0; }
-        .ej-resumen { color: #b0b0b0; }
-        .ej-progreso { color: #81c784; }
-        .ej-variantes summary { color: #c4c4c4; }
-        .st-cab { color: #b0b0b0; }
-        .st-fila { background: #232326; }
-        .st-fila.hecha { background: #1b3320; }
-        .st-ant { color: #b0b0b0; }
-        .st-fila input { border: 2px solid #3a3a3e; background: #1c1c1e; }
-        .st-ok { border: 2px solid #46464c; background: #1c1c1e; color: #b0b0b0; }
-        .st-rir { color: #cfcfcf; }
-        .st-rir span { color: #b0b0b0; }
-        .btn-hecho { border: 2px solid #46464c; background: #1c1c1e; }
-        .rutina-ayuda { color: #b0b0b0; }
-        .consejos-rutina { background: #1c1c1e; }
-        .opcional { color: #b0b0b0; }
-        .tz-modos button { border: 2px solid #3a3a3e; background: #1c1c1e; color: #cfcfcf; }
-        .tz-config label { color: #a6a6a6; }
-        .tz-config input, .tz-config select { border: 2px solid #3a3a3e; background: #1c1c1e; }
-        .tz-config .tz-preset { border: 1px dashed #46464c; background: #232326; }
-        .tz-config .tz-nota { color: #b0b0b0; }
-        .grafica-wrap { background: #1c1c1e; }
-        .grafica-titulo { color: #ececec; }
-        .plan-dia-card { background: #1c1c1e; }
-        .plan-dia-nombre { color: #ececec; }
-        .plan-dia-tipo { background: #0f0f11; color: #c4c4c4; }
-        .plan-ej-lista li { color: #cfcfcf; }
-        .plan-generando { color: #b0b0b0; }
-        .cal-dias .chip { border: 2px solid #3a3a3e; background: #1c1c1e; }
-        .notif-card { background: #1c1c1e; }
-        .notif-label { color: #dddddd; }
-        .notif-sub { color: #b0b0b0; }
-        .toggle-track::after { background: #1c1c1e; }
-        .perfil-banner { background: #1c1c1e; }
-        .perfil-banner-info { color: #c4c4c4; }
-        .perfil-banner-info strong { color: #ececec; }
-        .perfil-banner-edit { border: 2px solid #3a3a3e; color: #cfcfcf; }
-        .perfil-nota { color: #b0b0b0; }
-        .material-grupo-titulo { color: #b0b0b0; }
-        .material-extra { color: #c4c4c4; }
-        .btn-saltar { color: #b0b0b0; }
-        .btn-saltar:hover { color: #c4c4c4; }
-        .sesion-card { background: #1c1c1e; }
-        .sesion-card .sesion-fecha { color: #b0b0b0; }
-        .sesion-card .sesion-info { color: #ececec; }
-        .sesion-tag.completada-si { background: #1b3320; color: #9fd8a6; }
-        .sesion-tag.completada-no { background: #3a1c1f; color: #f2a0a0; }
-        .sesion-tag.completada-medias { background: #3a2a14; color: #f0c48a; }
-        .sesion-tag.dif-facil { background: #1b3320; color: #9fd8a6; }
-        .sesion-card .sesion-molestia { color: #b0b0b0; }
-        .historial-vacio { color: #b0b0b0; }
-        .cargando-card { background: #1c1c1e; }
-        .cargando-spinner { border: 4px solid #2e2e33; }
-        .cargando-titulo { color: #ececec; }
-        .cargando-subtitulo { color: #b0b0b0; }
-        .tag.youtube-link { background: #3a1c1f; }
-        .ej-porque { color: #a6a6a6; }
-        .seccion-titulo { color: #b0b0b0; }
-        .ejercicio-card { background: #1c1c1e; }
-        .ej-explicacion { color: #b0b0b0; }
-        .extra-card { background: #1c1c1e; color: #cfcfcf; }
-        .extra-card .extra-titulo { color: #b0b0b0; }
-        .calendario { background: #1c1c1e; }
-        .cal-mes-label { color: #ececec; }
-        .cal-nav-btn { border: 2px solid #3a3a3e; }
-        .cal-dow { color: #b0b0b0; }
-        .cal-celda.dia-mes { color: #cfcfcf; }
-        .cal-celda.dia-mes:hover { background: #26262a; }
-        .diario-detalle { background: #1c1c1e; }
-        .dd-vacio { color: #b0b0b0; }
-        .dd-fecha { color: #b0b0b0; }
-        .dd-titulo { color: #ececec; }
-        .dd-badge { background: #0f0f11; color: #c4c4c4; }
-        .dd-badge.verde { background: #1b3320; color: #9fd8a6; }
-        .dd-badge.naranja { background: #3a2a14; }
-        .dd-badge.rojo { background: #3a1c1f; color: #f2a0a0; }
-        .dd-seccion-titulo { color: #b0b0b0; }
-        .dd-ej-nombre { color: #ececec; }
-        .dd-tag { background: #2a2a2e; color: #c4c4c4; }
-        .dd-feedback { color: #c4c4c4; }
-        .dd-sesion { border-bottom: 1px solid #2e2e33; }
-        .dd-tipo { color: #cfcfcf; }
-        .dd-mensaje { color: #b0b0b0; }
-        .dd-seccion-tit { color: #b0b0b0; }
-        .dd-lista { color: #cfcfcf; }
-        .dd-nota { color: #b0b0b0; }
-        .dd-nota-feedback { color: #c4c4c4; }
-        .dd-ej-nombre { color: #ececec; }
-        .chat-wrapper { background: #1c1c1e; }
-        .chat-burbuja.ia { background: #0f0f11; color: #ececec; }
-        .chat-input-area { border-top: 1px solid #2e2e33; background: #1c1c1e; }
-        .chat-input { border: 2px solid #3a3a3e; }
-        .chat-vacío { color: #b0b0b0; }
-        .chat-sug-btn { background: #0f0f11; color: #c4c4c4; }
-        .chat-sug-btn:hover { background: #4a2a1e; }
-        .rec-ejercicio { color: #c4c4c4; }
-        .rec-fecha { color: #b0b0b0; }
-        .prog-ejercicio { background: #1c1c1e; }
-        .prog-nombre { color: #ececec; }
-        .prog-entry { background: #0f0f11; }
-        .variantes-box { border-top: 1px solid #2e2e33; }
-        .variante { color: #a6a6a6; }
-        .variante b { color: #cfcfcf; }
-        .cfp { background: #1c1c1e; }
-        .cfp-burbuja.ia { background: #0f0f11; color: #ececec; }
-        .cfp-input-area { border-top: 1px solid #2e2e33; }
-        .cfp-input { border: 1.5px solid #3a3a3e; }
-        .peso-corp-widget { background: #1c1c1e; border: 1.5px solid #34343a; }
-        .peso-corp-widget h3 { color: #ececec; }
-        .peso-corp-row input { border: 1.5px solid #3a3a3e; }
-        .peso-corp-ultimo { color: #b0b0b0; }
-        .prog-hint { background: #3a2a14; }
-        .ctx-semana-textarea { border: 1.5px solid #34343a; color: #e6e6e6; background: #232326; }
-        .ctx-foto-btn { background: #3a2a14; }
-        .ctx-foto-thumb { border: 2px solid #34343a; }
-        .gym-user-box { background: #1c1c1e; }
-        .gym-user-box h2 { color: #ececec; }
-        .gym-user-box p { color: #b0b0b0; }
-        .gym-user-list button { border: 1.5px solid #3a3a3e; background: #232326; color: #ececec; }
-        .gym-user-list button:hover { background: #3a2219; }
-        .gym-user-input { border: 1.5px solid #3a3a3e; }
-        .gym-user-note { color: #b0b0b0; }
-        .gym-pin-error { color: #ef9a9a; }
-        .gym-pin-volver { color: #b0b0b0; }
-        body { background: #0f0f11; color: #e6e6e6; }
-        input, textarea, select { background: #232326; color: #ececec; border-color: #3a3a3e; }
-        input::placeholder, textarea::placeholder { color: #7d7d84; }
-        .gym-user-box { background: #1c1c1e; color: #ececec; }
-        .gym-user-box h2 { color: #ececec; }
-        .gym-user-box p, .gym-user-note { color: #a6a6a6; }
-        .gym-user-list button { background: #26262a; color: #ececec; border-color: #3a3a3e; }
-        .groq-pasos { color: #d0d0d0; }
-        .groq-pasos a { color: #ff8a65; }
-        .st-fila input { background: #1c1c1e; color: #ececec; border-color: #3a3a3e; }
-        .st-fila.hecha { background: #1b3320; }
-        .st-ok { background: #1c1c1e; border-color: #46464c; }
-        .chip, .cal-dias .chip, .st-rir .chip { background: #26262a; color: #ececec; border-color: #46464c; }
-        .chip.activo, .cal-dias .chip.activo, .st-rir .chip.activo { background: #ff5722; border-color: #ff5722; color: white; }
-        .btn-op.activo, .material-item.activo { background: #ff5722; color: white; border-color: #ff5722; }
-        .tag[style*="background"], .sesion-tag[style*="background"] { background: #2a2a2e !important; color: #dddddd !important; }
-        .cal-celda.hoy { background: #3a2219; }
-        .dd-feedback-box, .dd-ej-card { background: #232326; }
-        .tag.peso { background: #3a2414; color: #ffab76; }
-        .plan-dia-tipo.descanso { background: #1b3320; color: #81c784; }
-        #feedback-ejercicio-duro { background: #232326 !important; border-color: #3a3a3e !important; }
-        #evaluacion-pregunta { color: #c4c4c4 !important; }
-        .grupo-card { background: #1c1c1e; }
-        .grupo-card p, .gr-dato, .gr-salir { color: #b0b0b0; }
-        .gr-fila { background: #26262a; }
-        .gr-fila.yo { background: #3a2219; outline-color: #6b3a24; }
-        .ej-foto { background: #26262a; }
-        .empezar-rapido { background: #1c1c1e; }
-        .empezar-rapido button { background: #2e1e18; border-color: #6b3a24; color: #ececec; }
-        .empezar-rapido button span, .er-titulo span { color: #a6a6a6; }
-        /* El botón principal era negro sobre fondo negro: en oscuro va en naranja */
-        .btn-generar { background: #ff5722; color: white; }
-        .btn-generar:disabled { background: #5a2a18; color: #c9a99c; }
-        .btn-generar.btn-terminar { background: #2e7d32; }
-        .tabs-progreso { background: #1c1c1e; }
-        .tabs-progreso button { color: #a6a6a6; }
-        .tabs-progreso button.activo { background: #2e2e33; color: #ececec; }
-        .ayuda-pantalla, .ts-letra, .ts-tipo, .ob-progreso, .ob-nota, .ob-atras { color: #a6a6a6; }
-        .tira-semana, .btn-chat-entrenar { background: #1c1c1e; color: #ececec; border-color: #3a3a3e; }
-        .ts-dia { background: #26262a; }
-        .ts-dia.hecho { background: #1b3320; }
-        .ts-marca { color: #ececec; }
-        .ts-dia.hecho .ts-marca { color: #81c784; }
-        .ts-cab button { color: #ff8a65; }
-        .ob-hola p { color: #c4c4c4; }
-        .ob-progreso div { background: #2e2e33; }
-        .ob-chips .chip { background: #26262a; color: #ececec; border-color: #46464c; }
-        .ob-chips .chip.activo { background: #ff5722; border-color: #ff5722; color: white; }
+            :root:not([data-tema="claro"]) body { background: #0f0f11; color: #ececec; }
+            :root:not([data-tema="claro"]) .card { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .card-label { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) select, :root:not([data-tema="claro"]) input[type="number"], :root:not([data-tema="claro"]) input[type="text"], :root:not([data-tema="claro"]) textarea { border: 2px solid #3a3a3e; color: #ececec; background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .input-label { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .deporte-detalle-item { background: #232326; }
+            :root:not([data-tema="claro"]) .deporte-detalle-nombre { color: #cfcfcf; }
+            :root:not([data-tema="claro"]) .chip { border: 1.5px solid #3f3f44; background: #1c1c1e; color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .cf-label { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .btn-copia { background: #1c1c1e; color: #dddddd; border: 2px solid #3a3a3e; }
+            :root:not([data-tema="claro"]) .btn-resetear-historial { background: #1c1c1e; color: #ef9a9a; border: 2px solid #7a3535; }
+            :root:not([data-tema="claro"]) .btn-resetear-historial:hover { background: #3a1c1f; }
+            :root:not([data-tema="claro"]) .cf-dia-bloque { border-top: 1px solid #34343a; }
+            :root:not([data-tema="claro"]) .btn-op { border: 2px solid #3a3a3e; background: #1c1c1e; color: #cfcfcf; }
+            :root:not([data-tema="claro"]) .material-item { border: 2px solid #3a3a3e; }
+            :root:not([data-tema="claro"]) .material-item .mat-nombre { color: #e6e6e6; }
+            :root:not([data-tema="claro"]) .btn-secundario { background: #1c1c1e; color: #ececec; border: 2px solid #3f3f44; }
+            :root:not([data-tema="claro"]) .chat-aplicar-banner { background: #1b3320; }
+            :root:not([data-tema="claro"]) .chat-aplicar-banner strong { color: #81c784; }
+            :root:not([data-tema="claro"]) .ejercicio-card { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .ej-info h3 { color: #ececec; }
+            :root:not([data-tema="claro"]) .tag { background: #0f0f11; color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .tag.descanso { background: #3a2219; }
+            :root:not([data-tema="claro"]) .peso-input { border: 2px solid #3a3a3e; }
+            :root:not([data-tema="claro"]) .btn-cambiar-ej { background: #26262a; color: #cfcfcf; border: 1px dashed #46464c; }
+            :root:not([data-tema="claro"]) .primeras-marcas span { background: #1c1c1e; border: 1px solid #34343a; }
+            :root:not([data-tema="claro"]) .btn-ir-diario { background: #1c1c1e; border: 2px solid #3a3a3e; }
+            :root:not([data-tema="claro"]) .grafica-resumen { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .grafica-leyenda { color: #a6a6a6; }
+            :root:not([data-tema="claro"]) .resumen-semana { background: #1c1c1e; border: 1px solid #34343a; }
+            :root:not([data-tema="claro"]) .rs-fecha { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .rs-numeros > div { background: #232326; }
+            :root:not([data-tema="claro"]) .rs-sube { color: #81c784; }
+            :root:not([data-tema="claro"]) .rs-baja { color: #ef9a9a; }
+            :root:not([data-tema="claro"]) .rs-gris { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .rs-cerrar { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .descarga-card { background: #1a2438; border: 1px solid #2f4570; color: #9db9f0; }
+            :root:not([data-tema="claro"]) .descarga-card.activa { background: #1b3320; border-color: #2f5a35; color: #9fd8a6; }
+            :root:not([data-tema="claro"]) .aviso-seguridad { background: #3a3214; border: 1px solid #6b5a20; color: #f0d58a; }
+            :root:not([data-tema="claro"]) .aviso-seguridad.fuerte { background: #3a1c1f; border-color: #7a3535; color: #f2a0a0; }
+            :root:not([data-tema="claro"]) .reps-input, :root:not([data-tema="claro"]) .rir-input { border: 2px solid #3a3a3e; background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .btn-timer { background: #3a2219; }
+            :root:not([data-tema="claro"]) .mas-opciones > summary { background: #1c1c1e; border: 1px solid #34343a; color: #dddddd; }
+            :root:not([data-tema="claro"]) .mas-opciones-resumen { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .ej-resumen { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .ej-progreso { color: #81c784; }
+            :root:not([data-tema="claro"]) .ej-variantes summary { color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .st-cab { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .st-fila { background: #232326; }
+            :root:not([data-tema="claro"]) .st-fila.hecha { background: #1b3320; }
+            :root:not([data-tema="claro"]) .st-ant { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .st-fila input { border: 2px solid #3a3a3e; background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .st-ok { border: 2px solid #46464c; background: #1c1c1e; color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .st-rir { color: #cfcfcf; }
+            :root:not([data-tema="claro"]) .st-rir span { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .btn-hecho { border: 2px solid #46464c; background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .rutina-ayuda { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .consejos-rutina { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .opcional { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .tz-modos button { border: 2px solid #3a3a3e; background: #1c1c1e; color: #cfcfcf; }
+            :root:not([data-tema="claro"]) .tz-config label { color: #a6a6a6; }
+            :root:not([data-tema="claro"]) .tz-config input, :root:not([data-tema="claro"]) .tz-config select { border: 2px solid #3a3a3e; background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .tz-config .tz-preset { border: 1px dashed #46464c; background: #232326; }
+            :root:not([data-tema="claro"]) .tz-config .tz-nota { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .grafica-wrap { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .grafica-titulo { color: #ececec; }
+            :root:not([data-tema="claro"]) .plan-dia-card { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .plan-dia-nombre { color: #ececec; }
+            :root:not([data-tema="claro"]) .plan-dia-tipo { background: #0f0f11; color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .plan-ej-lista li { color: #cfcfcf; }
+            :root:not([data-tema="claro"]) .plan-generando { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .cal-dias .chip { border: 2px solid #3a3a3e; background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .notif-card { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .notif-label { color: #dddddd; }
+            :root:not([data-tema="claro"]) .notif-sub { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .toggle-track::after { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .perfil-banner { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .perfil-banner-info { color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .perfil-banner-info strong { color: #ececec; }
+            :root:not([data-tema="claro"]) .perfil-banner-edit { border: 2px solid #3a3a3e; color: #cfcfcf; }
+            :root:not([data-tema="claro"]) .perfil-nota { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .material-grupo-titulo { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .material-extra { color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .btn-saltar { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .btn-saltar:hover { color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .sesion-card { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .sesion-card .sesion-fecha { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .sesion-card .sesion-info { color: #ececec; }
+            :root:not([data-tema="claro"]) .sesion-tag.completada-si { background: #1b3320; color: #9fd8a6; }
+            :root:not([data-tema="claro"]) .sesion-tag.completada-no { background: #3a1c1f; color: #f2a0a0; }
+            :root:not([data-tema="claro"]) .sesion-tag.completada-medias { background: #3a2a14; color: #f0c48a; }
+            :root:not([data-tema="claro"]) .sesion-tag.dif-facil { background: #1b3320; color: #9fd8a6; }
+            :root:not([data-tema="claro"]) .sesion-card .sesion-molestia { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .historial-vacio { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .cargando-card { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .cargando-spinner { border: 4px solid #2e2e33; }
+            :root:not([data-tema="claro"]) .cargando-titulo { color: #ececec; }
+            :root:not([data-tema="claro"]) .cargando-subtitulo { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .tag.youtube-link { background: #3a1c1f; }
+            :root:not([data-tema="claro"]) .ej-porque { color: #a6a6a6; }
+            :root:not([data-tema="claro"]) .seccion-titulo { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .ejercicio-card { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .ej-explicacion { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .extra-card { background: #1c1c1e; color: #cfcfcf; }
+            :root:not([data-tema="claro"]) .extra-card .extra-titulo { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .calendario { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .cal-mes-label { color: #ececec; }
+            :root:not([data-tema="claro"]) .cal-nav-btn { border: 2px solid #3a3a3e; }
+            :root:not([data-tema="claro"]) .cal-dow { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .cal-celda.dia-mes { color: #cfcfcf; }
+            :root:not([data-tema="claro"]) .cal-celda.dia-mes:hover { background: #26262a; }
+            :root:not([data-tema="claro"]) .diario-detalle { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .dd-vacio { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .dd-fecha { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .dd-titulo { color: #ececec; }
+            :root:not([data-tema="claro"]) .dd-badge { background: #0f0f11; color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .dd-badge.verde { background: #1b3320; color: #9fd8a6; }
+            :root:not([data-tema="claro"]) .dd-badge.naranja { background: #3a2a14; }
+            :root:not([data-tema="claro"]) .dd-badge.rojo { background: #3a1c1f; color: #f2a0a0; }
+            :root:not([data-tema="claro"]) .dd-seccion-titulo { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .dd-ej-nombre { color: #ececec; }
+            :root:not([data-tema="claro"]) .dd-tag { background: #2a2a2e; color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .dd-feedback { color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .dd-sesion { border-bottom: 1px solid #2e2e33; }
+            :root:not([data-tema="claro"]) .dd-tipo { color: #cfcfcf; }
+            :root:not([data-tema="claro"]) .dd-mensaje { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .dd-seccion-tit { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .dd-lista { color: #cfcfcf; }
+            :root:not([data-tema="claro"]) .dd-nota { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .dd-nota-feedback { color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .dd-ej-nombre { color: #ececec; }
+            :root:not([data-tema="claro"]) .chat-wrapper { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .chat-burbuja.ia { background: #0f0f11; color: #ececec; }
+            :root:not([data-tema="claro"]) .chat-input-area { border-top: 1px solid #2e2e33; background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .chat-input { border: 2px solid #3a3a3e; }
+            :root:not([data-tema="claro"]) .chat-vacío { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .chat-sug-btn { background: #0f0f11; color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .chat-sug-btn:hover { background: #4a2a1e; }
+            :root:not([data-tema="claro"]) .rec-ejercicio { color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .rec-fecha { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .prog-ejercicio { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .prog-nombre { color: #ececec; }
+            :root:not([data-tema="claro"]) .prog-entry { background: #0f0f11; }
+            :root:not([data-tema="claro"]) .variantes-box { border-top: 1px solid #2e2e33; }
+            :root:not([data-tema="claro"]) .variante { color: #a6a6a6; }
+            :root:not([data-tema="claro"]) .variante b { color: #cfcfcf; }
+            :root:not([data-tema="claro"]) .cfp { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .cfp-burbuja.ia { background: #0f0f11; color: #ececec; }
+            :root:not([data-tema="claro"]) .cfp-input-area { border-top: 1px solid #2e2e33; }
+            :root:not([data-tema="claro"]) .cfp-input { border: 1.5px solid #3a3a3e; }
+            :root:not([data-tema="claro"]) .peso-corp-widget { background: #1c1c1e; border: 1.5px solid #34343a; }
+            :root:not([data-tema="claro"]) .peso-corp-widget h3 { color: #ececec; }
+            :root:not([data-tema="claro"]) .peso-corp-row input { border: 1.5px solid #3a3a3e; }
+            :root:not([data-tema="claro"]) .peso-corp-ultimo { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .prog-hint { background: #3a2a14; }
+            :root:not([data-tema="claro"]) .ctx-semana-textarea { border: 1.5px solid #34343a; color: #e6e6e6; background: #232326; }
+            :root:not([data-tema="claro"]) .ctx-foto-btn { background: #3a2a14; }
+            :root:not([data-tema="claro"]) .ctx-foto-thumb { border: 2px solid #34343a; }
+            :root:not([data-tema="claro"]) .gym-user-box { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .gym-user-box h2 { color: #ececec; }
+            :root:not([data-tema="claro"]) .gym-user-box p { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .gym-user-list button { border: 1.5px solid #3a3a3e; background: #232326; color: #ececec; }
+            :root:not([data-tema="claro"]) .gym-user-list button:hover { background: #3a2219; }
+            :root:not([data-tema="claro"]) .gym-user-input { border: 1.5px solid #3a3a3e; }
+            :root:not([data-tema="claro"]) .gym-user-note { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .gym-pin-error { color: #ef9a9a; }
+            :root:not([data-tema="claro"]) .gym-pin-volver { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) body { background: #0f0f11; color: #e6e6e6; }
+            :root:not([data-tema="claro"]) input, :root:not([data-tema="claro"]) textarea, :root:not([data-tema="claro"]) select { background: #232326; color: #ececec; border-color: #3a3a3e; }
+            :root:not([data-tema="claro"]) input::placeholder, :root:not([data-tema="claro"]) textarea::placeholder { color: #7d7d84; }
+            :root:not([data-tema="claro"]) .gym-user-box { background: #1c1c1e; color: #ececec; }
+            :root:not([data-tema="claro"]) .gym-user-box h2 { color: #ececec; }
+            :root:not([data-tema="claro"]) .gym-user-box p, :root:not([data-tema="claro"]) .gym-user-note { color: #a6a6a6; }
+            :root:not([data-tema="claro"]) .gym-user-list button { background: #26262a; color: #ececec; border-color: #3a3a3e; }
+            :root:not([data-tema="claro"]) .groq-pasos { color: #d0d0d0; }
+            :root:not([data-tema="claro"]) .groq-pasos a { color: #ff8a65; }
+            :root:not([data-tema="claro"]) .st-fila input { background: #1c1c1e; color: #ececec; border-color: #3a3a3e; }
+            :root:not([data-tema="claro"]) .st-fila.hecha { background: #1b3320; }
+            :root:not([data-tema="claro"]) .st-ok { background: #1c1c1e; border-color: #46464c; }
+            :root:not([data-tema="claro"]) .chip, :root:not([data-tema="claro"]) .cal-dias .chip, :root:not([data-tema="claro"]) .st-rir .chip { background: #26262a; color: #ececec; border-color: #46464c; }
+            :root:not([data-tema="claro"]) .chip.activo, :root:not([data-tema="claro"]) .cal-dias .chip.activo, :root:not([data-tema="claro"]) .st-rir .chip.activo { background: #ff5722; border-color: #ff5722; color: white; }
+            :root:not([data-tema="claro"]) .btn-op.activo, :root:not([data-tema="claro"]) .material-item.activo { background: #ff5722; color: white; border-color: #ff5722; }
+            :root:not([data-tema="claro"]) .tag[style*="background"], :root:not([data-tema="claro"]) .sesion-tag[style*="background"] { background: #2a2a2e !important; color: #dddddd !important; }
+            :root:not([data-tema="claro"]) .cal-celda.hoy { background: #3a2219; }
+            :root:not([data-tema="claro"]) .dd-feedback-box, :root:not([data-tema="claro"]) .dd-ej-card { background: #232326; }
+            :root:not([data-tema="claro"]) .tag.peso { background: #3a2414; color: #ffab76; }
+            :root:not([data-tema="claro"]) .plan-dia-tipo.descanso { background: #1b3320; color: #81c784; }
+            :root:not([data-tema="claro"]) #feedback-ejercicio-duro { background: #232326 !important; border-color: #3a3a3e !important; }
+            :root:not([data-tema="claro"]) #evaluacion-pregunta { color: #c4c4c4 !important; }
+            :root:not([data-tema="claro"]) .grupo-card { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .grupo-card p, :root:not([data-tema="claro"]) .gr-dato, :root:not([data-tema="claro"]) .gr-salir { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .gr-fila { background: #26262a; }
+            :root:not([data-tema="claro"]) .gr-fila.yo { background: #3a2219; outline-color: #6b3a24; }
+            :root:not([data-tema="claro"]) .ej-foto { background: #26262a; }
+            :root:not([data-tema="claro"]) .empezar-rapido { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .empezar-rapido button { background: #2e1e18; border-color: #6b3a24; color: #ececec; }
+            :root:not([data-tema="claro"]) .empezar-rapido button span, :root:not([data-tema="claro"]) .er-titulo span { color: #a6a6a6; }
+            :root:not([data-tema="claro"]) .btn-generar { background: #ff5722; color: white; }
+            :root:not([data-tema="claro"]) .btn-generar:disabled { background: #5a2a18; color: #c9a99c; }
+            :root:not([data-tema="claro"]) .btn-generar.btn-terminar { background: #2e7d32; }
+            :root:not([data-tema="claro"]) .tabs-progreso { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .tabs-progreso button { color: #a6a6a6; }
+            :root:not([data-tema="claro"]) .tabs-progreso button.activo { background: #2e2e33; color: #ececec; }
+            :root:not([data-tema="claro"]) .ayuda-pantalla, :root:not([data-tema="claro"]) .ts-letra, :root:not([data-tema="claro"]) .ts-tipo, :root:not([data-tema="claro"]) .ob-progreso, :root:not([data-tema="claro"]) .ob-nota, :root:not([data-tema="claro"]) .ob-atras { color: #a6a6a6; }
+            :root:not([data-tema="claro"]) .tira-semana, :root:not([data-tema="claro"]) .btn-chat-entrenar { background: #1c1c1e; color: #ececec; border-color: #3a3a3e; }
+            :root:not([data-tema="claro"]) .ts-dia { background: #26262a; }
+            :root:not([data-tema="claro"]) .ts-dia.hecho { background: #1b3320; }
+            :root:not([data-tema="claro"]) .ts-marca { color: #ececec; }
+            :root:not([data-tema="claro"]) .ts-dia.hecho .ts-marca { color: #81c784; }
+            :root:not([data-tema="claro"]) .ts-cab button { color: #ff8a65; }
+            :root:not([data-tema="claro"]) .ob-hola p { color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .ob-progreso div { background: #2e2e33; }
+            :root:not([data-tema="claro"]) .ob-chips .chip { background: #26262a; color: #ececec; border-color: #46464c; }
+            :root:not([data-tema="claro"]) .ob-chips .chip.activo { background: #ff5722; border-color: #ff5722; color: white; }
         }
+        /* MODO OSCURO elegido a mano en el Perfil */
+        :root[data-tema="oscuro"] body { background: #0f0f11; color: #ececec; }
+        :root[data-tema="oscuro"] .card { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .card-label { color: #b0b0b0; }
+        :root[data-tema="oscuro"] select, :root[data-tema="oscuro"] input[type="number"], :root[data-tema="oscuro"] input[type="text"], :root[data-tema="oscuro"] textarea { border: 2px solid #3a3a3e; color: #ececec; background: #1c1c1e; }
+        :root[data-tema="oscuro"] .input-label { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .deporte-detalle-item { background: #232326; }
+        :root[data-tema="oscuro"] .deporte-detalle-nombre { color: #cfcfcf; }
+        :root[data-tema="oscuro"] .chip { border: 1.5px solid #3f3f44; background: #1c1c1e; color: #c4c4c4; }
+        :root[data-tema="oscuro"] .cf-label { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .btn-copia { background: #1c1c1e; color: #dddddd; border: 2px solid #3a3a3e; }
+        :root[data-tema="oscuro"] .btn-resetear-historial { background: #1c1c1e; color: #ef9a9a; border: 2px solid #7a3535; }
+        :root[data-tema="oscuro"] .btn-resetear-historial:hover { background: #3a1c1f; }
+        :root[data-tema="oscuro"] .cf-dia-bloque { border-top: 1px solid #34343a; }
+        :root[data-tema="oscuro"] .btn-op { border: 2px solid #3a3a3e; background: #1c1c1e; color: #cfcfcf; }
+        :root[data-tema="oscuro"] .material-item { border: 2px solid #3a3a3e; }
+        :root[data-tema="oscuro"] .material-item .mat-nombre { color: #e6e6e6; }
+        :root[data-tema="oscuro"] .btn-secundario { background: #1c1c1e; color: #ececec; border: 2px solid #3f3f44; }
+        :root[data-tema="oscuro"] .chat-aplicar-banner { background: #1b3320; }
+        :root[data-tema="oscuro"] .chat-aplicar-banner strong { color: #81c784; }
+        :root[data-tema="oscuro"] .ejercicio-card { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .ej-info h3 { color: #ececec; }
+        :root[data-tema="oscuro"] .tag { background: #0f0f11; color: #c4c4c4; }
+        :root[data-tema="oscuro"] .tag.descanso { background: #3a2219; }
+        :root[data-tema="oscuro"] .peso-input { border: 2px solid #3a3a3e; }
+        :root[data-tema="oscuro"] .btn-cambiar-ej { background: #26262a; color: #cfcfcf; border: 1px dashed #46464c; }
+        :root[data-tema="oscuro"] .primeras-marcas span { background: #1c1c1e; border: 1px solid #34343a; }
+        :root[data-tema="oscuro"] .btn-ir-diario { background: #1c1c1e; border: 2px solid #3a3a3e; }
+        :root[data-tema="oscuro"] .grafica-resumen { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .grafica-leyenda { color: #a6a6a6; }
+        :root[data-tema="oscuro"] .resumen-semana { background: #1c1c1e; border: 1px solid #34343a; }
+        :root[data-tema="oscuro"] .rs-fecha { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .rs-numeros > div { background: #232326; }
+        :root[data-tema="oscuro"] .rs-sube { color: #81c784; }
+        :root[data-tema="oscuro"] .rs-baja { color: #ef9a9a; }
+        :root[data-tema="oscuro"] .rs-gris { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .rs-cerrar { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .descarga-card { background: #1a2438; border: 1px solid #2f4570; color: #9db9f0; }
+        :root[data-tema="oscuro"] .descarga-card.activa { background: #1b3320; border-color: #2f5a35; color: #9fd8a6; }
+        :root[data-tema="oscuro"] .aviso-seguridad { background: #3a3214; border: 1px solid #6b5a20; color: #f0d58a; }
+        :root[data-tema="oscuro"] .aviso-seguridad.fuerte { background: #3a1c1f; border-color: #7a3535; color: #f2a0a0; }
+        :root[data-tema="oscuro"] .reps-input, :root[data-tema="oscuro"] .rir-input { border: 2px solid #3a3a3e; background: #1c1c1e; }
+        :root[data-tema="oscuro"] .btn-timer { background: #3a2219; }
+        :root[data-tema="oscuro"] .mas-opciones > summary { background: #1c1c1e; border: 1px solid #34343a; color: #dddddd; }
+        :root[data-tema="oscuro"] .mas-opciones-resumen { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .ej-resumen { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .ej-progreso { color: #81c784; }
+        :root[data-tema="oscuro"] .ej-variantes summary { color: #c4c4c4; }
+        :root[data-tema="oscuro"] .st-cab { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .st-fila { background: #232326; }
+        :root[data-tema="oscuro"] .st-fila.hecha { background: #1b3320; }
+        :root[data-tema="oscuro"] .st-ant { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .st-fila input { border: 2px solid #3a3a3e; background: #1c1c1e; }
+        :root[data-tema="oscuro"] .st-ok { border: 2px solid #46464c; background: #1c1c1e; color: #b0b0b0; }
+        :root[data-tema="oscuro"] .st-rir { color: #cfcfcf; }
+        :root[data-tema="oscuro"] .st-rir span { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .btn-hecho { border: 2px solid #46464c; background: #1c1c1e; }
+        :root[data-tema="oscuro"] .rutina-ayuda { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .consejos-rutina { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .opcional { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .tz-modos button { border: 2px solid #3a3a3e; background: #1c1c1e; color: #cfcfcf; }
+        :root[data-tema="oscuro"] .tz-config label { color: #a6a6a6; }
+        :root[data-tema="oscuro"] .tz-config input, :root[data-tema="oscuro"] .tz-config select { border: 2px solid #3a3a3e; background: #1c1c1e; }
+        :root[data-tema="oscuro"] .tz-config .tz-preset { border: 1px dashed #46464c; background: #232326; }
+        :root[data-tema="oscuro"] .tz-config .tz-nota { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .grafica-wrap { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .grafica-titulo { color: #ececec; }
+        :root[data-tema="oscuro"] .plan-dia-card { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .plan-dia-nombre { color: #ececec; }
+        :root[data-tema="oscuro"] .plan-dia-tipo { background: #0f0f11; color: #c4c4c4; }
+        :root[data-tema="oscuro"] .plan-ej-lista li { color: #cfcfcf; }
+        :root[data-tema="oscuro"] .plan-generando { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .cal-dias .chip { border: 2px solid #3a3a3e; background: #1c1c1e; }
+        :root[data-tema="oscuro"] .notif-card { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .notif-label { color: #dddddd; }
+        :root[data-tema="oscuro"] .notif-sub { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .toggle-track::after { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .perfil-banner { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .perfil-banner-info { color: #c4c4c4; }
+        :root[data-tema="oscuro"] .perfil-banner-info strong { color: #ececec; }
+        :root[data-tema="oscuro"] .perfil-banner-edit { border: 2px solid #3a3a3e; color: #cfcfcf; }
+        :root[data-tema="oscuro"] .perfil-nota { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .material-grupo-titulo { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .material-extra { color: #c4c4c4; }
+        :root[data-tema="oscuro"] .btn-saltar { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .btn-saltar:hover { color: #c4c4c4; }
+        :root[data-tema="oscuro"] .sesion-card { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .sesion-card .sesion-fecha { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .sesion-card .sesion-info { color: #ececec; }
+        :root[data-tema="oscuro"] .sesion-tag.completada-si { background: #1b3320; color: #9fd8a6; }
+        :root[data-tema="oscuro"] .sesion-tag.completada-no { background: #3a1c1f; color: #f2a0a0; }
+        :root[data-tema="oscuro"] .sesion-tag.completada-medias { background: #3a2a14; color: #f0c48a; }
+        :root[data-tema="oscuro"] .sesion-tag.dif-facil { background: #1b3320; color: #9fd8a6; }
+        :root[data-tema="oscuro"] .sesion-card .sesion-molestia { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .historial-vacio { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .cargando-card { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .cargando-spinner { border: 4px solid #2e2e33; }
+        :root[data-tema="oscuro"] .cargando-titulo { color: #ececec; }
+        :root[data-tema="oscuro"] .cargando-subtitulo { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .tag.youtube-link { background: #3a1c1f; }
+        :root[data-tema="oscuro"] .ej-porque { color: #a6a6a6; }
+        :root[data-tema="oscuro"] .seccion-titulo { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .ejercicio-card { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .ej-explicacion { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .extra-card { background: #1c1c1e; color: #cfcfcf; }
+        :root[data-tema="oscuro"] .extra-card .extra-titulo { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .calendario { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .cal-mes-label { color: #ececec; }
+        :root[data-tema="oscuro"] .cal-nav-btn { border: 2px solid #3a3a3e; }
+        :root[data-tema="oscuro"] .cal-dow { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .cal-celda.dia-mes { color: #cfcfcf; }
+        :root[data-tema="oscuro"] .cal-celda.dia-mes:hover { background: #26262a; }
+        :root[data-tema="oscuro"] .diario-detalle { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .dd-vacio { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .dd-fecha { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .dd-titulo { color: #ececec; }
+        :root[data-tema="oscuro"] .dd-badge { background: #0f0f11; color: #c4c4c4; }
+        :root[data-tema="oscuro"] .dd-badge.verde { background: #1b3320; color: #9fd8a6; }
+        :root[data-tema="oscuro"] .dd-badge.naranja { background: #3a2a14; }
+        :root[data-tema="oscuro"] .dd-badge.rojo { background: #3a1c1f; color: #f2a0a0; }
+        :root[data-tema="oscuro"] .dd-seccion-titulo { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .dd-ej-nombre { color: #ececec; }
+        :root[data-tema="oscuro"] .dd-tag { background: #2a2a2e; color: #c4c4c4; }
+        :root[data-tema="oscuro"] .dd-feedback { color: #c4c4c4; }
+        :root[data-tema="oscuro"] .dd-sesion { border-bottom: 1px solid #2e2e33; }
+        :root[data-tema="oscuro"] .dd-tipo { color: #cfcfcf; }
+        :root[data-tema="oscuro"] .dd-mensaje { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .dd-seccion-tit { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .dd-lista { color: #cfcfcf; }
+        :root[data-tema="oscuro"] .dd-nota { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .dd-nota-feedback { color: #c4c4c4; }
+        :root[data-tema="oscuro"] .dd-ej-nombre { color: #ececec; }
+        :root[data-tema="oscuro"] .chat-wrapper { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .chat-burbuja.ia { background: #0f0f11; color: #ececec; }
+        :root[data-tema="oscuro"] .chat-input-area { border-top: 1px solid #2e2e33; background: #1c1c1e; }
+        :root[data-tema="oscuro"] .chat-input { border: 2px solid #3a3a3e; }
+        :root[data-tema="oscuro"] .chat-vacío { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .chat-sug-btn { background: #0f0f11; color: #c4c4c4; }
+        :root[data-tema="oscuro"] .chat-sug-btn:hover { background: #4a2a1e; }
+        :root[data-tema="oscuro"] .rec-ejercicio { color: #c4c4c4; }
+        :root[data-tema="oscuro"] .rec-fecha { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .prog-ejercicio { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .prog-nombre { color: #ececec; }
+        :root[data-tema="oscuro"] .prog-entry { background: #0f0f11; }
+        :root[data-tema="oscuro"] .variantes-box { border-top: 1px solid #2e2e33; }
+        :root[data-tema="oscuro"] .variante { color: #a6a6a6; }
+        :root[data-tema="oscuro"] .variante b { color: #cfcfcf; }
+        :root[data-tema="oscuro"] .cfp { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .cfp-burbuja.ia { background: #0f0f11; color: #ececec; }
+        :root[data-tema="oscuro"] .cfp-input-area { border-top: 1px solid #2e2e33; }
+        :root[data-tema="oscuro"] .cfp-input { border: 1.5px solid #3a3a3e; }
+        :root[data-tema="oscuro"] .peso-corp-widget { background: #1c1c1e; border: 1.5px solid #34343a; }
+        :root[data-tema="oscuro"] .peso-corp-widget h3 { color: #ececec; }
+        :root[data-tema="oscuro"] .peso-corp-row input { border: 1.5px solid #3a3a3e; }
+        :root[data-tema="oscuro"] .peso-corp-ultimo { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .prog-hint { background: #3a2a14; }
+        :root[data-tema="oscuro"] .ctx-semana-textarea { border: 1.5px solid #34343a; color: #e6e6e6; background: #232326; }
+        :root[data-tema="oscuro"] .ctx-foto-btn { background: #3a2a14; }
+        :root[data-tema="oscuro"] .ctx-foto-thumb { border: 2px solid #34343a; }
+        :root[data-tema="oscuro"] .gym-user-box { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .gym-user-box h2 { color: #ececec; }
+        :root[data-tema="oscuro"] .gym-user-box p { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .gym-user-list button { border: 1.5px solid #3a3a3e; background: #232326; color: #ececec; }
+        :root[data-tema="oscuro"] .gym-user-list button:hover { background: #3a2219; }
+        :root[data-tema="oscuro"] .gym-user-input { border: 1.5px solid #3a3a3e; }
+        :root[data-tema="oscuro"] .gym-user-note { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .gym-pin-error { color: #ef9a9a; }
+        :root[data-tema="oscuro"] .gym-pin-volver { color: #b0b0b0; }
+        :root[data-tema="oscuro"] body { background: #0f0f11; color: #e6e6e6; }
+        :root[data-tema="oscuro"] input, :root[data-tema="oscuro"] textarea, :root[data-tema="oscuro"] select { background: #232326; color: #ececec; border-color: #3a3a3e; }
+        :root[data-tema="oscuro"] input::placeholder, :root[data-tema="oscuro"] textarea::placeholder { color: #7d7d84; }
+        :root[data-tema="oscuro"] .gym-user-box { background: #1c1c1e; color: #ececec; }
+        :root[data-tema="oscuro"] .gym-user-box h2 { color: #ececec; }
+        :root[data-tema="oscuro"] .gym-user-box p, :root[data-tema="oscuro"] .gym-user-note { color: #a6a6a6; }
+        :root[data-tema="oscuro"] .gym-user-list button { background: #26262a; color: #ececec; border-color: #3a3a3e; }
+        :root[data-tema="oscuro"] .groq-pasos { color: #d0d0d0; }
+        :root[data-tema="oscuro"] .groq-pasos a { color: #ff8a65; }
+        :root[data-tema="oscuro"] .st-fila input { background: #1c1c1e; color: #ececec; border-color: #3a3a3e; }
+        :root[data-tema="oscuro"] .st-fila.hecha { background: #1b3320; }
+        :root[data-tema="oscuro"] .st-ok { background: #1c1c1e; border-color: #46464c; }
+        :root[data-tema="oscuro"] .chip, :root[data-tema="oscuro"] .cal-dias .chip, :root[data-tema="oscuro"] .st-rir .chip { background: #26262a; color: #ececec; border-color: #46464c; }
+        :root[data-tema="oscuro"] .chip.activo, :root[data-tema="oscuro"] .cal-dias .chip.activo, :root[data-tema="oscuro"] .st-rir .chip.activo { background: #ff5722; border-color: #ff5722; color: white; }
+        :root[data-tema="oscuro"] .btn-op.activo, :root[data-tema="oscuro"] .material-item.activo { background: #ff5722; color: white; border-color: #ff5722; }
+        :root[data-tema="oscuro"] .tag[style*="background"], :root[data-tema="oscuro"] .sesion-tag[style*="background"] { background: #2a2a2e !important; color: #dddddd !important; }
+        :root[data-tema="oscuro"] .cal-celda.hoy { background: #3a2219; }
+        :root[data-tema="oscuro"] .dd-feedback-box, :root[data-tema="oscuro"] .dd-ej-card { background: #232326; }
+        :root[data-tema="oscuro"] .tag.peso { background: #3a2414; color: #ffab76; }
+        :root[data-tema="oscuro"] .plan-dia-tipo.descanso { background: #1b3320; color: #81c784; }
+        :root[data-tema="oscuro"] #feedback-ejercicio-duro { background: #232326 !important; border-color: #3a3a3e !important; }
+        :root[data-tema="oscuro"] #evaluacion-pregunta { color: #c4c4c4 !important; }
+        :root[data-tema="oscuro"] .grupo-card { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .grupo-card p, :root[data-tema="oscuro"] .gr-dato, :root[data-tema="oscuro"] .gr-salir { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .gr-fila { background: #26262a; }
+        :root[data-tema="oscuro"] .gr-fila.yo { background: #3a2219; outline-color: #6b3a24; }
+        :root[data-tema="oscuro"] .ej-foto { background: #26262a; }
+        :root[data-tema="oscuro"] .empezar-rapido { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .empezar-rapido button { background: #2e1e18; border-color: #6b3a24; color: #ececec; }
+        :root[data-tema="oscuro"] .empezar-rapido button span, :root[data-tema="oscuro"] .er-titulo span { color: #a6a6a6; }
+        :root[data-tema="oscuro"] .btn-generar { background: #ff5722; color: white; }
+        :root[data-tema="oscuro"] .btn-generar:disabled { background: #5a2a18; color: #c9a99c; }
+        :root[data-tema="oscuro"] .btn-generar.btn-terminar { background: #2e7d32; }
+        :root[data-tema="oscuro"] .tabs-progreso { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .tabs-progreso button { color: #a6a6a6; }
+        :root[data-tema="oscuro"] .tabs-progreso button.activo { background: #2e2e33; color: #ececec; }
+        :root[data-tema="oscuro"] .ayuda-pantalla, :root[data-tema="oscuro"] .ts-letra, :root[data-tema="oscuro"] .ts-tipo, :root[data-tema="oscuro"] .ob-progreso, :root[data-tema="oscuro"] .ob-nota, :root[data-tema="oscuro"] .ob-atras { color: #a6a6a6; }
+        :root[data-tema="oscuro"] .tira-semana, :root[data-tema="oscuro"] .btn-chat-entrenar { background: #1c1c1e; color: #ececec; border-color: #3a3a3e; }
+        :root[data-tema="oscuro"] .ts-dia { background: #26262a; }
+        :root[data-tema="oscuro"] .ts-dia.hecho { background: #1b3320; }
+        :root[data-tema="oscuro"] .ts-marca { color: #ececec; }
+        :root[data-tema="oscuro"] .ts-dia.hecho .ts-marca { color: #81c784; }
+        :root[data-tema="oscuro"] .ts-cab button { color: #ff8a65; }
+        :root[data-tema="oscuro"] .ob-hola p { color: #c4c4c4; }
+        :root[data-tema="oscuro"] .ob-progreso div { background: #2e2e33; }
+        :root[data-tema="oscuro"] .ob-chips .chip { background: #26262a; color: #ececec; border-color: #46464c; }
+        :root[data-tema="oscuro"] .ob-chips .chip.activo { background: #ff5722; border-color: #ff5722; color: white; }
+
 </style>
 </head>
 <body>
@@ -2755,7 +2979,9 @@
     </div>
     <div class="gym-user-input-row">
       <input type="text" id="gym-user-input" class="gym-user-input" placeholder="Escribe tu nombre…" autocomplete="off" spellcheck="false" inputmode="text" style="font-size:16px">
-      <button class="gym-user-enter" onclick="selectGymUser(document.getElementById('gym-user-input').value)">Entrar →</button>
+      <button class="gym-user-enter" id="gym-user-entrar" onclick="selectGymUser(document.getElementById('gym-user-input').value)">Entrar →</button>
+      <div class="gym-pin-error" id="gym-user-error"></div>
+      <button class="gym-pin-volver" id="gym-user-seguir" style="display:none" onclick="document.getElementById('gym-user-modal').classList.add('hidden')"></button>
     </div>
     <p class="gym-user-note">Tu progreso se guarda en la nube — funciona en cualquier dispositivo</p>
    </div>
@@ -2930,6 +3156,16 @@
         </div>
 
         <button class="btn-generar" onclick="guardarPerfil()">Guardar</button>
+
+        <div class="card" style="margin-top:20px;">
+            <div class="card-label">🎨 Apariencia</div>
+            <div class="btn-group" id="tema-botones">
+                <button class="btn-op" data-tema="auto" onclick="elegirTema('auto')">📱 Automático</button>
+                <button class="btn-op" data-tema="claro" onclick="elegirTema('claro')">☀️ Claro</button>
+                <button class="btn-op" data-tema="oscuro" onclick="elegirTema('oscuro')">🌙 Oscuro</button>
+            </div>
+            <p class="perfil-nota" style="font-size:0.8rem;margin-top:8px">"Automático" sigue el modo claro u oscuro de tu móvil.</p>
+        </div>
 
         <div class="card" id="card-instalar" style="margin-top:20px;display:none">
             <div class="card-label">📲 Instalar la app</div>
@@ -3670,6 +3906,7 @@ function mostrarPerfil() {
     const pon = (id, v) => { document.getElementById(id).value = v ?? ''; };
     // El nombre ya se escribió al entrar: no pedirlo otra vez
     document.getElementById('perfil-usuario-actual').textContent = _currentGymUser || '—';
+    marcarTema();
     renderizarInstalar();
     document.getElementById('groq-estado-perfil').textContent = localStorage.getItem('gym_groq_key')
         ? '✅ Tienes una clave guardada en este móvil. Solo se usa aquí, nunca se sube a la nube.'
@@ -9147,6 +9384,19 @@ function openGymUserModal() {
     document.getElementById('gym-user-modal').classList.remove('hidden');
     loadGymUserList();
     document.getElementById('gym-user-input').value = '';
+    document.getElementById('gym-user-error').textContent = '';
+    // Si ya hay alguien dentro, se puede cerrar sin cambiar de usuario
+    const seguir = document.getElementById('gym-user-seguir');
+    seguir.textContent = `← Seguir como ${_currentGymUser}`;
+    seguir.style.display = _currentGymUser ? '' : 'none';
+}
+
+// Mientras se conecta, el botón dice "Conectando…" para que se vea que algo pasa
+function gymUserEsperando(si) {
+    const b = document.getElementById('gym-user-entrar');
+    if (!b) return;
+    b.disabled = si;
+    b.textContent = si ? 'Conectando…' : 'Entrar →';
 }
 
 async function loadGymUserList() {
@@ -9169,7 +9419,13 @@ async function loadGymUserList() {
             list.innerHTML = '<span style="color:#ccc;font-size:0.85rem">Sé el primero en crear un perfil</span>';
         }
     } catch {
-        list.innerHTML = '<span style="color:#ccc;font-size:0.85rem">Sin conexión — escribe tu nombre abajo</span>';
+        // Sin servidor: solo se puede seguir con el usuario cuyos datos están en este móvil
+        const dueno = localStorage.getItem('gym_data_owner') || '';
+        const safe = escaparHTML(dueno);
+        list.innerHTML = '<span style="color:#ccc;font-size:0.85rem">Sin conexión con el servidor. Ahora no se puede cambiar de usuario.</span>'
+            + (dueno ? `<button data-gymuser="${safe}">${safe}</button>` : '');
+        const b = list.querySelector('button[data-gymuser]');
+        if (b) b.addEventListener('click', () => selectGymUser(dueno));
     }
 }
 
@@ -9422,6 +9678,10 @@ function scheduleSyncGym() {
 async function selectGymUser(name) {
     name = (name || '').trim().toLowerCase();
     if (!name) return;
+    const entrar = document.getElementById('gym-user-entrar');
+    if (entrar && entrar.disabled) return; // ya se está conectando
+    document.getElementById('gym-user-error').textContent = '';
+    gymUserEsperando(true);
     // Subir ya los cambios pendientes del usuario anterior, antes de cambiar
     if (_syncTimer) {
         clearTimeout(_syncTimer);
@@ -9430,6 +9690,26 @@ async function selectGymUser(name) {
     }
     // PIN: elegirlo si el perfil aún no tiene; escribirlo si este móvil no lo recuerda
     const estado = await consultarEstado(name);
+    gymUserEsperando(false);
+    const dueno = localStorage.getItem('gym_data_owner') || '';
+    if (estado.sinConexion) {
+        // Sin servidor no se puede traer a otro usuario (y se perderían los datos de
+        // este móvil). Con el mismo usuario se sigue con lo guardado aquí.
+        if (name !== dueno) {
+            document.getElementById('gym-user-error').textContent = dueno
+                ? `Sin conexión con el servidor: ahora solo puedes seguir como ${dueno}. Inténtalo más tarde.`
+                : 'Sin conexión con el servidor. Inténtalo más tarde.';
+            return;
+        }
+        _gymDatosListos = true;
+        _currentGymUser = name;
+        localStorage.setItem('gym_user', name);
+        document.getElementById('gym-user-modal').classList.add('hidden');
+        updateSidebarUser();
+        materialSeleccionado = cargarMaterial();
+        init();
+        return;
+    }
     let nuevoPin = false;
     if (estado.servidorConPin) {
         if (!estado.tienePin) {
@@ -9481,6 +9761,25 @@ const _gymInp = document.getElementById('gym-user-input');
 if (_gymInp) _gymInp.addEventListener('keydown', e => {
     if (e.key === 'Enter') selectGymUser(_gymInp.value);
 });
+
+// ===================== APARIENCIA (claro / oscuro) =====================
+// Por defecto sigue al móvil; en el Perfil se puede fijar claro u oscuro (solo en este dispositivo).
+function temaActual() {
+    let t = 'auto';
+    try { t = localStorage.getItem('gym_tema') || 'auto'; } catch {}
+    return ['claro', 'oscuro'].includes(t) ? t : 'auto';
+}
+function elegirTema(t) {
+    try { if (t === 'auto') localStorage.removeItem('gym_tema'); else localStorage.setItem('gym_tema', t); } catch {}
+    const raiz = document.documentElement;
+    if (t === 'auto') { raiz.removeAttribute('data-tema'); raiz.style.colorScheme = ''; }
+    else { raiz.setAttribute('data-tema', t); raiz.style.colorScheme = t === 'oscuro' ? 'dark' : 'light'; }
+    marcarTema();
+}
+function marcarTema() {
+    const t = temaActual();
+    document.querySelectorAll('#tema-botones .btn-op').forEach(b => b.classList.toggle('activo', b.dataset.tema === t));
+}
 
 // ===================== APP INSTALABLE =====================
 // Service worker (abrir sin conexión) y botón "Instalar" / pasos para iPhone.
