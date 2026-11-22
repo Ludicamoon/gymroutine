@@ -2342,6 +2342,10 @@
         }
         @media (hover: hover) { .gym-user-enter:hover { background: #e64a19; } }
         .gym-user-note { font-size: 0.78rem; color: #999; margin-top: 12px; }
+        .gym-pin-input { letter-spacing: 8px; font-size: 1.3rem !important; font-weight: 800; text-transform: none; }
+        .gym-pin-input::placeholder { letter-spacing: normal; font-size: 1rem; font-weight: 400; }
+        .gym-pin-error { color: #c62828; font-size: 0.85rem; font-weight: 700; min-height: 1.1em; }
+        .gym-pin-volver { background: none; border: none; color: #888; font-size: 0.9rem; cursor: pointer; padding: 6px; }
 
         /* Botón cambiar usuario en sidebar */
         .sidebar-switch-user {
@@ -2361,6 +2365,7 @@
 <!-- ===================== USER MODAL ===================== -->
 <div class="gym-user-overlay hidden" id="gym-user-modal">
   <div class="gym-user-box">
+   <div id="gym-paso-nombre">
     <div style="font-size:2.8rem;margin-bottom:10px">🏋️</div>
     <h2>¿Quién entrena hoy?</h2>
     <p>Selecciona tu perfil o crea uno nuevo</p>
@@ -2372,6 +2377,21 @@
       <button class="gym-user-enter" onclick="selectGymUser(document.getElementById('gym-user-input').value)">Entrar →</button>
     </div>
     <p class="gym-user-note">Tu progreso se guarda en la nube — funciona en cualquier dispositivo</p>
+   </div>
+   <!-- Paso del PIN: crear (perfil nuevo o sin PIN), entrar o cambiar -->
+   <div id="gym-paso-pin" style="display:none">
+    <div style="font-size:2.8rem;margin-bottom:10px">🔒</div>
+    <h2 id="gym-pin-titulo">Tu PIN</h2>
+    <p id="gym-pin-texto"></p>
+    <div class="gym-user-input-row">
+      <input type="password" id="gym-pin-1" class="gym-user-input gym-pin-input" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="6 cifras">
+      <input type="password" id="gym-pin-2" class="gym-user-input gym-pin-input" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="Repite el PIN">
+      <div class="gym-pin-error" id="gym-pin-error"></div>
+      <button class="gym-user-enter" id="gym-pin-ok">Entrar →</button>
+      <button class="gym-pin-volver" id="gym-pin-volver">← Volver</button>
+    </div>
+    <p class="gym-user-note" id="gym-pin-nota">¿Lo has olvidado? Pide a quien gestiona la app que borre tu perfil para empezar de nuevo.</p>
+   </div>
   </div>
 </div>
 
@@ -2535,6 +2555,13 @@
         </div>
 
         <button class="btn-generar" onclick="guardarPerfil()">Guardar y empezar →</button>
+
+        <div class="card" style="margin-top:20px;">
+            <div class="card-label">🔒 PIN de tu perfil</div>
+            <p style="font-size:0.83rem;color:#999;margin-bottom:14px">Tus datos en la nube están protegidos con tu PIN de 6 cifras. Cada móvil lo pide una sola vez.</p>
+            <button class="btn-copia" onclick="cambiarMiPin()">Cambiar mi PIN</button>
+            <div id="pin-estado" style="display:none;font-size:0.82rem;margin-top:10px"></div>
+        </div>
 
         <div class="card" style="margin-top:20px;">
             <div class="card-label">Copia de seguridad</div>
@@ -7246,12 +7273,98 @@ function mostrarEstadoCopia(texto, error = false) {
 // guarden en el perfil de otro (o que se suba un perfil vacío encima del bueno).
 let _gymDatosListos = false;
 
+// ===================== PIN DEL PERFIL =====================
+// El servidor protege cada perfil con un PIN de 6 cifras. Este móvil lo recuerda
+// (por usuario) para no pedirlo en cada entreno.
+const pinGuardado = n => { try { return localStorage.getItem('gym_pin:' + n) || ''; } catch { return ''; } };
+const guardarPin  = (n, pin) => { try { localStorage.setItem('gym_pin:' + n, pin); } catch {} };
+const borrarPin   = n => { try { localStorage.removeItem('gym_pin:' + n); } catch {} };
+const cabecerasPin = n => (pinGuardado(n) ? { 'X-Pin': pinGuardado(n) } : {});
+
+// ¿Existe el perfil? ¿Tiene PIN? (si el servidor aún es el antiguo, no hay PIN)
+async function consultarEstado(name) {
+    try {
+        const ctrl = new AbortController();
+        setTimeout(() => ctrl.abort(), 6000);
+        const r = await fetch(`${GYM_WORKER}/estado?name=${encodeURIComponent(name)}`, { signal: ctrl.signal });
+        if (!r.ok) return { servidorConPin: false };
+        const d = await r.json();
+        return { servidorConPin: true, existe: !!d.existe, tienePin: !!d.tienePin };
+    } catch {
+        return { sinConexion: true };
+    }
+}
+
+// Muestra el paso del PIN y devuelve el PIN escrito, o null si se pulsa "Volver".
+// modo: 'crear' (elegir uno nuevo, dos veces), 'entrar' o 'cambiar'.
+function pedirPin(name, modo, error = '') {
+    return new Promise(resolve => {
+        const $ = id => document.getElementById(id);
+        const textos = {
+            crear:   ['Elige tu PIN', `Protege el perfil de <b>${escaparHTML(name)}</b> con un PIN de 6 cifras. Sin él, nadie podrá ver ni cambiar tus datos. Este móvil lo recordará.`, 'Guardar PIN y entrar →'],
+            entrar:  ['Escribe tu PIN', `El perfil de <b>${escaparHTML(name)}</b> está protegido. Escribe tu PIN de 6 cifras (solo una vez en este móvil).`, 'Entrar →'],
+            cambiar: ['Nuevo PIN', 'Elige tu nuevo PIN de 6 cifras.', 'Cambiar PIN'],
+        }[modo];
+        document.getElementById('gym-user-modal').classList.remove('hidden');
+        $('gym-paso-nombre').style.display = 'none';
+        $('gym-paso-pin').style.display = 'block';
+        $('gym-pin-titulo').textContent = textos[0];
+        $('gym-pin-texto').innerHTML = textos[1];
+        $('gym-pin-ok').textContent = textos[2];
+        $('gym-pin-2').style.display = modo === 'entrar' ? 'none' : '';
+        $('gym-pin-nota').style.display = modo === 'entrar' ? '' : 'none';
+        $('gym-pin-1').value = ''; $('gym-pin-2').value = '';
+        $('gym-pin-error').textContent = error;
+        setTimeout(() => $('gym-pin-1').focus(), 50);
+
+        const terminar = valor => {
+            $('gym-pin-ok').onclick = $('gym-pin-volver').onclick = null;
+            $('gym-pin-1').onkeydown = $('gym-pin-2').onkeydown = null;
+            $('gym-paso-pin').style.display = 'none';
+            $('gym-paso-nombre').style.display = '';
+            resolve(valor);
+        };
+        const aceptar = () => {
+            const p1 = $('gym-pin-1').value.trim(), p2 = $('gym-pin-2').value.trim();
+            if (!/^\d{6}$/.test(p1)) { $('gym-pin-error').textContent = 'El PIN son 6 cifras.'; return; }
+            if (modo !== 'entrar' && p1 !== p2) { $('gym-pin-error').textContent = 'Los dos PIN no coinciden.'; return; }
+            terminar(p1);
+        };
+        $('gym-pin-ok').onclick = aceptar;
+        $('gym-pin-volver').onclick = () => terminar(null);
+        $('gym-pin-1').onkeydown = $('gym-pin-2').onkeydown = e => { if (e.key === 'Enter') aceptar(); };
+    });
+}
+
+async function cambiarMiPin() {
+    const name = _currentGymUser;
+    if (!name) return;
+    const nuevo = await pedirPin(name, 'cambiar');
+    document.getElementById('gym-user-modal').classList.add('hidden');
+    if (!nuevo) return;
+    const estado = document.getElementById('pin-estado');
+    try {
+        const r = await fetch(`${GYM_WORKER}/pin?name=${encodeURIComponent(name)}`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json', ...cabecerasPin(name) },
+            body: JSON.stringify({ nuevo }),
+        });
+        if (r.ok) { guardarPin(name, nuevo); estado.textContent = '✅ PIN cambiado. En tus otros móviles te lo pedirán una vez.'; }
+        else estado.textContent = r.status === 401 ? '❌ El PIN guardado ya no vale: sal y vuelve a entrar con tu PIN.' : '❌ No se ha podido cambiar el PIN.';
+    } catch { estado.textContent = '❌ Sin conexión. Inténtalo más tarde.'; }
+    estado.style.display = 'block';
+}
+
 async function loadGymUserData(name) {
     _gymDatosListos = false;
     try {
         const ctrl = new AbortController();
         setTimeout(() => ctrl.abort(), 7000);
-        const r = await fetch(`${GYM_WORKER}/user?name=${encodeURIComponent(name)}`, { signal: ctrl.signal });
+        const r = await fetch(`${GYM_WORKER}/user?name=${encodeURIComponent(name)}`, { signal: ctrl.signal, headers: cabecerasPin(name) });
+        // PIN que falta, incorrecto o perfil bloqueado: no se toca nada
+        if (r.status === 401 || r.status === 429) {
+            const d = await r.json().catch(() => ({}));
+            return { error: r.status === 429 ? 'bloqueado' : 'pin', ...d };
+        }
         if (r.status === 404) {
             // Usuario nuevo: empieza con datos vacíos
             clearLocalGymData();
@@ -7293,9 +7406,9 @@ async function syncGymUser() {
         let existing = {};
         const ctrl = new AbortController();
         setTimeout(() => ctrl.abort(), 5000);
-        const r = await fetch(`${GYM_WORKER}/user?name=${encodeURIComponent(_currentGymUser)}`, { signal: ctrl.signal });
+        const r = await fetch(`${GYM_WORKER}/user?name=${encodeURIComponent(_currentGymUser)}`, { signal: ctrl.signal, headers: cabecerasPin(_currentGymUser) });
         if (r.ok) existing = await r.json();
-        else if (r.status !== 404) return;
+        else if (r.status !== 404) return; // incluye PIN incorrecto: no se sube nada
 
         const data = {
             ...existing,
@@ -7311,7 +7424,7 @@ async function syncGymUser() {
         };
         await fetch(`${GYM_WORKER}/user?name=${encodeURIComponent(_currentGymUser)}`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...cabecerasPin(_currentGymUser) },
             body: JSON.stringify(data),
         });
     } catch(e) { console.warn('syncGymUser error:', e); }
@@ -7331,14 +7444,42 @@ async function selectGymUser(name) {
         _syncTimer = null;
         await syncGymUser();
     }
+    // PIN: elegirlo si el perfil aún no tiene; escribirlo si este móvil no lo recuerda
+    const estado = await consultarEstado(name);
+    let nuevoPin = false;
+    if (estado.servidorConPin) {
+        if (!estado.tienePin) {
+            const pin = await pedirPin(name, 'crear');
+            if (!pin) return; // "Volver": se queda en "¿Quién entrena hoy?"
+            guardarPin(name, pin);
+            nuevoPin = true;
+        } else if (!pinGuardado(name)) {
+            const pin = await pedirPin(name, 'entrar');
+            if (!pin) return;
+            guardarPin(name, pin);
+        }
+    }
+
+    // Cargar datos del usuario desde la nube (si el PIN falla, se vuelve a pedir)
+    let res = await loadGymUserData(name);
+    while (res && res.error) {
+        borrarPin(name);
+        const aviso = res.error === 'bloqueado'
+            ? `Demasiados intentos. Perfil bloqueado ${res.minutos || 15} minutos.`
+            : (res.intentosRestantes ? `PIN incorrecto. Te quedan ${res.intentosRestantes} intentos.` : 'Escribe tu PIN.');
+        const pin = await pedirPin(name, 'entrar', aviso);
+        if (!pin) return;
+        guardarPin(name, pin);
+        res = await loadGymUserData(name);
+    }
+
     _currentGymUser = name;
     localStorage.setItem('gym_user', name);
     document.getElementById('gym-user-modal').classList.add('hidden');
-    // Mostrar indicador de carga
     document.getElementById('sidebar-user-label').textContent = name;
     document.getElementById('sidebar-switch-user').style.display = 'block';
-    // Cargar datos del usuario desde la nube
-    await loadGymUserData(name);
+    // Perfil recién protegido: se guarda ya en la nube para dejar el PIN puesto
+    if (nuevoPin && _gymDatosListos && localStorage.getItem('gym_data_owner') === name) await syncGymUser();
     // Reiniciar la app con los datos del nuevo usuario
     materialSeleccionado = cargarMaterial();
     init();
