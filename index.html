@@ -2720,6 +2720,10 @@
         .empezar-rapido { background: #1c1c1e; }
         .empezar-rapido button { background: #2e1e18; border-color: #6b3a24; color: #ececec; }
         .empezar-rapido button span, .er-titulo span { color: #a6a6a6; }
+        /* El botón principal era negro sobre fondo negro: en oscuro va en naranja */
+        .btn-generar { background: #ff5722; color: white; }
+        .btn-generar:disabled { background: #5a2a18; color: #c9a99c; }
+        .btn-generar.btn-terminar { background: #2e7d32; }
         .tabs-progreso { background: #1c1c1e; }
         .tabs-progreso button { color: #a6a6a6; }
         .tabs-progreso button.activo { background: #2e2e33; color: #ececec; }
@@ -2920,7 +2924,7 @@
 
         <!-- Dónde entrenas y material -->
         <div class="card">
-            <div class="card-label">¿Dónde entrenas?</div>
+            <div class="card-label">¿Dónde entrenas? <span class="opcional">(marca todos los que uses)</span></div>
             <div class="btn-group" id="perfil-lugar-group"></div>
             <div id="material-zona" style="margin-top:16px"></div>
         </div>
@@ -3018,10 +3022,7 @@
         </div>
         <div class="card" id="card-lugar-hoy" style="display:none">
             <div class="card-label">¿Dónde entrenas hoy?</div>
-            <div class="btn-group">
-                <button class="btn-op" data-lugar="casa" onclick="elegirLugarHoy('casa', this)">🏠 Fuera del gimnasio</button>
-                <button class="btn-op" data-lugar="gimnasio" onclick="elegirLugarHoy('gimnasio', this)">🏢 En el gimnasio</button>
-            </div>
+            <div class="btn-group" id="lugar-hoy-botones"></div>
         </div>
 
         <div class="card">
@@ -3402,7 +3403,7 @@ function guardarPerfil() {
         guardarPesoCorporal(regs);
     }
 
-    const lugar = _perfilSel.lugar;
+    const lugares = _perfilSel.lugares;
     const perfil = {
         nombre: val('perfil-nombre'),
         anioNacimiento: anio,
@@ -3416,7 +3417,9 @@ function guardarPerfil() {
         nivel: _perfilSel.nivel, objetivoTipo: _perfilSel.objetivoTipo,
         diasSemana: parseInt(_perfilSel.diasSemana) || null,
         compartirActividad: !!anterior.compartirActividad,
-        lugar,
+        lugares,
+        // Compatibilidad con versiones anteriores de la app (un solo sitio)
+        lugar: lugares.length > 1 ? 'mezcla' : lugares[0],
         pesasKg: document.getElementById('perfil-pesas-kg') ? val('perfil-pesas-kg') : (anterior.pesasKg || ''),
         materialOtro: document.getElementById('perfil-material-otro') ? val('perfil-material-otro') : (anterior.materialOtro || ''),
     };
@@ -3425,7 +3428,9 @@ function guardarPerfil() {
     // Quitar de habituales los "Otro" que se han borrado del texto
     perfil.deportesHabituales = perfil.deportesHabituales.filter(d => DEPORTES_BASE.includes(d) || perfil.deportesOtros.includes(d));
 
-    const material = lugar === 'gimnasio' ? ['gimnasio'] : materialSeleccionado.filter(m => m !== 'gimnasio' || lugar === 'mezcla');
+    // El material guardado es el de casa (el gimnasio y el parque ya se saben)
+    const material = lugares.includes('casa') ? materialSeleccionado.filter(m => m !== 'gimnasio')
+        : lugares.includes('gimnasio') ? ['gimnasio'] : materialSeleccionado.filter(m => MATERIAL_PORTATIL.includes(m));
     localStorage.setItem('gym_perfil', JSON.stringify(perfil));
     localStorage.setItem('gym_material', JSON.stringify(material));
     scheduleSyncGym();
@@ -3441,35 +3446,32 @@ function toggleMaterial(id) {
     renderizarMaterialPerfil();
 }
 
+// Sitios: se pueden marcar varios (al menos uno)
 function elegirLugar(lugar) {
-    const antes = _perfilSel.lugar;
-    _perfilSel.lugar = lugar;
-    // Atajos: el parque ya trae barra y paralelas; al salir de "Gimnasio" se empieza en blanco
-    if (lugar === 'parque' && antes !== 'parque' && !materialSeleccionado.some(m => m !== 'gimnasio')) {
-        materialSeleccionado = ['barra_dominadas', 'paralelas'];
-    }
-    if (lugar !== 'mezcla') materialSeleccionado = materialSeleccionado.filter(m => m !== 'gimnasio');
+    const ls = _perfilSel.lugares;
+    _perfilSel.lugares = ls.includes(lugar) ? (ls.length > 1 ? ls.filter(l => l !== lugar) : ls) : [...ls, lugar];
     renderizarMaterialPerfil();
 }
 
 function renderizarMaterialPerfil() {
     const perfil = cargarPerfil() || {};
-    const lugar = _perfilSel.lugar;
+    const lugares = _perfilSel.lugares;
     document.getElementById('perfil-lugar-group').innerHTML = Object.entries(LUGARES).map(([id, txt]) =>
-        `<button class="btn-op${id === lugar ? ' activo' : ''}" onclick="elegirLugar('${id}')">${txt}</button>`).join('');
+        `<button class="btn-op${lugares.includes(id) ? ' activo' : ''}" onclick="elegirLugar('${id}')">${txt}</button>`).join('');
 
     // Conservar lo que ya se ha escrito en los campos antes de redibujar
     const kgPrevio = document.getElementById('perfil-pesas-kg')?.value ?? perfil.pesasKg ?? '';
     const otroPrevio = document.getElementById('perfil-material-otro')?.value ?? perfil.materialOtro ?? '';
     const zona = document.getElementById('material-zona');
-    if (lugar === 'gimnasio') {
-        zona.innerHTML = `<p class="perfil-nota" style="font-size:0.85rem">🏢 Con gimnasio tienes todo el material: máquinas, poleas, barras, mancuernas, cardio… No hace falta marcar nada.</p>`;
-        return;
-    }
-    const nota = lugar === 'mezcla'
-        ? 'Marca el material que tienes fuera del gimnasio. En "Entrenar" eliges cada día dónde entrenas.'
-        : 'Marca lo que tienes. El peso corporal siempre cuenta.';
-    zona.innerHTML = `<p class="perfil-nota" style="font-size:0.85rem;margin-bottom:4px">${nota}</p>`
+    // Notas de los sitios que no necesitan marcar material
+    const notas = [];
+    if (lugares.includes('gimnasio')) notas.push('🏢 En el gimnasio tienes todo el material: no hace falta marcar nada.');
+    if (lugares.includes('parque')) notas.push('🌳 En el parque usarás barra, paralelas, bancos y tu peso.');
+    if (lugares.length > 1) notas.push('En "Entrenar" eliges cada día dónde entrenas.');
+    const htmlNotas = notas.map(n => `<p class="perfil-nota" style="font-size:0.85rem;margin-bottom:4px">${n}</p>`).join('');
+    if (!lugares.includes('casa')) { zona.innerHTML = htmlNotas; return; }
+    zona.innerHTML = htmlNotas + `<div class="card-label" style="margin-top:12px">Material que tienes en casa</div>
+        <p class="perfil-nota" style="font-size:0.85rem;margin-bottom:4px">Marca lo que tienes. El peso corporal siempre cuenta.</p>`
         + MATERIAL_GRUPOS.map(([grupo, items]) => `<div class="material-grupo-titulo">${grupo}</div>
             <div class="material-grid">${items.map(([id, ico, nombre]) =>
                 `<div class="material-item${materialSeleccionado.includes(id) ? ' activo' : ''}" onclick="toggleMaterial('${id}')">
@@ -3506,38 +3508,71 @@ const MATERIAL_GRUPOS = [
 const MATERIAL_INFO = Object.fromEntries(MATERIAL_GRUPOS.flatMap(([, items]) => items.map(([id, ico, nombre, ia]) => [id, { ico, nombre, ia }])));
 MATERIAL_INFO.gimnasio = { ico: '🏢', nombre: 'Gimnasio completo', ia: 'gimnasio completo' };
 const MATERIAL_GIMNASIO_IA = 'acceso completo a gimnasio: mancuernas, barra olímpica, press de banca plano/inclinado/declinado, máquina de cables y poleas, lat pulldown, remo en máquina, leg press, hack squat, extensión de cuádriceps, curl femoral, hip thrust en máquina, pec deck, máquina de hombros, pull-over en polea, fondos en paralelas, barra de dominadas, esterilla, TRX, máquinas de cardio (cinta, bici, elíptica)';
-const LUGARES = { casa: '🏠 Casa', gimnasio: '🏢 Gimnasio', parque: '🌳 Parque', mezcla: '🔀 Varios sitios' };
+// Sitios donde se entrena: se pueden marcar varios. El material de "casa" es el que se
+// marca en el perfil; el gimnasio lo tiene todo; el parque tiene barra, paralelas y suelo.
+const LUGARES = { casa: '🏠 Casa', gimnasio: '🏢 Gimnasio', parque: '🌳 Parque' };
+const ICONO_LUGAR = { casa: '🏠', gimnasio: '🏢', parque: '🌳' };
+const MATERIAL_PARQUE_IA = 'parque de calistenia al aire libre: barra de dominadas, paralelas, bancos y suelo (peso corporal)';
+const MATERIAL_PORTATIL = ['gomas', 'trx', 'comba', 'esterilla'];
 
-function lugarPerfil(perfil = cargarPerfil(), material = cargarMaterial()) {
-    if (perfil && LUGARES[perfil.lugar]) return perfil.lugar;
-    return material.length === 1 && material[0] === 'gimnasio' ? 'gimnasio' : 'casa'; // perfiles antiguos
+// Lista de sitios del perfil (los perfiles antiguos tenían uno solo, o "mezcla")
+function lugaresPerfil(perfil = cargarPerfil(), material = cargarMaterial()) {
+    const validos = l => Array.isArray(l) ? l.filter(x => LUGARES[x]) : [];
+    if (perfil && validos(perfil.lugares).length) return validos(perfil.lugares);
+    if (perfil && perfil.lugar === 'mezcla') return ['casa', 'gimnasio'];
+    if (perfil && LUGARES[perfil.lugar]) return [perfil.lugar];
+    return material.length === 1 && material[0] === 'gimnasio' ? ['gimnasio'] : ['casa'];
 }
+
+// Sitio donde se entrena hoy: si solo hay uno, ese; si hay varios, el elegido en Entrenar
+function lugarDeHoy(perfil = cargarPerfil()) {
+    const lugares = lugaresPerfil(perfil);
+    if (lugares.length === 1) return lugares[0];
+    if (elegido.lugarHoy && lugares.includes(elegido.lugarHoy)) return elegido.lugarHoy;
+    let guardado = '';
+    try { guardado = localStorage.getItem(claveLocal('gym_lugar_hoy')) || ''; } catch {}
+    return lugares.includes(guardado) ? guardado : lugares[0];
+}
+// Compatibilidad con el código que pedía "el" sitio del perfil
+function lugarPerfil(perfil = cargarPerfil()) { return lugarDeHoy(perfil); }
 
 function nombresMaterial(lista) {
     const perfil = cargarPerfil();
-    const lugar = lugarPerfil(perfil, lista || []);
-    if (lugar === 'gimnasio') return 'Gimnasio completo';
-    const nombres = (lista || []).map(m => (MATERIAL_INFO[m] || {}).nombre || m);
-    if (perfil && perfil.materialOtro) nombres.push(perfil.materialOtro);
-    const txt = nombres.length ? nombres.join(', ') : 'Solo peso corporal';
-    return lugar === 'casa' ? txt : `${LUGARES[lugar]} · ${txt}`;
+    const lugares = lugaresPerfil(perfil, lista || []);
+    return lugares.map(l => {
+        if (l !== 'casa') return LUGARES[l];
+        const nombres = (lista || []).filter(m => m !== 'gimnasio').map(m => (MATERIAL_INFO[m] || {}).nombre || m);
+        if (perfil && perfil.materialOtro) nombres.push(perfil.materialOtro);
+        return `${LUGARES.casa}: ${nombres.length ? nombres.join(', ') : 'peso corporal'}`;
+    }).join(' · ');
 }
 
-// Material tal y como se le explica a la IA. lugarHoy: 'casa' | 'gimnasio' (para "Varios sitios")
-function textoMaterialIA(perfil = cargarPerfil(), material = cargarMaterial(), lugarHoy = null) {
-    const lugar = lugarPerfil(perfil, material);
-    const propio = material.filter(m => m !== 'gimnasio').map(m => (MATERIAL_INFO[m] || {}).ia || m);
-    if (perfil && perfil.materialOtro) propio.push(perfil.materialOtro);
-    const kg = perfil && perfil.pesasKg && material.includes('pesas') ? ` (mancuernas de hasta ${perfil.pesasKg} kg cada una: no propongas más peso)` : '';
-    const casa = ['peso corporal', ...propio].join(', ') + kg;
+// Material de un sitio, tal y como se le explica a la IA
+function materialDeLugarIA(lugar, perfil, material) {
     if (lugar === 'gimnasio') return MATERIAL_GIMNASIO_IA;
-    if (lugar === 'parque') return `parque de calistenia al aire libre: ${casa}`;
-    if (lugar === 'mezcla') {
-        return lugarHoy === 'gimnasio'
-            ? `HOY entrena en el gimnasio: ${MATERIAL_GIMNASIO_IA}`
-            : `HOY entrena fuera del gimnasio (casa/parque): ${casa}. Otros días va al gimnasio.`;
+    const propio = material.filter(m => m !== 'gimnasio');
+    if (lugar === 'parque') {
+        const llevar = propio.filter(m => MATERIAL_PORTATIL.includes(m)).map(m => MATERIAL_INFO[m].ia);
+        return MATERIAL_PARQUE_IA + (llevar.length ? `; puede llevar ${llevar.join(', ')}` : '');
     }
-    return casa;
+    const enCasa = propio.map(m => (MATERIAL_INFO[m] || {}).ia || m);
+    if (perfil && perfil.materialOtro) enCasa.push(perfil.materialOtro);
+    const kg = perfil && perfil.pesasKg && propio.includes('pesas') ? ` (mancuernas de hasta ${perfil.pesasKg} kg cada una: no propongas más peso)` : '';
+    return ['peso corporal', ...enCasa].join(', ') + kg;
+}
+
+// Para la rutina de hoy: el material del sitio de hoy (y dónde entrena otros días)
+function textoMaterialIA(perfil = cargarPerfil(), material = cargarMaterial(), lugarHoy = null) {
+    const lugares = lugaresPerfil(perfil, material);
+    const hoy = lugarHoy && lugares.includes(lugarHoy) ? lugarHoy : lugarDeHoy(perfil);
+    const otros = lugares.filter(l => l !== hoy).map(l => LUGARES[l].replace(/^\S+\s/, '').toLowerCase());
+    return `HOY entrena en ${LUGARES[hoy].replace(/^\S+\s/, '').toLowerCase()}: ${materialDeLugarIA(hoy, perfil, material)}`
+        + (otros.length ? `. Otros días entrena en: ${otros.join(', ')}` : '');
+}
+
+// Para el plan semanal y el chat: todos los sitios con su material
+function textoLugaresIA(perfil = cargarPerfil(), material = cargarMaterial()) {
+    return lugaresPerfil(perfil, material).map(l => `${LUGARES[l].replace(/^\S+\s/, '')} → ${materialDeLugarIA(l, perfil, material)}`).join(' | ');
 }
 
 // Edad a partir del año de nacimiento (la edad escrita a mano se quedaba vieja)
@@ -3618,7 +3653,7 @@ function nivelYObjetivo(perfil = cargarPerfil()) {
         objetivoTipo: validoObj(perfil && perfil.objetivoTipo) || validoObj(ultima && ultima.objetivo) || 'mantener',
     };
 }
-let _perfilSel = { nivel: 'medio', objetivoTipo: 'mantener', diasSemana: null, lugar: 'casa' };
+let _perfilSel = { nivel: 'medio', objetivoTipo: 'mantener', diasSemana: null, lugares: ['casa'] };
 function elegirPerfil(campo, btn) {
     _perfilSel[campo] = btn.dataset.valor;
     btn.parentElement.querySelectorAll('.btn-op').forEach(b => b.classList.toggle('activo', b === btn));
@@ -3648,7 +3683,7 @@ function mostrarPerfil() {
     pon('perfil-objetivo', perfil.objetivo);
 
     // Nivel, objetivo, días y lugar
-    _perfilSel = { ...nivelYObjetivo(perfil), diasSemana: perfil.diasSemana ? String(perfil.diasSemana) : null, lugar: lugarPerfil(perfil) };
+    _perfilSel = { ...nivelYObjetivo(perfil), diasSemana: perfil.diasSemana ? String(perfil.diasSemana) : null, lugares: [...lugaresPerfil(perfil)] };
     ['nivel', 'objetivoTipo', 'diasSemana'].forEach(campo => {
         document.querySelectorAll(`#perfil-${campo}-group .btn-op`).forEach(b =>
             b.classList.toggle('activo', b.dataset.valor === _perfilSel[campo]));
@@ -3657,7 +3692,7 @@ function mostrarPerfil() {
     // Deportes y material
     deportesPerfilSeleccionados = (perfil.deportesHabituales || []).filter(d => d !== 'gimnasio');
     renderizarDeportesPerfil(perfil);
-    materialSeleccionado = cargarMaterial();
+    materialSeleccionado = cargarMaterial().filter(m => m !== 'gimnasio');
     if (document.getElementById('perfil-pesas-kg')) document.getElementById('perfil-pesas-kg').remove();
     if (document.getElementById('perfil-material-otro')) document.getElementById('perfil-material-otro').remove();
     renderizarMaterialPerfil();
@@ -3715,16 +3750,19 @@ function mostrarFormulario() {
     renderBotonesDeporteSemana();
     restaurarDeporteSemana();
 
-    // Quien entrena en varios sitios elige cada día dónde
+    // Quien entrena en varios sitios elige cada día dónde (si el plan lo dice, ya viene marcado)
     const cardLugar = document.getElementById('card-lugar-hoy');
-    if (lugarPerfil(perfil, material) === 'mezcla') {
-        let hoyEn = 'casa';
-        try { hoyEn = localStorage.getItem(claveLocal('gym_lugar_hoy')) || 'casa'; } catch {}
+    const lugares = lugaresPerfil(perfil, material);
+    if (lugares.length > 1) {
+        const delPlan = planDeHoy();
+        if (delPlan && lugares.includes(delPlan.lugar) && !elegido.lugarHoy) elegido.lugarHoy = delPlan.lugar;
+        const hoyEn = lugarDeHoy(perfil);
         elegido.lugarHoy = hoyEn;
+        document.getElementById('lugar-hoy-botones').innerHTML = lugares.map(l =>
+            `<button class="btn-op${l === hoyEn ? ' activo' : ''}" data-lugar="${l}" onclick="elegirLugarHoy('${l}', this)">${LUGARES[l]}</button>`).join('');
         cardLugar.style.display = '';
-        cardLugar.querySelectorAll('.btn-op').forEach(b => b.classList.toggle('activo', b.dataset.lugar === hoyEn));
     } else {
-        elegido.lugarHoy = null;
+        elegido.lugarHoy = lugares[0];
         cardLugar.style.display = 'none';
     }
 
@@ -3743,7 +3781,7 @@ const OB_MATERIAL_RAPIDO = ['pesas', 'barras', 'press_banca', 'barra_dominadas',
 
 function mostrarBienvenida() {
     const nombre = _currentGymUser ? _currentGymUser.charAt(0).toUpperCase() + _currentGymUser.slice(1) : '';
-    _ob = { paso: 0, nombre, objetivoTipo: null, nivel: 'medio', diasSemana: 3, lugar: null, material: [], pesasKg: '', lesiones: '', anio: '' };
+    _ob = { paso: 0, nombre, objetivoTipo: null, nivel: 'medio', diasSemana: 3, lugares: [], material: [], pesasKg: '', lesiones: '', anio: '' };
     ocultarTodas();
     document.body.classList.add('primer-dia');
     document.getElementById('pantalla-inicio').style.display = 'block';
@@ -3760,7 +3798,11 @@ function _obGuardarCampos() {
 function obElegir(campo, valor) {
     _obGuardarCampos();
     _ob[campo] = valor;
-    if (campo === 'lugar' && valor === 'parque' && !_ob.material.length) _ob.material = ['barra_dominadas', 'paralelas'];
+    renderBienvenida();
+}
+function obLugar(id) {
+    _obGuardarCampos();
+    _ob.lugares = _ob.lugares.includes(id) ? _ob.lugares.filter(l => l !== id) : [..._ob.lugares, id];
     renderBienvenida();
 }
 function obMaterial(id) {
@@ -3806,15 +3848,18 @@ function renderBienvenida() {
                 <div class="btn-group">${[2, 3, 4, 5, 6].map(d => op('diasSemana', d, String(d))).join('')}</div></div>
             <button class="btn-generar" onclick="obIr(3)">Siguiente →</button>`;
     } else if (_ob.paso === 3) {
-        const conMaterial = _ob.lugar && _ob.lugar !== 'gimnasio';
+        const conMaterial = _ob.lugares.includes('casa');
         html = `<h2>¿Dónde entrenas?</h2>
-            <div class="btn-group ob-grande">${Object.entries(LUGARES).map(([id, t]) => op('lugar', id, t)).join('')}</div>
-            ${_ob.lugar === 'gimnasio' ? '<p class="ob-nota">Perfecto: en un gimnasio tienes todo el material.</p>' : ''}
-            ${conMaterial ? `<div class="card"><div class="card-label">¿Qué material tienes${_ob.lugar === 'mezcla' ? ' fuera del gimnasio' : ''}?</div>
+            <p class="ob-nota" style="margin-top:-8px">Marca todos los que uses. Cada día elegirás dónde entrenas.</p>
+            <div class="btn-group ob-grande">${Object.entries(LUGARES).map(([id, t]) =>
+                `<button class="btn-op${_ob.lugares.includes(id) ? ' activo' : ''}" onclick="obLugar('${id}')">${t}</button>`).join('')}</div>
+            ${_ob.lugares.includes('gimnasio') ? '<p class="ob-nota">🏢 En el gimnasio tienes todo el material.</p>' : ''}
+            ${_ob.lugares.includes('parque') ? '<p class="ob-nota">🌳 En el parque usarás barra, paralelas y tu peso.</p>' : ''}
+            ${conMaterial ? `<div class="card"><div class="card-label">¿Qué material tienes en casa?</div>
                 <div class="ob-chips">${OB_MATERIAL_RAPIDO.map(id => `<button class="chip${_ob.material.includes(id) ? ' activo' : ''}" onclick="obMaterial('${id}')">${MATERIAL_INFO[id].ico} ${MATERIAL_INFO[id].nombre}</button>`).join('')}</div>
                 ${_ob.material.includes('pesas') ? `<div class="material-extra">🏋️ Mancuernas: hasta <input type="number" id="ob-kg" min="1" max="100" step="0.5" placeholder="kg" value="${escaparHTML(_ob.pesasKg)}"> kg cada una</div>` : ''}
                 <p class="ob-nota">Si no tienes nada, no pasa nada: hay rutinas con tu propio peso. Puedes añadir más material luego en tu Perfil.</p></div>` : ''}
-            <button class="btn-generar" onclick="obIr(4)" ${_ob.lugar ? '' : 'disabled'}>Siguiente →</button>`;
+            <button class="btn-generar" onclick="obIr(4)" ${_ob.lugares.length ? '' : 'disabled'}>Siguiente →</button>`;
     } else {
         html = `<h2>Último paso</h2>
             <div class="card"><div class="card-label">¿Alguna lesión o molestia? <span class="opcional">(opcional)</span></div>
@@ -3834,9 +3879,11 @@ function terminarBienvenida() {
         peso: '', altura: '', lesiones: _ob.lesiones, evitar: '', objetivo: '',
         deportesHabituales: [], deportesOtros: [],
         nivel: _ob.nivel, objetivoTipo: _ob.objetivoTipo || 'mantener', diasSemana: _ob.diasSemana,
-        lugar: _ob.lugar || 'casa', pesasKg: _ob.material.includes('pesas') ? _ob.pesasKg : '', materialOtro: '',
+        lugares: _ob.lugares.length ? _ob.lugares : ['casa'],
+        pesasKg: _ob.material.includes('pesas') ? _ob.pesasKg : '', materialOtro: '',
     };
-    const material = perfil.lugar === 'gimnasio' ? ['gimnasio'] : _ob.material;
+    perfil.lugar = perfil.lugares.length > 1 ? 'mezcla' : perfil.lugares[0]; // compatibilidad
+    const material = perfil.lugares.includes('casa') ? _ob.material : perfil.lugares.includes('gimnasio') ? ['gimnasio'] : [];
     localStorage.setItem('gym_perfil', JSON.stringify(perfil));
     localStorage.setItem('gym_material', JSON.stringify(material));
     scheduleSyncGym();
@@ -3869,7 +3916,7 @@ function renderizarTiraSemana() {
             return `<div class="ts-dia${hecho ? ' hecho' : ''}${f === hoy ? ' hoy' : ''}${p && p.descanso ? ' descanso' : ''}">
                 <span class="ts-letra">${'LMXJVSD'[k]}</span>
                 <span class="ts-marca">${hecho ? '✓' : d.getDate()}</span>
-                <span class="ts-tipo">${p ? escaparHTML(p.descanso ? 'Desc.' : corto(p.tipo)) : ''}</span>
+                <span class="ts-tipo">${p ? (p.lugar && ICONO_LUGAR[p.lugar] && !p.descanso ? ICONO_LUGAR[p.lugar] + ' ' : '') + escaparHTML(p.descanso ? 'Desc.' : corto(p.tipo)) : ''}</span>
             </div>`;
         }).join('')}</div>
     </div>`;
@@ -4503,7 +4550,7 @@ function construirPrompt(perfil, material, sesiones, tiempo, nivel, objetivo, co
             const fechaDate = parseFechaES(s.fecha);
             const diasSem = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
             const diaStr = isNaN(fechaDate) ? s.fecha : `${diasSem[fechaDate.getDay()]} ${s.fecha}`;
-            let linea = `[${diaStr}] ${s.tiempo}min${s.duracionReal ? ` (duró ${s.duracionReal}min de verdad)` : ''} · nivel:${s.nivel} · obj:${s.objetivo}`;
+            let linea = `[${diaStr}] ${s.tiempo}min${s.duracionReal ? ` (duró ${s.duracionReal}min de verdad)` : ''}${s.lugar ? ` · en ${s.lugar}` : ''} · nivel:${s.nivel} · obj:${s.objetivo}`;
             if (s.completada)        linea += ` · completada:${s.completada}`;
             if (s.dificultad)        linea += ` · dificultad:${s.dificultad}`;
             if (s.pesos_feedback)    linea += ` · pesos:${s.pesos_feedback}`;
@@ -4728,7 +4775,7 @@ async function llamarIA(prompt) {
         if (!p) return { ...ej, nombre };
         // En casa, las mancuernas tienen un máximo: no pedir más peso del que hay
         const maxKg = parseFloat(perfilIA.pesasKg);
-        const enCasa = lugarPerfil(perfilIA) !== 'gimnasio' && elegido.lugarHoy !== 'gimnasio';
+        const enCasa = lugarDeHoy(perfilIA) === 'casa'; // el tope de mancuernas es el de casa
         const kg = enCasa && maxKg > 0 && /mancuern/i.test(nombre) ? Math.min(p.siguienteKg, maxKg) : p.siguienteKg;
         return { ...ej, nombre, peso: `${kg} kg` };
     });
@@ -4828,6 +4875,7 @@ function empezarSesion(resultado, tiempo, nivel, objetivo) {
         tipo_entrenamiento: resultado.tipo_entrenamiento || '',
         mensaje: resultado.mensaje || '',
         origen: resultado.origen || 'ia',
+        lugar: lugarDeHoy(),
         deporteHecho:    [...elegido.deporteHecho],
         deportePrevisto: [...elegido.deportePrevisto],
     };
@@ -4848,7 +4896,7 @@ function pesoDeHoy(nombre) {
     if (!p) return null;
     const perfil = cargarPerfil() || {};
     const maxKg = parseFloat(perfil.pesasKg);
-    const enCasa = lugarPerfil(perfil) !== 'gimnasio' && elegido.lugarHoy !== 'gimnasio';
+    const enCasa = lugarDeHoy(perfil) === 'casa'; // el tope de mancuernas es el de casa
     return enCasa && maxKg > 0 && /mancuern/i.test(nombre) ? Math.min(p.siguienteKg, maxKg) : p.siguienteKg;
 }
 
@@ -4868,6 +4916,7 @@ function sesionParaRepetir() {
 function repetirUltimaRutina() {
     const s = sesionParaRepetir();
     if (!s) return;
+    if (s.lugar && lugaresPerfil().includes(s.lugar)) elegido.lugarHoy = s.lugar; // mismo sitio que aquel día
     const { nivel, objetivoTipo } = nivelYObjetivo();
     const dia = parseFechaES(s.fecha).toLocaleDateString('es-ES', { weekday: 'long' });
     empezarSesion({
@@ -4908,6 +4957,7 @@ function ejercicioDelPlan(texto) {
 function empezarRutinaDelPlan() {
     const d = planDeHoy();
     if (!d) return;
+    if (d.lugar && lugaresPerfil().includes(d.lugar)) elegido.lugarHoy = d.lugar; // el sitio que dice el plan
     const { nivel, objetivoTipo } = nivelYObjetivo();
     let tiempo = '45';
     try { tiempo = localStorage.getItem(claveLocal('gym_ultimo_tiempo')) || '45'; } catch {}
@@ -4929,8 +4979,8 @@ function renderizarEmpezarRapido() {
     const dia = s ? parseFechaES(s.fecha).toLocaleDateString('es-ES', { weekday: 'long' }) : '';
     cont.innerHTML = `<div class="empezar-rapido">
         <div class="er-titulo">⚡ Empezar ya <span>sin esperar a la IA</span></div>
-        ${p ? `<button onclick="empezarRutinaDelPlan()"><b>📋 Hoy toca: ${escaparHTML(p.tipo || 'tu plan')}</b><span>${p.ejercicios.length} ejercicios de tu plan semanal</span></button>` : ''}
-        ${s ? `<button onclick="repetirUltimaRutina()"><b>🔁 Repetir: ${escaparHTML(s.tipo_entrenamiento || 'última rutina')}</b><span>La del ${dia}, con los pesos ajustados</span></button>` : ''}
+        ${p ? `<button onclick="empezarRutinaDelPlan()"><b>📋 Hoy toca: ${escaparHTML(p.tipo || 'tu plan')}${p.lugar && LUGARES[p.lugar] && lugaresPerfil().length > 1 ? ' · ' + LUGARES[p.lugar] : ''}</b><span>${p.ejercicios.length} ejercicios de tu plan semanal</span></button>` : ''}
+        ${s ? `<button onclick="repetirUltimaRutina()"><b>🔁 Repetir: ${escaparHTML(s.tipo_entrenamiento || 'última rutina')}${s.lugar && LUGARES[s.lugar] && lugaresPerfil().length > 1 ? ' · ' + LUGARES[s.lugar] : ''}</b><span>La del ${dia}, con los pesos ajustados</span></button>` : ''}
     </div>`;
 }
 
@@ -7003,6 +7053,7 @@ function guardarFeedback() {
         tipo_entrenamiento: sesionActual.tipo_entrenamiento || '',
         mensaje: sesionActual.mensaje || '',
         energia: sesionActual.energia || null,
+        lugar: sesionActual.lugar || undefined,
         descarga: descargaActiva() || undefined,
         duracionReal,
         deporteHecho:     sesionActual.deporteHecho     || [],
@@ -7558,7 +7609,7 @@ function construirSystemPromptChat() {
     const pesasKg  = perfil.pesasKg  || '';
     const material = cargarMaterial();
 
-    const matTexto = textoMaterialIA(perfil, material);
+    const matTexto = textoLugaresIA(perfil, material);
 
     const ultimasSesiones = sesiones.slice(-20).map(s => {
         let linea = `- ${s.fecha}: ${s.nivel || ''} / ${s.objetivo || ''} / ${s.tiempo || ''}min${s.duracionReal ? ` (duró ${s.duracionReal})` : ''}`;
@@ -7937,7 +7988,8 @@ async function generarPlanSemanal() {
     const material = cargarMaterial();
     const records  = cargarRecords();
 
-    const matTexto = textoMaterialIA(perfil, material);
+    const matTexto = textoLugaresIA(perfil, material);
+    const variosSitios = lugaresPerfil(perfil, material).length > 1;
 
     const fmtDep = (lista) => (lista||[]).map(e => {
         const n = e.deporte || e;
@@ -7992,9 +8044,10 @@ INSTRUCCIONES:
 - Pon días de deporte SOLO para los deportes habituales del usuario (si no tiene ninguno, no inventes deportes). ${perfil.diasSemana ? 'Reparte los días de gimnasio' : 'Elige tú cuántos días de gimnasio y de descanso'} según su nivel, objetivo y deporte.
 - Responde SOLO con JSON válido, sin texto adicional. Formato (los valores entre <> son indicaciones, no los copies):
 {"semana":[
-  {"dia":"Lunes","tipo":"<tipo de sesión, deporte o Descanso>","descanso":<true o false>,"ejercicios":["<Ejercicio NxReps>"],"nota":"<frase corta>"}
+  {"dia":"Lunes","tipo":"<tipo de sesión, deporte o Descanso>","descanso":<true o false>,${variosSitios ? '"lugar":"<' + lugaresPerfil(perfil, material).join(' o ') + '>",' : ''}"ejercicios":["<Ejercicio NxReps>"],"nota":"<frase corta>"}
 ]}
-Incluye los 7 días, de Lunes a Domingo, en ese orden. En los días de descanso o de deporte, "ejercicios" va vacío [].`;
+Incluye los 7 días, de Lunes a Domingo, en ese orden. En los días de descanso o de deporte, "ejercicios" va vacío [].${variosSitios ? `
+Entrena en varios sitios: en cada día de gimnasio pon en "lugar" dónde lo hará y elige ejercicios que se puedan hacer con el material de ese sitio. Reparte con sentido (por ejemplo, lo más pesado en el gimnasio).` : ''}`;
 
     try {
         const respuesta = await groqChat({
@@ -8035,7 +8088,7 @@ function renderizarPlan(plan) {
 
         const badge = d.descanso
             ? `<span class="plan-dia-tipo descanso">Descanso</span>`
-            : `<span class="plan-dia-tipo">${d.tipo || ''}</span>`;
+            : `<span class="plan-dia-tipo">${d.lugar && LUGARES[d.lugar] ? LUGARES[d.lugar] + ' · ' : ''}${escaparHTML(d.tipo || '')}</span>`;
 
         const ejsHtml = d.ejercicios && d.ejercicios.length
             ? `<ul class="plan-ej-lista">${d.ejercicios.map(e => `<li>${e}</li>`).join('')}</ul>`
