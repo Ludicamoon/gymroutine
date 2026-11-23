@@ -1338,6 +1338,25 @@
         .mem-añadir input { flex: 1; min-width: 160px; }
         .mem-ok { padding: 9px 14px; border: none; border-radius: 10px; background: #ff5722; color: #fff; font-weight: 600; cursor: pointer; }
         .chat-nueva { text-align: center; margin-bottom: 10px; }
+        #pantalla-foto-entreno input[type=date], #fe-tipo { width: 100%; padding: 10px; border: 2px solid #eee; border-radius: 10px; font-size: 0.95rem; background: #fff; color: #222; box-sizing: border-box; }
+        #fe-tipo { margin-bottom: 10px; font-weight: 700; }
+        .fe-fila { border: 1px solid #eee; border-radius: 12px; padding: 8px 10px; margin-bottom: 8px; background: #fafafa; }
+        .fe-seccion { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #999; letter-spacing: 0.04em; margin-bottom: 4px; }
+        .fe-fila-top { display: flex; gap: 6px; align-items: center; }
+        .fe-fila input { padding: 7px 8px; border: 1.5px solid #e5e5e5; border-radius: 8px; font-size: 0.9rem; background: #fff; color: #222; box-sizing: border-box; }
+        #fe-lista input { margin: 0; }
+        #fe-lista .fe-nombre { flex: 1; width: auto; font-weight: 600; min-width: 0; }
+        .fe-datos { display: flex; gap: 5px; align-items: center; margin-top: 6px; font-size: 0.85rem; color: #666; flex-wrap: wrap; }
+        #fe-lista .fe-datos input[type=number] { width: 56px; }
+        #fe-lista .fe-reps { width: 84px; }
+        #fe-lista .fe-kg { width: 66px; }
+        .fe-detalle { font-size: 0.8rem; color: #666; margin-top: 6px; line-height: 1.35; }
+        .fe-min { margin-top: 12px; font-size: 0.9rem; color: #555; }
+        #pantalla-foto-entreno .fe-min input { width: 76px; margin: 0; padding: 8px; border: 2px solid #eee; border-radius: 10px; font-size: 0.95rem; }
+        .chat-entrevista-btn { display: block; width: 100%; margin: 10px 0 12px; padding: 12px; border-radius: 12px; border: 2px solid #ff5722; background: #fff3ef; color: #c43c12; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+        .mem-meses { margin-top: 14px; }
+        .mem-meses summary { cursor: pointer; font-weight: 700; font-size: 0.85rem; color: #444; }
+        .mem-mes { padding: 8px 10px; background: #f7f7f8; border-radius: 10px; margin-top: 6px; font-size: 0.85rem; line-height: 1.4; color: #333; }
         .chat-nueva button { background: none; border: 1px solid #ddd; border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; color: #666; cursor: pointer; }
         /* Material del perfil más compacto: 19 opciones en 3 columnas */
         #material-zona .material-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -2037,6 +2056,10 @@
         }
         @media (hover: hover) { .chat-send-btn:hover { background: #e64a19; } }
         .chat-send-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .chat-foto-btn { background: none; border: 2px solid #e8e8e8; border-radius: 12px; padding: 8px 10px; font-size: 1.1rem; cursor: pointer; flex-shrink: 0; }
+        .chat-fotos { gap: 8px; padding: 8px 20px 0; flex-wrap: wrap; }
+        .chat-fotos .ctx-foto-thumb { width: 64px; height: 64px; }
+        .chat-foto-burbuja { display: block; max-width: 160px; max-height: 160px; border-radius: 10px; margin-top: 8px; }
         .chat-vacío {
             text-align: center;
             color: #666;
@@ -2708,6 +2731,13 @@
             :root:not([data-tema="claro"]) .mem-texto { color: #ececec; }
             :root:not([data-tema="claro"]) .mem-añadir select,             :root:not([data-tema="claro"]) .mem-añadir input { background: #0f0f11; border-color: #3a3a3e; color: #ececec; }
             :root:not([data-tema="claro"]) .chat-nueva button { border-color: #3a3a3e; color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .chat-foto-btn { border-color: #3a3a3e; }
+            :root:not([data-tema="claro"]) #pantalla-foto-entreno input[type=date], :root:not([data-tema="claro"]) #fe-tipo, :root:not([data-tema="claro"]) .fe-fila input, :root:not([data-tema="claro"]) .fe-min input { background: #0f0f11; border-color: #3a3a3e; color: #ececec; }
+            :root:not([data-tema="claro"]) .fe-fila { background: #1c1c1e; border-color: #34343a; }
+            :root:not([data-tema="claro"]) .fe-datos, :root:not([data-tema="claro"]) .fe-detalle, :root:not([data-tema="claro"]) .fe-min { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .chat-entrevista-btn { background: #3a1f15; color: #ffb59c; }
+            :root:not([data-tema="claro"]) .mem-meses summary { color: #d0d0d0; }
+            :root:not([data-tema="claro"]) .mem-mes { background: #0f0f11; color: #ececec; }
             :root:not([data-tema="claro"]) .chat-sug-btn:hover { background: #4a2a1e; }
             :root:not([data-tema="claro"]) .rec-ejercicio { color: #c4c4c4; }
             :root:not([data-tema="claro"]) .rec-fecha { color: #b0b0b0; }
@@ -2934,6 +2964,13 @@
         :root[data-tema="oscuro"] .mem-texto { color: #ececec; }
         :root[data-tema="oscuro"] .mem-añadir select,         :root[data-tema="oscuro"] .mem-añadir input { background: #0f0f11; border-color: #3a3a3e; color: #ececec; }
         :root[data-tema="oscuro"] .chat-nueva button { border-color: #3a3a3e; color: #b0b0b0; }
+        :root[data-tema="oscuro"] .chat-foto-btn { border-color: #3a3a3e; }
+        :root[data-tema="oscuro"] #pantalla-foto-entreno input[type=date], :root[data-tema="oscuro"] #fe-tipo, :root[data-tema="oscuro"] .fe-fila input, :root[data-tema="oscuro"] .fe-min input { background: #0f0f11; border-color: #3a3a3e; color: #ececec; }
+        :root[data-tema="oscuro"] .fe-fila { background: #1c1c1e; border-color: #34343a; }
+        :root[data-tema="oscuro"] .fe-datos, :root[data-tema="oscuro"] .fe-detalle, :root[data-tema="oscuro"] .fe-min { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .chat-entrevista-btn { background: #3a1f15; color: #ffb59c; }
+        :root[data-tema="oscuro"] .mem-meses summary { color: #d0d0d0; }
+        :root[data-tema="oscuro"] .mem-mes { background: #0f0f11; color: #ececec; }
         :root[data-tema="oscuro"] .chat-sug-btn:hover { background: #4a2a1e; }
         :root[data-tema="oscuro"] .rec-ejercicio { color: #c4c4c4; }
         :root[data-tema="oscuro"] .rec-fecha { color: #b0b0b0; }
@@ -3372,9 +3409,57 @@
 
         <button class="btn-generar" onclick="generarRutina()">Generar rutina →</button>
         <button class="btn-chat-entrenar" onclick="mostrarChat()">💬 Pregunta a tu entrenador</button>
+        <button class="btn-chat-entrenar" onclick="mostrarFotoEntreno()">📷 Apuntar un entreno que ya hiciste</button>
         <div class="error" id="error">Por favor, completa todas las opciones antes de continuar.</div>
         <div class="error-ia" id="error-ia"></div>
 
+    </div>
+
+    <!-- ===================== APUNTAR ENTRENO CON FOTO ===================== -->
+    <div id="pantalla-foto-entreno" style="display:none">
+        <div class="rutina-header">
+            <h2>📷 Apuntar un entreno</h2>
+            <p>Haz una foto de la pizarra o de la rutina que hiciste y tu entrenador la apunta en tu historial.</p>
+        </div>
+        <div id="fe-paso1">
+            <div class="card">
+                <div class="card-label">¿Qué día fue?</div>
+                <div class="btn-group" id="fe-dias"></div>
+                <input type="date" id="fe-fecha-otra" onchange="feElegirDia(this.value)" style="margin-top:10px">
+            </div>
+            <div class="card">
+                <div class="card-label">La foto <span class="opcional">(hasta 3)</span></div>
+                <input type="file" id="fe-input" accept="image/*" multiple hidden onchange="feAgregarFotos(this.files)">
+                <button class="btn-secundario" onclick="document.getElementById('fe-input').click()">📷 Hacer o elegir foto</button>
+                <div class="ctx-fotos-grid" id="fe-fotos"></div>
+            </div>
+            <div class="card">
+                <div class="card-label">¿Algo que añadir? <span class="opcional">(opcional)</span></div>
+                <textarea id="fe-nota" placeholder="Ej: el press de banca lo hice con 50 kg; en el AMRAP hice 4 rondas"></textarea>
+            </div>
+            <button class="btn-generar" id="fe-leer" onclick="feLeerFoto()">Leer la foto →</button>
+            <div class="error-ia" id="fe-error"></div>
+        </div>
+        <div id="fe-paso2" style="display:none">
+            <div class="card">
+                <div class="card-label">Revisa lo que ha leído</div>
+                <p class="perfil-nota" style="margin:0 0 10px">Corrige lo que esté mal, quita (✕) lo que no hiciste y, si quieres, pon los kilos: así la app sabrá cuánto levantas.</p>
+                <input type="text" id="fe-tipo" placeholder="Tipo de entreno" maxlength="80">
+                <div id="fe-lista"></div>
+                <button class="btn-secundario" onclick="feAñadirFila()">+ Añadir ejercicio</button>
+            </div>
+            <div class="card">
+                <div class="card-label">¿Cómo te fue?</div>
+                <div class="btn-group fb-caras" id="fe-dif">
+                    <button class="btn-op" onclick="feDificultad('facil', this)"><span>😌</span>Fácil</button>
+                    <button class="btn-op" onclick="feDificultad('normal', this)"><span>💪</span>Bien</button>
+                    <button class="btn-op" onclick="feDificultad('dificil', this)"><span>🔥</span>Duro</button>
+                </div>
+                <div class="fe-min"><input type="number" id="fe-minutos" min="5" max="240" inputmode="numeric"> minutos</div>
+            </div>
+            <button class="btn-generar" onclick="feGuardar()">Guardar en mi historial</button>
+            <span class="btn-saltar" onclick="mostrarFotoEntreno()">← Empezar de nuevo</span>
+        </div>
     </div>
 
     <!-- ===================== PANTALLA RUTINA ===================== -->
@@ -3433,6 +3518,12 @@
             <input type="text" id="feedback-molestia" placeholder="Ej: rodilla, lumbar, hombro...">
         </div>
 
+        <div class="card" id="evaluacion-card" style="display:none">
+            <div class="card-label">🧠 Tu entrenador te pregunta</div>
+            <p id="evaluacion-pregunta" style="font-size:0.9rem;color:#555;margin-bottom:12px;line-height:1.5"></p>
+            <input type="text" id="evaluacion-respuesta" placeholder="Tu respuesta (opcional)...">
+        </div>
+
         <details class="mas-opciones" id="fb-mas">
             <summary>Más detalles <span class="mas-opciones-resumen">(opcional)</span></summary>
 
@@ -3450,12 +3541,6 @@
                 <select id="feedback-ejercicio-duro" style="width:100%;padding:10px;border-radius:8px;border:1.5px solid #eee;font-size:0.95rem;background:#fafafa">
                     <option value="">— Ninguno en especial —</option>
                 </select>
-            </div>
-
-            <div class="card" id="evaluacion-card" style="display:none">
-                <div class="card-label">Pregunta de tu entrenador</div>
-                <p id="evaluacion-pregunta" style="font-size:0.9rem;color:#555;margin-bottom:12px;line-height:1.5"></p>
-                <input type="text" id="evaluacion-respuesta" placeholder="Tu respuesta...">
             </div>
 
             <div class="card">
@@ -3477,7 +3562,10 @@
                 <p>Pregúntame lo que quieras sobre tu entrenamiento</p>
             </div>
             <div class="chat-mensajes" id="chat-mensajes"></div>
+            <div class="chat-fotos" id="chat-fotos" style="display:none"></div>
             <div class="chat-input-area">
+                <input type="file" id="chat-fotos-input" accept="image/*" multiple hidden onchange="chatAgregarFotos(this.files)">
+                <button class="chat-foto-btn" onclick="document.getElementById('chat-fotos-input').click()" aria-label="Añadir foto">📷</button>
                 <textarea id="chat-input" class="chat-input" placeholder="Escribe tu pregunta..." rows="2" onkeydown="chatKeyDown(event)"></textarea>
                 <button class="chat-send-btn" id="chat-send-btn" onclick="enviarMensajeChat()">Enviar</button>
             </div>
@@ -3551,6 +3639,7 @@
             <button data-tab="historial" onclick="mostrarDiario()">📅 Historial</button>
         </div>
         <p class="ayuda-pantalla" id="diario-subtitulo">Toca un día del calendario para ver esa sesión.</p>
+        <button class="btn-chat-entrenar" style="margin:0 0 14px" onclick="mostrarFotoEntreno()">📷 Apuntar un entreno hecho fuera de la app</button>
         <div class="diario-layout">
             <div>
                 <div class="calendario">
@@ -3659,10 +3748,10 @@ function calcularStats() {
     return { estesMes, racha, total: sesiones.length };
 }
 
-function actualizarRecordsDesdeEjercicios(ejercicios) {
+function actualizarRecordsDesdeEjercicios(ejercicios, fecha) {
     if (!ejercicios || !ejercicios.length) return;
     const records = cargarRecords();
-    const hoy = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const hoy = fecha || new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
     let actualizado = false;
 
     ejercicios.forEach(ej => {
@@ -3908,7 +3997,7 @@ function init() {
 function ocultarTodas() {
     ['pantalla-perfil','pantalla-form','pantalla-rutina',
      'pantalla-feedback','pantalla-historial','pantalla-cargando','pantalla-diario','pantalla-chat','pantalla-plan',
-     'pantalla-temporizadores', 'pantalla-inicio']
+     'pantalla-temporizadores', 'pantalla-inicio', 'pantalla-foto-entreno']
         .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
     document.body.classList.remove('en-rutina');
     if (!_ob) document.body.classList.remove('primer-dia');
@@ -4054,6 +4143,7 @@ function mostrarPerfil() {
 }
 
 function mostrarFormulario() {
+    setTimeout(revisarResumenMes, 8000); // resumen del mes pasado, si falta
     ocultarTodas();
     activarNavItem('nav-entrenar');
     document.getElementById('pantalla-form').style.display = 'block';
@@ -5145,6 +5235,201 @@ async function llamarIA(prompt) {
     if (parsed.ejercicios)    parsed.ejercicios    = aplicarProgresion(normalizarEjs(parsed.ejercicios, false));
     if (parsed.estiramientos) parsed.estiramientos = normalizarEjs(parsed.estiramientos, true);
     return parsed;
+}
+
+// ===================== APUNTAR UN ENTRENO CON FOTO =====================
+// La IA lee la foto (pizarra, papel, pantalla), el usuario revisa la lista y se
+// guarda como una sesión más (origen: 'foto'), en su sitio por fecha.
+let _fe = null; // {fecha, fotos: [dataUrl], items: [{seccion, nombre, grupo_muscular, series, reps, detalle, kg}], dificultad}
+
+const _fechaES = d => d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+const _fechaAOrden = f => { const [d, m, a] = String(f || '').split('/'); return a ? `${a}${m}${d}` : ''; };
+
+function mostrarFotoEntreno() {
+    ocultarTodas();
+    activarNavItem('nav-entrenar');
+    document.getElementById('pantalla-foto-entreno').style.display = 'block';
+    document.getElementById('btn-header-perfil').style.display = 'none';
+    document.getElementById('btn-header-historial').style.display = 'none';
+    _fe = { fecha: _fechaES(new Date()), fotos: [], items: [], dificultad: null };
+    document.getElementById('fe-paso1').style.display = '';
+    document.getElementById('fe-paso2').style.display = 'none';
+    document.getElementById('fe-nota').value = '';
+    document.getElementById('fe-error').textContent = '';
+    document.getElementById('fe-fotos').innerHTML = '';
+    const otra = document.getElementById('fe-fecha-otra');
+    otra.value = '';
+    otra.max = new Date().toISOString().slice(0, 10);
+    pintarDiasFe();
+    window.scrollTo(0, 0);
+}
+
+function pintarDiasFe() {
+    const dias = [0, 1, 2].map(n => { const d = new Date(); d.setDate(d.getDate() - n); return [['Hoy', 'Ayer', 'Anteayer'][n], _fechaES(d)]; });
+    const enLista = dias.some(([, f]) => f === _fe.fecha);
+    document.getElementById('fe-dias').innerHTML = dias.map(([t, f]) =>
+        `<button class="btn-op${f === _fe.fecha ? ' activo' : ''}" onclick="feElegirDia('${f}')">${t}</button>`).join('')
+        + (enLista ? '' : `<button class="btn-op activo">${_fe.fecha}</button>`);
+}
+
+function feElegirDia(valor) {
+    if (!valor) return;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(valor)) { const [a, m, d] = valor.split('-'); valor = `${d}/${m}/${a}`; }
+    _fe.fecha = valor;
+    pintarDiasFe();
+}
+
+async function feAgregarFotos(files) {
+    for (const file of Array.from(files)) {
+        if (_fe.fotos.length >= MAX_FOTOS) { alert(`Como mucho ${MAX_FOTOS} fotos.`); break; }
+        const dataUrl = await _resizarImagen(file, 1280);
+        if (!dataUrl) { alert(`No se pudo abrir "${file.name}". Prueba con una foto JPG o PNG.`); continue; }
+        _fe.fotos.push(dataUrl);
+    }
+    document.getElementById('fe-input').value = '';
+    pintarFotosFe();
+}
+
+function pintarFotosFe() {
+    document.getElementById('fe-fotos').innerHTML = _fe.fotos.map((f, i) =>
+        `<div class="ctx-foto-thumb"><img src="${f}"><button class="ctx-foto-remove" onclick="_fe.fotos.splice(${i},1);pintarFotosFe()">✕</button></div>`).join('');
+}
+
+async function feLeerFoto() {
+    const error = document.getElementById('fe-error');
+    error.textContent = '';
+    if (!_fe.fotos.length) { error.textContent = 'Primero haz o elige una foto del entreno.'; return; }
+    const btn = document.getElementById('fe-leer');
+    btn.disabled = true;
+    btn.textContent = '⏳ Leyendo la foto…';
+    const nota = document.getElementById('fe-nota').value.trim();
+    const texto = `Lee esta(s) foto(s) de un entrenamiento (pizarra de un box, papel o pantalla) y conviértelo en una lista de ejercicios.${nota ? `\nEl usuario añade: "${nota}"` : ''}
+REGLAS:
+- Nombres en español, como se dicen en un gimnasio, con las faltas corregidas.
+- "seccion": "calentamiento", "principal" o "estiramientos".
+- Bloque de rondas con varios ejercicios (ej. "4 rondas: 10 push press, 12 remo"): cada ejercicio por separado, "series" = número de rondas y "reps" sus repeticiones.
+- AMRAP, EMOM, Tabata o "for time": UN solo elemento, "nombre" como "AMRAP 18 min" (o el que sea), "series" 1, "reps" la duración y en "detalle" los ejercicios con sus repeticiones. Si el usuario dice su resultado (rondas, tiempo), ponlo al final del detalle.
+- Fuerza tipo "Press de banca 5x5": "series" 5, "reps" "5".
+- "grupo_muscular": el músculo principal, EXACTAMENTE uno de: ${GRUPOS_MUSCULARES.join(', ')}.
+- "kg": solo si la foto o el usuario dicen un peso concreto para ese ejercicio; si no, null.
+- No inventes nada que no se lea.
+Responde solo con JSON: {"tipo_entrenamiento":"...","duracion_min":60,"ejercicios":[{"seccion":"principal","nombre":"","grupo_muscular":"","series":1,"reps":"","detalle":"","kg":null}]}`;
+    try {
+        const r = await groqChat({
+            messages: [{ role: 'user', content: [{ type: 'text', text: texto }, ...(_fe.fotos.map(url => ({ type: 'image_url', image_url: { url } })))] }],
+            temperature: 0.2, maxTokens: 2000, vision: true, json: true,
+        });
+        const d = extraerObjetoJSON(r) || {};
+        const lista = Array.isArray(d.ejercicios) ? d.ejercicios : [];
+        if (!lista.length) throw new Error('No he sabido leer ejercicios en la foto. Prueba con una foto más cerca y con buena luz.');
+        _fe.items = lista.slice(0, 30).map(e => ({
+            seccion: ['calentamiento', 'principal', 'estiramientos'].includes(e?.seccion) ? e.seccion : 'principal',
+            nombre: String(e?.nombre || '').slice(0, 80), grupo_muscular: String(e?.grupo_muscular || ''),
+            series: parseInt(e?.series) || 1, reps: String(e?.reps ?? '').slice(0, 30),
+            detalle: String(e?.detalle || '').slice(0, 300), kg: _num(e?.kg) > 0 ? _num(e.kg) : '',
+        }));
+        document.getElementById('fe-tipo').value = String(d.tipo_entrenamiento || '').slice(0, 80);
+        document.getElementById('fe-minutos').value = parseInt(d.duracion_min) > 0 ? Math.min(240, parseInt(d.duracion_min)) : '';
+        _fe.dificultad = null;
+        document.querySelectorAll('#fe-dif .btn-op').forEach(b => b.classList.remove('activo'));
+        pintarListaFe();
+        document.getElementById('fe-paso1').style.display = 'none';
+        document.getElementById('fe-paso2').style.display = '';
+        window.scrollTo(0, 0);
+    } catch (e) {
+        error.textContent = e.status === 429 || /429|rate/i.test(e.message) ? 'La IA está saturada. Espera un minuto y vuelve a probar.' : e.message;
+    }
+    btn.disabled = false;
+    btn.textContent = 'Leer la foto →';
+}
+
+function pintarListaFe() {
+    const etiqueta = { calentamiento: 'Calentamiento', principal: '', estiramientos: 'Estiramientos' };
+    document.getElementById('fe-lista').innerHTML = _fe.items.map((x, i) => `
+        <div class="fe-fila">
+            ${etiqueta[x.seccion] ? `<div class="fe-seccion">${etiqueta[x.seccion]}</div>` : ''}
+            <div class="fe-fila-top">
+                <input type="text" class="fe-nombre" value="${escaparHTML(x.nombre)}" placeholder="Ejercicio" oninput="_fe.items[${i}].nombre=this.value">
+                <button class="mem-btn" onclick="_fe.items.splice(${i},1);pintarListaFe()" aria-label="Quitar">✕</button>
+            </div>
+            <div class="fe-datos">
+                <input type="number" min="1" max="20" inputmode="numeric" value="${x.series}" oninput="_fe.items[${i}].series=this.value"> ×
+                <input type="text" class="fe-reps" value="${escaparHTML(x.reps)}" placeholder="reps" oninput="_fe.items[${i}].reps=this.value">
+                ${x.seccion === 'principal' && tipoBloque({ nombre: x.nombre, reps: x.reps }) === 'normal' ? `<input type="text" inputmode="decimal" class="fe-kg" value="${x.kg}" placeholder="kg" oninput="_fe.items[${i}].kg=this.value"> kg` : ''}
+            </div>
+            ${x.detalle ? `<div class="fe-detalle">${escaparHTML(x.detalle)}</div>` : ''}
+        </div>`).join('') || '<p class="perfil-nota">No queda ningún ejercicio.</p>';
+}
+
+function feAñadirFila() {
+    _fe.items.push({ seccion: 'principal', nombre: '', grupo_muscular: '', series: 3, reps: '10', detalle: '', kg: '' });
+    pintarListaFe();
+    const nombres = document.querySelectorAll('#fe-lista .fe-nombre');
+    nombres[nombres.length - 1]?.focus();
+}
+
+function feDificultad(valor, btn) {
+    _fe.dificultad = valor;
+    document.querySelectorAll('#fe-dif .btn-op').forEach(b => b.classList.toggle('activo', b === btn));
+}
+
+function feGuardar() {
+    const limpia = t => String(t ?? '').replace(/[<>]/g, '').trim();
+    const items = _fe.items.filter(x => limpia(x.nombre));
+    if (!items.length) { alert('Añade al menos un ejercicio.'); return; }
+    let volumen = 0;
+    const aEjercicio = x => {
+        const e = {
+            nombre: nombreConocido(limpia(x.nombre).slice(0, 80)),
+            grupo_muscular: normalizarGrupo(x.grupo_muscular) || normalizarGrupo(x.nombre) || 'Cuerpo completo',
+            series: Math.max(1, parseInt(x.series) || 1),
+            reps: limpia(x.reps).slice(0, 30) || '—',
+        };
+        if (!GRUPOS_MUSCULARES.includes(e.grupo_muscular)) e.grupo_muscular = 'Cuerpo completo';
+        if (x.detalle) e.explicacion = limpia(x.detalle).slice(0, 300);
+        const kg = _num(x.kg);
+        if (x.seccion === 'principal' && kg > 0 && tipoBloque(e) === 'normal') {
+            const reps = parseInt(e.reps) || null;
+            e.pesoUsado = kg;
+            e.peso = kg + ' kg';
+            if (reps) { e.repsHechas = reps; volumen += kg * reps * e.series; }
+            e.seriesHechas = Array.from({ length: e.series }, () => ({ kg, reps }));
+        }
+        return e;
+    };
+    const { nivel, objetivoTipo } = nivelYObjetivo();
+    const minutos = parseInt(document.getElementById('fe-minutos').value);
+    const nueva = {
+        fecha: _fe.fecha,
+        nivel, objetivo: objetivoTipo,
+        tiempo: minutos > 0 ? minutos : '—',
+        duracionReal: minutos >= 5 && minutos <= 180 ? minutos : undefined,
+        completada: 'si',
+        dificultad: _fe.dificultad,
+        molestia: '',
+        comentario: limpia(document.getElementById('fe-nota').value).slice(0, 300),
+        tipo_entrenamiento: limpia(document.getElementById('fe-tipo').value).slice(0, 80) || 'Entreno apuntado con foto',
+        origen: 'foto',
+        calentamiento: items.filter(x => x.seccion === 'calentamiento').map(aEjercicio),
+        ejercicios:    items.filter(x => x.seccion === 'principal').map(aEjercicio),
+        estiramientos: items.filter(x => x.seccion === 'estiramientos').map(aEjercicio),
+        deporteHecho: [], deportePrevisto: [],
+    };
+    if (volumen) nueva.volumenTotal = volumen;
+
+    // Va en su sitio por fecha (puede ser de hace unos días)
+    const sesiones = cargarSesiones();
+    const orden = _fechaAOrden(nueva.fecha);
+    let pos = sesiones.findIndex(s => _fechaAOrden(s.fecha) > orden);
+    if (pos === -1) pos = sesiones.length;
+    sesiones.splice(pos, 0, nueva);
+    if (sesiones.length > 100) sesiones.splice(0, sesiones.length - 100);
+    guardarSesiones(sesiones);
+    actualizarRecordsDesdeEjercicios(nueva.ejercicios, nueva.fecha);
+    apuntarEntrenoEnMemoria(nueva);
+    avisoRapido('✅ Entreno apuntado en tu historial');
+    mostrarDiario();
+    mostrarDetalleDia(nueva.fecha, cargarSesiones().filter(s => s.fecha === nueva.fecha));
 }
 
 // ===================== CONTEXTO SEMANA + FOTOS =====================
@@ -7445,14 +7730,7 @@ function irAFeedback() {
         nombre: (cargarPerfil() || {}).nombre || '',
     };
 
-    const evalCard = document.getElementById('evaluacion-card');
-    if (ultimaEvaluacion) {
-        document.getElementById('evaluacion-pregunta').textContent = ultimaEvaluacion;
-        document.getElementById('evaluacion-respuesta').value = '';
-        evalCard.style.display = 'block';
-    } else {
-        evalCard.style.display = 'none';
-    }
+    prepararPreguntaEntrenador();
 
     ocultarTodas();
     document.getElementById('pantalla-feedback').style.display = 'block';
@@ -7525,7 +7803,7 @@ function guardarFeedback() {
         ejercicio_mas_duro: document.getElementById('feedback-ejercicio-duro').value.trim(),
         molestia:          document.getElementById('feedback-molestia').value.trim(),
         comentario:        document.getElementById('feedback-comentario').value.trim(),
-        evaluacion_pregunta:  ultimaEvaluacion || '',
+        evaluacion_pregunta:  _preguntaHoy || ultimaEvaluacion || '',
         evaluacion_respuesta: document.getElementById('evaluacion-respuesta') ? document.getElementById('evaluacion-respuesta').value.trim() : '',
         calentamiento: ejConPeso(sesionActual.calentamiento, false),
         ejercicios:    ejConPeso(sesionActual.ejercicios, true),
@@ -8018,6 +8296,7 @@ function cargarMemoria() {
     return {
         notas: Array.isArray(m?.notas) ? m.notas : [],
         conversaciones: Array.isArray(m?.conversaciones) ? m.conversaciones : [],
+        meses: Array.isArray(m?.meses) ? m.meses : [],
         sig: m?.sig || 1,
     };
 }
@@ -8025,6 +8304,7 @@ function cargarMemoria() {
 function guardarMemoria(m) {
     if (m.notas.length > MAX_NOTAS) m.notas = m.notas.slice(-MAX_NOTAS);
     if (m.conversaciones.length > MAX_CONVERSACIONES) m.conversaciones = m.conversaciones.slice(-MAX_CONVERSACIONES);
+    if (m.meses.length > MAX_MESES) m.meses = m.meses.slice(-MAX_MESES);
     localStorage.setItem(MEMORIA_KEY, JSON.stringify(m));
     scheduleSyncGym();
 }
@@ -8053,6 +8333,9 @@ function textoMemoriaIA(conConversaciones = false) {
             return `- [${n.tema}] ${n.texto} (${n.fecha}${n.tuya ? ', lo escribió él/ella' : ''})${antigua}`;
         }).join('\n') + '\n';
     }
+    if (conConversaciones && m.meses.length) {
+        t += `\nSU HISTORIA MES A MES (tu archivo):\n` + m.meses.map(x => `- ${nombreMes(x.mes)}: ${x.texto}`).join('\n') + '\n';
+    }
     if (conConversaciones && m.conversaciones.length) {
         t += `\nCONVERSACIONES ANTERIORES CONTIGO (resumen; puedes referirte a ellas):\n` + m.conversaciones.map(c => `- ${c.fecha}: ${c.texto}`).join('\n') + '\n';
     }
@@ -8069,7 +8352,8 @@ function lineaSesionIA(s) {
     if (s.ejercicio_mas_duro) linea += ` / lo más duro: "${s.ejercicio_mas_duro}"`;
     if (s.molestia)           linea += ` / molestia: "${s.molestia}"`;
     if (s.comentario)         linea += ` / nota: "${s.comentario}"`;
-    if (s.evaluacion_respuesta) linea += ` / eval: "${s.evaluacion_respuesta}"`;
+    if (s.evaluacion_respuesta) linea += s.evaluacion_pregunta ? ` / le preguntaste "${s.evaluacion_pregunta}" → "${s.evaluacion_respuesta}"` : ` / eval: "${s.evaluacion_respuesta}"`;
+    if (s.origen === 'foto')  linea += ' / entreno hecho fuera de la app (apuntado con foto)';
     const fmtDep = (lista) => (lista||[]).map(e => { const n = e.deporte||e; if(!e.dias||e.dias.length===0) return n; const ds = e.dias.map(d => d.dia + (d.tipo_cf ? ` (${d.tipo_cf})` : '')).join(' y '); return `${n}: ${ds}`; }).join(', ');
     if (s.deporteHecho    && s.deporteHecho.length)    linea += ` / deporte hecho: ${fmtDep(s.deporteHecho)}`;
     if (s.deportePrevisto && s.deportePrevisto.length) linea += ` / deporte previsto: ${fmtDep(s.deportePrevisto)}`;
@@ -8112,9 +8396,10 @@ REGLAS:
 - Si hay más de ${MAX_NOTAS - 5} notas, junta las parecidas.
 - Si no hay nada nuevo que merezca la pena, devuelve listas vacías. Es lo normal muchas veces.
 Responde SOLO con JSON: {"nuevas":[{"tema":"salud|gustos|funciona|vida|metas","texto":"..."}],"cambiar":[{"id":"n3","texto":"..."}],"quitar":["n5"]${tipo === 'chat' ? ',"resumen":"1-2 frases: de qué hablasteis y qué se decidió"' : ''}}`;
-    const user = `LIBRETA ACTUAL:\n${notasTexto}\n\n${tipo === 'chat' ? 'CONVERSACIÓN NUEVA CON EL ENTRENADOR' : 'ENTRENO QUE ACABA DE GUARDAR (con su valoración)'}:\n${contenido}`;
+    const titulos = { chat: 'CONVERSACIÓN NUEVA CON EL ENTRENADOR', entreno: 'ENTRENO QUE ACABA DE GUARDAR (con su valoración)', entrevista: 'ENTREVISTA PARA CONOCERLE (sus respuestas: apunta todo lo útil, aquí sí pueden salir bastantes notas)' };
+    const user = `LIBRETA ACTUAL:\n${notasTexto}\n\n${titulos[tipo]}:\n${contenido}`;
 
-    const respuesta = await groqChat({ messages: [{ role: 'system', content: system }, { role: 'user', content: user }], temperature: 0.2, maxTokens: 700, json: true });
+    const respuesta = await groqChat({ messages: [{ role: 'system', content: system }, { role: 'user', content: user }], temperature: 0.2, maxTokens: tipo === 'entrevista' ? 1200 : 700, json: true });
     const r = extraerObjetoJSON(respuesta) || {};
     if (!esDeEste()) return;
 
@@ -8126,7 +8411,7 @@ Responde SOLO con JSON: {"nuevas":[{"tema":"salud|gustos|funciona|vida|metas","t
         const texto = String(c?.texto || '').trim().slice(0, 200);
         if (n && texto && !n.tuya) { n.texto = texto; n.fecha = fechaDeHoy(); }
     });
-    (Array.isArray(r.nuevas) ? r.nuevas : []).slice(0, 5).forEach(n => añadirNota(actual, n?.tema, n?.texto));
+    (Array.isArray(r.nuevas) ? r.nuevas : []).slice(0, tipo === 'entrevista' ? 15 : 5).forEach(n => añadirNota(actual, n?.tema, n?.texto));
     if (tipo === 'chat' && r.resumen) actual.conversaciones.push({ fecha: fechaDeHoy(), texto: String(r.resumen).trim().slice(0, 300) });
     guardarMemoria(actual);
     if (document.getElementById('memoria-lista')) renderizarMemoria();
@@ -8134,7 +8419,7 @@ Responde SOLO con JSON: {"nuevas":[{"tema":"salud|gustos|funciona|vida|metas","t
 
 // Después de guardar un entreno
 function apuntarEntrenoEnMemoria(sesion) {
-    setTimeout(() => actualizarMemoria('entreno', lineaSesionIA(sesion)), 3000);
+    setTimeout(() => { actualizarMemoria('entreno', lineaSesionIA(sesion)); revisarResumenMes(); }, 3000);
 }
 
 // ── Lo que tu entrenador sabe de ti (Perfil) ──
@@ -8142,11 +8427,14 @@ function renderizarMemoria() {
     const cont = document.getElementById('memoria-lista');
     if (!cont) return;
     const m = cargarMemoria();
+    const entrevista = m.notas.length < 8 ? `<button class="chat-entrevista-btn" onclick="empezarEntrevista()">🎙️ Deja que te conozca: 10 preguntas rápidas</button>` : '';
+    const meses = m.meses.length ? `<details class="mem-meses"><summary>📅 Tu historia mes a mes (${m.meses.length})</summary>${m.meses.slice().reverse().map(x =>
+        `<div class="mem-mes"><b>${escaparHTML(nombreMes(x.mes))}</b>${x.entrenos ? ` · ${x.entrenos} entrenos` : ''}<br>${escaparHTML(x.texto)}</div>`).join('')}</details>` : '';
     if (!m.notas.length) {
-        cont.innerHTML = `<p class="perfil-nota">Todavía no ha apuntado nada. Lo irá haciendo cuando guardes entrenos con tu valoración y cuando hables con él.</p>`;
+        cont.innerHTML = `<p class="perfil-nota">Todavía no ha apuntado nada. Lo irá haciendo cuando guardes entrenos con tu valoración y cuando hables con él. Si quieres que te conozca ya:</p>${entrevista}${meses}`;
         return;
     }
-    cont.innerHTML = Object.entries(MEMORIA_TEMAS).map(([tema, titulo]) => {
+    cont.innerHTML = entrevista + Object.entries(MEMORIA_TEMAS).map(([tema, titulo]) => {
         const notas = m.notas.filter(n => n.tema === tema);
         if (!notas.length) return '';
         return `<div class="mem-tema">${titulo}</div>` + notas.map(n => `
@@ -8155,7 +8443,7 @@ function renderizarMemoria() {
                 <button class="mem-btn" onclick="editarNota('${n.id}')" aria-label="Corregir">✏️</button>
                 <button class="mem-btn" onclick="borrarNota('${n.id}')" aria-label="Borrar">✕</button>
             </div>`).join('');
-    }).join('');
+    }).join('') + meses;
 }
 
 function editarNota(id) {
@@ -8188,6 +8476,152 @@ function añadirNotaManual() {
     guardarMemoria(m);
     input.value = '';
     renderizarMemoria();
+}
+
+// ── Pregunta del entrenador al terminar ──
+// La IA la piensa al ver cómo ha ido el entreno de hoy (y lo que sabe de ti).
+// Si no hay clave o falla, se usa la que propuso al crear la rutina.
+let _preguntaHoy = '';
+let _preguntaPedida = 0;
+
+function resumenHoyIA() {
+    const lineas = (sesionActual.ejercicios || []).map(e => {
+        const r = registroSeries[e.nombre];
+        const hechas = r ? r.series.filter(x => x.hecho) : [];
+        let hecho;
+        if (resultadosBloques[e.nombre]) hecho = resultadosBloques[e.nombre];
+        else if (hechas.length) hecho = hechas.map(x => `${_num(x.kg) > 0 ? _num(x.kg) + 'kg' : ''}×${x.reps || '?'}`).join(', ')
+            + (r.rir !== null && r.rir !== undefined ? ` (le sobraban ${r.rir >= 3 ? '3 o más' : r.rir})` : '');
+        else hecho = 'sin marcar';
+        return `- ${e.nombre}: propuesto ${e.series}×${e.reps}${e.peso ? ' con ' + e.peso : ''}; hecho: ${hecho}`;
+    });
+    const inicio = sesionActual.inicioGuiado || sesionActual.inicio;
+    const min = inicio ? Math.round((Date.now() - inicio) / 60000) : null;
+    return `${sesionActual.tipo_entrenamiento || 'Entreno'} (previsto ${sesionActual.tiempo || '?'} min${min && min <= 180 ? `, duró ${min}` : ''}; energía al empezar: ${sesionActual.energia || '?'})\n${lineas.join('\n')}`;
+}
+
+async function prepararPreguntaEntrenador() {
+    const card = document.getElementById('evaluacion-card');
+    const p = document.getElementById('evaluacion-pregunta');
+    document.getElementById('evaluacion-respuesta').value = '';
+    const id = ++_preguntaPedida;
+    const mostrar = t => { _preguntaHoy = t; p.textContent = t; card.style.display = 'block'; };
+    const sinIA = () => { if (ultimaEvaluacion) mostrar(ultimaEvaluacion); else { _preguntaHoy = ''; card.style.display = 'none'; } };
+    if (!localStorage.getItem('gym_groq_key')) { sinIA(); return; }
+    _preguntaHoy = ultimaEvaluacion || '';
+    p.textContent = '⏳ Tu entrenador está mirando cómo te ha ido…';
+    card.style.display = 'block';
+    const recientes = cargarSesiones().slice(-4).filter(s => s.evaluacion_pregunta).map(s => `- ${s.evaluacion_pregunta}`).join('\n');
+    try {
+        const r = await groqChat({
+            messages: [
+                { role: 'system', content: `Eres su entrenador personal y acaba de terminar el entreno. Hazle UNA sola pregunta corta (máximo 20 palabras), cercana y de tú, para aprender algo que te sirva para entrenarle mejor a partir de ahora.
+Elige lo más llamativo de hoy: un ejercicio sin terminar, menos peso o repeticiones de lo propuesto, algo que le sobró mucho, un ejercicio nuevo, o una nota antigua de tu libreta que convenga confirmar.
+Nada genérico ("¿qué tal?", "¿cómo te sientes?"). No repitas preguntas recientes. Responde solo con JSON: {"pregunta":"..."}` },
+                { role: 'user', content: `ENTRENO DE HOY:\n${resumenHoyIA()}\n${textoMemoriaIA()}${recientes ? `\nPREGUNTAS RECIENTES (no las repitas):\n${recientes}` : ''}` },
+            ],
+            temperature: 0.6, maxTokens: 150, json: true,
+        });
+        const q = String((extraerObjetoJSON(r) || {}).pregunta || '').trim().slice(0, 200);
+        if (id !== _preguntaPedida) return;
+        if (q) mostrar(q); else sinIA();
+    } catch (e) {
+        if (id === _preguntaPedida) sinIA();
+    }
+}
+
+// ── Entrevista: el entrenador te hace 10 preguntas para conocerte ──
+const PREGUNTAS_ENTREVISTA = [
+    '¿Por qué quieres entrenar? ¿Qué te gustaría conseguir, y para cuándo?',
+    '¿Qué deportes o entrenamientos has hecho antes? ¿Cuánto tiempo llevas entrenando?',
+    '¿Has dejado de entrenar alguna vez? ¿Qué te hizo dejarlo?',
+    '¿Qué ejercicios o tipos de entreno te gustan más? ¿Y cuáles odias?',
+    '¿Tienes o has tenido lesiones, operaciones o dolores que se repiten?',
+    '¿A qué te dedicas? ¿Pasas muchas horas sentado, de pie, a turnos…?',
+    '¿Cuántas horas sueles dormir y qué tal duermes?',
+    '¿Cómo andas de estrés estos meses?',
+    '¿Qué días y a qué hora sueles entrenar? ¿Cuánto tiempo tienes de verdad?',
+    '¿Cómo prefieres que te hable: que te apriete o más tranquilo? ¿Algo más que deba saber de ti?',
+];
+let _entrevista = null; // {i, respuestas: [[pregunta, respuesta]]}
+
+function empezarEntrevista() {
+    mostrarChat();
+    _entrevista = { i: 0, respuestas: [] };
+    const intro = '🎙️ Vamos a conocernos. Te haré 10 preguntas rápidas: contesta con pocas palabras, escribe «paso» para saltar una o «para» para dejarlo. Lo que me cuentes lo apunto en mi libreta.';
+    chatHistorial.push({ role: 'assistant', content: intro });
+    añadirBurbuja('assistant', intro);
+    preguntarEntrevista();
+}
+
+function preguntarEntrevista() {
+    const q = `(${_entrevista.i + 1}/${PREGUNTAS_ENTREVISTA.length}) ${PREGUNTAS_ENTREVISTA[_entrevista.i]}`;
+    chatHistorial.push({ role: 'assistant', content: q });
+    añadirBurbuja('assistant', q);
+    guardarChat();
+}
+
+function responderEntrevista(texto) {
+    chatHistorial.push({ role: 'user', content: texto });
+    añadirBurbuja('user', texto);
+    const parar = /^\s*(para|parar|basta|stop|fin|terminar|termina)\s*\.?\s*$/i.test(texto);
+    const saltar = /^\s*(paso|pasar|salta|saltar|siguiente)\s*\.?\s*$/i.test(texto);
+    if (!parar && !saltar) _entrevista.respuestas.push([PREGUNTAS_ENTREVISTA[_entrevista.i], texto]);
+    _entrevista.i = parar ? PREGUNTAS_ENTREVISTA.length : _entrevista.i + 1;
+    if (_entrevista.i < PREGUNTAS_ENTREVISTA.length) { preguntarEntrevista(); return; }
+    const respuestas = _entrevista.respuestas;
+    _entrevista = null;
+    const fin = respuestas.length
+        ? '¡Gracias! 🙌 Ya lo estoy apuntando. Puedes verlo y corregirlo en tu Perfil → «🧠 Lo que tu entrenador sabe de ti». ¿Quieres preguntarme algo?'
+        : 'Sin problema, lo dejamos para otro día. ¿En qué te ayudo?';
+    chatHistorial.push({ role: 'assistant', content: fin });
+    añadirBurbuja('assistant', fin);
+    _chatApuntadoHasta = chatHistorial.length; // la entrevista va a la libreta aparte
+    guardarChat();
+    if (respuestas.length) actualizarMemoria('entrevista', respuestas.map(([q, r]) => `P: ${q}\nR: ${r}`).join('\n'));
+}
+
+// ── Resumen de cada mes: tu historia, aunque los entrenos antiguos se borren ──
+const MAX_MESES = 24;
+const NOMBRES_MES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const _claveMes = fecha => { const [, m, a] = String(fecha || '').split('/'); return a && m ? `${a}-${m.padStart(2, '0')}` : null; };
+const nombreMes = clave => { const [a, m] = clave.split('-'); return `${NOMBRES_MES[parseInt(m) - 1]} ${a}`; };
+let _mesesRevisados = null;
+
+// Resume el mes terminado más antiguo que falte (uno cada vez, para no gastar de golpe)
+function revisarResumenMes() {
+    if (!localStorage.getItem('gym_groq_key') || !_gymDatosListos || _mesesRevisados === _currentGymUser) return;
+    _mesesRevisados = _currentGymUser;
+    const dueño = _currentGymUser;
+    _colaMemoria = _colaMemoria.then(() => _resumirMes(dueño)).catch(e => console.warn('Resumen del mes:', e));
+}
+
+async function _resumirMes(dueño) {
+    const esDeEste = () => _currentGymUser === dueño && localStorage.getItem('gym_data_owner') === dueño;
+    if (!esDeEste()) return;
+    const actual = _claveMes(fechaDeHoy());
+    const hechos = new Set(cargarMemoria().meses.map(x => x.mes));
+    const porMes = {};
+    cargarSesiones().forEach(s => { const k = _claveMes(s.fecha); if (k && k < actual && !hechos.has(k)) (porMes[k] = porMes[k] || []).push(s); });
+    const mes = Object.keys(porMes).sort()[0];
+    if (!mes) return;
+    const r = await groqChat({
+        messages: [
+            { role: 'system', content: `Eres su entrenador personal y escribes en tu archivo el resumen de un mes. En 3-4 frases y en tercera persona: cuántos entrenos hizo y si fue constante, qué tipo de entreno, cómo evolucionaron los pesos de sus ejercicios principales (con números: de X a Y kg), molestias y cómo se sintió. Sin saludos ni consejos. Responde solo con JSON: {"resumen":"..."}` },
+            { role: 'user', content: `ENTRENOS DE ${nombreMes(mes).toUpperCase()}:\n${porMes[mes].map(lineaSesionIA).join('\n')}` },
+        ],
+        temperature: 0.2, maxTokens: 400, json: true,
+    });
+    const texto = String((extraerObjetoJSON(r) || {}).resumen || '').trim().slice(0, 600);
+    if (!texto || !esDeEste()) return;
+    const m = cargarMemoria();
+    if (m.meses.some(x => x.mes === mes)) return;
+    m.meses.push({ mes, texto, entrenos: porMes[mes].length });
+    m.meses.sort((a, b) => a.mes.localeCompare(b.mes));
+    guardarMemoria(m);
+    if (document.getElementById('memoria-lista')) renderizarMemoria();
+    // Si quedan más meses por resumir, el siguiente dentro de un minuto (límite gratis de Groq)
+    if (Object.keys(porMes).length > 1) setTimeout(() => { _mesesRevisados = null; revisarResumenMes(); }, 60000);
 }
 
 // ── Buscar en todo el historial lo que tiene que ver con la pregunta ──
@@ -8330,6 +8764,7 @@ function mostrarChat() {
     document.getElementById('btn-header-historial').style.display = 'none';
 
     cargarChatGuardado();
+    revisarResumenMes();
     if (chatHistorial.length === 0) renderizarChatVacio();
     else pintarChatGuardado();
     window.scrollTo(0, 0);
@@ -8345,6 +8780,7 @@ function renderizarChatVacio() {
         <div class="chat-vacío">
             <div>🤖</div>
             <div>Hola ${nombre}, soy tu entrenador personal IA.<br>Pregúntame lo que quieras.</div>
+            <button class="chat-entrevista-btn" onclick="empezarEntrevista()">🎙️ Deja que te conozca: 10 preguntas rápidas</button>
             <div class="chat-sugerencias">
                 <button class="chat-sug-btn" onclick="usarSugerencia('¿Qué músculo debería priorizar esta semana?')">¿Qué músculo priorizar esta semana?</button>
                 <button class="chat-sug-btn" onclick="usarSugerencia('¿Cómo puedo mejorar mis dominadas?')">¿Cómo mejorar mis dominadas?</button>
@@ -8471,6 +8907,7 @@ ${textoSeriesSemanales()}
 ${textoMolestias() ? `\nMOLESTIAS DE LAS ÚLTIMAS ${DIAS_MOLESTIAS / 7} SEMANAS:\n${textoMolestias()}\n${molestiasRecurrentes().length ? 'Si alguna se repite, recomiéndale que lo vea un fisioterapeuta o médico y no le propongas cargar esa zona.\n' : ''}` : ''}
 ${rutinaActivaTexto}
 INSTRUCCIONES GENERALES:
+- FOTOS: si te manda una foto (máquina, su postura, comida, báscula, pizarra...), di brevemente qué ves y responde a lo que pregunta. Si es su postura en un ejercicio, di qué está bien y qué corregir, recordando que una foto es solo un instante del movimiento. En el historial verás "[📷 foto]": esa foto ya no la puedes ver, recuerda lo que dijiste de ella.
 - Ya le conoces: usa tu libreta y las conversaciones anteriores con naturalidad ("como me dijiste…"), sin recitarlas. Si algo de la libreta es antiguo y viene al caso, pregúntale si sigue igual.
 - Tienes acceso al historial completo del usuario. Úsalo para dar consejos personalizados y detectar patrones (días que entrena, ejercicios frecuentes, evolución de pesos, si suele completar las sesiones, etc.).
 - Responde de forma concisa y práctica. No des discursos largos salvo que lo pidan.
@@ -8489,10 +8926,29 @@ MODIFICACIÓN DE RUTINA:
 - Si el usuario solo hace preguntas (no pide modificar), responde solo en texto natural, SIN JSON ni bloques de código.`;
 }
 
+// Fotos en el chat: solo viajan a la IA en ese mensaje; en el historial queda "[📷 foto]"
+let _chatFotos = [];
+const MAX_FOTOS_CHAT = 2;
+async function chatAgregarFotos(files) {
+    for (const file of Array.from(files)) {
+        if (_chatFotos.length >= MAX_FOTOS_CHAT) { alert(`Como mucho ${MAX_FOTOS_CHAT} fotos por mensaje.`); break; }
+        const dataUrl = await _resizarImagen(file, 1024);
+        if (!dataUrl) { alert(`No se pudo abrir "${file.name}". Prueba con una foto JPG o PNG.`); continue; }
+        _chatFotos.push(dataUrl);
+    }
+    document.getElementById('chat-fotos-input').value = '';
+    pintarChatFotos();
+}
+function pintarChatFotos() {
+    const el = document.getElementById('chat-fotos');
+    el.innerHTML = _chatFotos.map((f, i) => `<div class="ctx-foto-thumb"><img src="${f}"><button class="ctx-foto-remove" onclick="_chatFotos.splice(${i},1);pintarChatFotos()">✕</button></div>`).join('');
+    el.style.display = _chatFotos.length ? 'flex' : 'none';
+}
+
 async function enviarMensajeChat() {
     const input = document.getElementById('chat-input');
-    const texto = input.value.trim();
-    if (!texto) return;
+    let texto = input.value.trim();
+    if (!texto && !_chatFotos.length) return;
 
     const btn = document.getElementById('chat-send-btn');
     input.value = '';
@@ -8500,11 +8956,16 @@ async function enviarMensajeChat() {
     btn.disabled = true;
 
     cargarChatGuardado();
-    añadirBurbuja('user', texto);
+    if (_entrevista) { btn.disabled = false; if (texto) responderEntrevista(texto); input.focus(); return; }
+    const fotos = _chatFotos.splice(0);
+    pintarChatFotos();
+    if (!texto) texto = '¿Qué ves en esta foto?';
+    const burbujaUsuario = añadirBurbuja('user', texto);
+    fotos.forEach(f => { const img = document.createElement('img'); img.src = f; img.className = 'chat-foto-burbuja'; burbujaUsuario.appendChild(img); });
 
     const burbujaEscribiendo = añadirBurbuja('assistant', 'Escribiendo...', true);
 
-    chatHistorial.push({ role: 'user', content: texto });
+    chatHistorial.push({ role: 'user', content: texto + (fotos.length ? ` [📷 ${fotos.length === 1 ? 'una foto' : fotos.length + ' fotos'}]` : '') });
 
     try {
         const systemPrompt = construirSystemPromptChat(texto);
@@ -8512,8 +8973,9 @@ async function enviarMensajeChat() {
             { role: 'system', content: systemPrompt },
             ...chatHistorialReciente()
         ];
+        if (fotos.length) mensajes[mensajes.length - 1] = { role: 'user', content: [{ type: 'text', text: texto }, ...fotos.map(url => ({ type: 'image_url', image_url: { url } }))] };
 
-        const respuesta = await groqChat({ messages: mensajes, temperature: 0.7, maxTokens: 3500 });
+        const respuesta = await groqChat({ messages: mensajes, temperature: 0.7, maxTokens: fotos.length ? 1500 : 3500, vision: fotos.length > 0 });
 
         chatHistorial.push({ role: 'assistant', content: respuesta });
         guardarChat();
