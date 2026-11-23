@@ -1328,6 +1328,17 @@
         }
 
         .perfil-nota { font-size: 0.78rem; color: #666; margin-top: 6px; }
+        .mem-tema { font-size: 0.8rem; font-weight: 700; color: #444; margin: 12px 0 4px; }
+        .mem-nota { display: flex; align-items: flex-start; gap: 6px; padding: 7px 10px; background: #f7f7f8; border-radius: 10px; margin-bottom: 5px; font-size: 0.88rem; line-height: 1.35; }
+        .mem-texto { flex: 1; color: #222; }
+        .mem-texto small { color: #999; font-size: 0.72rem; white-space: nowrap; }
+        .mem-btn { background: none; border: none; cursor: pointer; font-size: 0.85rem; padding: 2px 4px; color: #888; flex-shrink: 0; }
+        .mem-añadir { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+        .mem-añadir select, .mem-añadir input { padding: 9px 10px; border: 2px solid #eee; border-radius: 10px; font-size: 0.9rem; background: #fff; color: #222; }
+        .mem-añadir input { flex: 1; min-width: 160px; }
+        .mem-ok { padding: 9px 14px; border: none; border-radius: 10px; background: #ff5722; color: #fff; font-weight: 600; cursor: pointer; }
+        .chat-nueva { text-align: center; margin-bottom: 10px; }
+        .chat-nueva button { background: none; border: 1px solid #ddd; border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; color: #666; cursor: pointer; }
         /* Material del perfil más compacto: 19 opciones en 3 columnas */
         #material-zona .material-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
         #material-zona .material-item { padding: 10px 6px; min-height: 0; text-align: center; }
@@ -2692,6 +2703,11 @@
             :root:not([data-tema="claro"]) .chat-input { border: 2px solid #3a3a3e; }
             :root:not([data-tema="claro"]) .chat-vacío { color: #b0b0b0; }
             :root:not([data-tema="claro"]) .chat-sug-btn { background: #0f0f11; color: #c4c4c4; }
+            :root:not([data-tema="claro"]) .mem-tema { color: #d0d0d0; }
+            :root:not([data-tema="claro"]) .mem-nota { background: #0f0f11; }
+            :root:not([data-tema="claro"]) .mem-texto { color: #ececec; }
+            :root:not([data-tema="claro"]) .mem-añadir select,             :root:not([data-tema="claro"]) .mem-añadir input { background: #0f0f11; border-color: #3a3a3e; color: #ececec; }
+            :root:not([data-tema="claro"]) .chat-nueva button { border-color: #3a3a3e; color: #b0b0b0; }
             :root:not([data-tema="claro"]) .chat-sug-btn:hover { background: #4a2a1e; }
             :root:not([data-tema="claro"]) .rec-ejercicio { color: #c4c4c4; }
             :root:not([data-tema="claro"]) .rec-fecha { color: #b0b0b0; }
@@ -2913,6 +2929,11 @@
         :root[data-tema="oscuro"] .chat-input { border: 2px solid #3a3a3e; }
         :root[data-tema="oscuro"] .chat-vacío { color: #b0b0b0; }
         :root[data-tema="oscuro"] .chat-sug-btn { background: #0f0f11; color: #c4c4c4; }
+        :root[data-tema="oscuro"] .mem-tema { color: #d0d0d0; }
+        :root[data-tema="oscuro"] .mem-nota { background: #0f0f11; }
+        :root[data-tema="oscuro"] .mem-texto { color: #ececec; }
+        :root[data-tema="oscuro"] .mem-añadir select,         :root[data-tema="oscuro"] .mem-añadir input { background: #0f0f11; border-color: #3a3a3e; color: #ececec; }
+        :root[data-tema="oscuro"] .chat-nueva button { border-color: #3a3a3e; color: #b0b0b0; }
         :root[data-tema="oscuro"] .chat-sug-btn:hover { background: #4a2a1e; }
         :root[data-tema="oscuro"] .rec-ejercicio { color: #c4c4c4; }
         :root[data-tema="oscuro"] .rec-fecha { color: #b0b0b0; }
@@ -3183,6 +3204,23 @@
         </div>
 
         <button class="btn-generar" onclick="guardarPerfil()">Guardar</button>
+
+        <div class="card" style="margin-top:20px;">
+            <div class="card-label">🧠 Lo que tu entrenador sabe de ti</div>
+            <p class="perfil-nota" style="margin-top:0;margin-bottom:10px">Lo va apuntando él solo cuando guardas un entreno con tu valoración y cuando habláis. Si algo está mal, corrígelo (✏️) o bórralo (✕).</p>
+            <div id="memoria-lista"></div>
+            <div class="mem-añadir">
+                <select id="memoria-tema">
+                    <option value="salud">🩹 Salud</option>
+                    <option value="gustos">❤️ Gustos</option>
+                    <option value="funciona">✅ Me funciona</option>
+                    <option value="vida" selected>🏠 Mi vida</option>
+                    <option value="metas">🎯 Metas</option>
+                </select>
+                <input type="text" id="memoria-nueva" maxlength="200" placeholder="Cuéntale algo: «trabajo a turnos»…" onkeydown="if(event.key==='Enter')añadirNotaManual()">
+                <button class="mem-ok" onclick="añadirNotaManual()">Añadir</button>
+            </div>
+        </div>
 
         <div class="card" style="margin-top:20px;">
             <div class="card-label">🎨 Apariencia</div>
@@ -3982,6 +4020,7 @@ function mostrarPerfil() {
     // El nombre ya se escribió al entrar: no pedirlo otra vez
     document.getElementById('perfil-usuario-actual').textContent = _currentGymUser || '—';
     marcarTema();
+    renderizarMemoria();
     renderizarInstalar();
     document.getElementById('groq-estado-perfil').textContent = localStorage.getItem('gym_groq_key')
         ? '✅ Tienes una clave guardada en este móvil. Solo se usa aquí, nunca se sube a la nube.'
@@ -5020,7 +5059,7 @@ ${duracionText}SOLICITUD DE HOY (${hoy}):
 - Deporte hecho esta semana: ${elegido.deporteHecho.length > 0 ? elegido.deporteHecho.map(e => { const nombre = nombreDeporte(e.deporte); if(!e.dias||e.dias.length===0) return nombre; const diasStr = e.dias.map(d => { let s = d.dia; if(d.tipo_cf) s += ` (${CF_TIPOS.find(t=>t.id===d.tipo_cf)?.label||d.tipo_cf})`; return s; }).join(' y '); return `${nombre}: ${diasStr}`; }).join(' | ') : 'ninguno indicado'}
 - Deporte previsto esta semana: ${elegido.deportePrevisto.length > 0 ? elegido.deportePrevisto.map(e => { const nombre = nombreDeporte(e.deporte); if(!e.dias||e.dias.length===0) return nombre; const diasStr = e.dias.map(d => { let s = d.dia; if(d.tipo_cf) s += ` (${CF_TIPOS.find(t=>t.id===d.tipo_cf)?.label||d.tipo_cf})`; return s; }).join(' y '); return `${nombre}: ${diasStr}`; }).join(' | ') : 'ninguno indicado'}
 - Ejercicios en rutina principal: exactamente ${numEj}
-${contextoSemana ? `\nCONTEXTO ADICIONAL DEL USUARIO (muy importante, adáptate a esto):\n${contextoSemana}` : ''}
+${textoMemoriaIA()}${contextoSemana ? `\nCONTEXTO ADICIONAL DEL USUARIO (muy importante, adáptate a esto):\n${contextoSemana}` : ''}
 
 INSTRUCCIONES OBLIGATORIAS:
 1. ESTRUCTURA: calentamiento (3-4 ejercicios), rutina principal (exactamente ${numEj} ejercicios) y estiramientos (3-4 ejercicios).
@@ -7510,6 +7549,7 @@ function guardarFeedback() {
     // Guardar solo las últimas 100 sesiones
     if (sesiones.length > 100) sesiones.splice(0, sesiones.length - 100);
     guardarSesiones(sesiones);
+    apuntarEntrenoEnMemoria(nueva);
 
     resetear();
 }
@@ -7960,8 +8000,327 @@ function mostrarDetalleDia(fechaStr, sesiones) {
     detalle.innerHTML = html;
 }
 
+// ===================== LIBRETA DEL ENTRENADOR =====================
+// Lo que la IA va sabiendo de cada usuario (gym_memoria, se sube a la nube con su perfil):
+// - notas: [{id, tema, texto, fecha, tuya}] cortas y duraderas (gustos, salud, vida...).
+// - conversaciones: [{fecha, texto}] resumen de cada charla con el entrenador.
+// La IA las actualiza después de cada entreno guardado y de cada conversación,
+// añadiendo, cambiando o quitando notas sueltas (nunca reescribe la libreta entera).
+const MEMORIA_KEY = 'gym_memoria';
+const MEMORIA_TEMAS = { salud: '🩹 Salud y molestias', gustos: '❤️ Gustos', funciona: '✅ Lo que te funciona', vida: '🏠 Tu vida', metas: '🎯 Metas' };
+const MAX_NOTAS = 30;
+const MAX_CONVERSACIONES = 8;
+const DIAS_NOTA_ANTIGUA = 60;
+
+function cargarMemoria() {
+    let m = null;
+    try { m = JSON.parse(localStorage.getItem(MEMORIA_KEY) || 'null'); } catch {}
+    return {
+        notas: Array.isArray(m?.notas) ? m.notas : [],
+        conversaciones: Array.isArray(m?.conversaciones) ? m.conversaciones : [],
+        sig: m?.sig || 1,
+    };
+}
+
+function guardarMemoria(m) {
+    if (m.notas.length > MAX_NOTAS) m.notas = m.notas.slice(-MAX_NOTAS);
+    if (m.conversaciones.length > MAX_CONVERSACIONES) m.conversaciones = m.conversaciones.slice(-MAX_CONVERSACIONES);
+    localStorage.setItem(MEMORIA_KEY, JSON.stringify(m));
+    scheduleSyncGym();
+}
+
+const fechaDeHoy = () => new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+function diasDesde(fecha) {
+    const [d, m, a] = String(fecha || '').split('/').map(Number);
+    if (!a) return 0;
+    return Math.floor((Date.now() - new Date(a, m - 1, d).getTime()) / 86400000);
+}
+
+function añadirNota(m, tema, texto, tuya = false) {
+    texto = String(texto || '').trim().slice(0, 200);
+    if (!texto) return;
+    m.notas.push({ id: 'n' + (m.sig++), tema: MEMORIA_TEMAS[tema] ? tema : 'vida', texto, fecha: fechaDeHoy(), ...(tuya ? { tuya: true } : {}) });
+}
+
+// Texto para la IA. conConversaciones: solo el chat las necesita
+function textoMemoriaIA(conConversaciones = false) {
+    const m = cargarMemoria();
+    let t = '';
+    if (m.notas.length) {
+        t += `\nLO QUE SABES DE ESTA PERSONA (tu libreta; tenlo en cuenta siempre, sin repetírselo):\n` + m.notas.map(n => {
+            const dias = diasDesde(n.fecha);
+            const antigua = dias > DIAS_NOTA_ANTIGUA ? ` — apuntado hace ${Math.round(dias / 30)} meses: si importa, pregúntale si sigue así` : '';
+            return `- [${n.tema}] ${n.texto} (${n.fecha}${n.tuya ? ', lo escribió él/ella' : ''})${antigua}`;
+        }).join('\n') + '\n';
+    }
+    if (conConversaciones && m.conversaciones.length) {
+        t += `\nCONVERSACIONES ANTERIORES CONTIGO (resumen; puedes referirte a ellas):\n` + m.conversaciones.map(c => `- ${c.fecha}: ${c.texto}`).join('\n') + '\n';
+    }
+    return t;
+}
+
+// Una sesión en una o dos líneas para la IA
+function lineaSesionIA(s) {
+    let linea = `- ${s.fecha}: ${s.nivel || ''} / ${s.objetivo || ''} / ${s.tiempo || ''}min${s.duracionReal ? ` (duró ${s.duracionReal})` : ''}`;
+    if (s.tipo_entrenamiento) linea += ` / ${s.tipo_entrenamiento}`;
+    if (s.completada)         linea += ` / completada: ${s.completada}`;
+    if (s.dificultad)         linea += ` / dificultad: ${s.dificultad}`;
+    if (s.energia)            linea += ` / energía: ${s.energia}`;
+    if (s.ejercicio_mas_duro) linea += ` / lo más duro: "${s.ejercicio_mas_duro}"`;
+    if (s.molestia)           linea += ` / molestia: "${s.molestia}"`;
+    if (s.comentario)         linea += ` / nota: "${s.comentario}"`;
+    if (s.evaluacion_respuesta) linea += ` / eval: "${s.evaluacion_respuesta}"`;
+    const fmtDep = (lista) => (lista||[]).map(e => { const n = e.deporte||e; if(!e.dias||e.dias.length===0) return n; const ds = e.dias.map(d => d.dia + (d.tipo_cf ? ` (${d.tipo_cf})` : '')).join(' y '); return `${n}: ${ds}`; }).join(', ');
+    if (s.deporteHecho    && s.deporteHecho.length)    linea += ` / deporte hecho: ${fmtDep(s.deporteHecho)}`;
+    if (s.deportePrevisto && s.deportePrevisto.length) linea += ` / deporte previsto: ${fmtDep(s.deportePrevisto)}`;
+    const ejercs = (s.ejercicios || []).map(e => e.nombre + (e.resultado ? ` [${e.resultado}]` : '') + (
+        e.pesoUsado ? ` (${e.pesoUsado} kg${e.repsHechas ? ' × ' + e.repsHechas : ''} hecho)`
+        : (e.pesoSugerido || e.peso) ? ` (sugerido ${e.pesoSugerido || e.peso}, sin confirmar)` : ''
+    )).join(', ');
+    if (ejercs) linea += `\n  Ejercicios: ${ejercs}`;
+    return linea;
+}
+
+// Pide a la IA que actualice la libreta. Van en cola (una detrás de otra) y si
+// cambia el usuario mientras tanto, no se guarda nada.
+let _colaMemoria = Promise.resolve();
+function actualizarMemoria(tipo, contenido) {
+    if (!localStorage.getItem('gym_groq_key')) return Promise.resolve(); // sin clave no se molesta al usuario
+    const dueño = _currentGymUser;
+    _colaMemoria = _colaMemoria.then(() => _actualizarMemoria(tipo, contenido, dueño)).catch(e => console.warn('Libreta:', e));
+    return _colaMemoria;
+}
+
+async function _actualizarMemoria(tipo, contenido, dueño) {
+    const esDeEste = () => _currentGymUser === dueño && localStorage.getItem('gym_data_owner') === dueño;
+    if (!esDeEste()) return;
+    const m = cargarMemoria();
+    const notasTexto = m.notas.length
+        ? m.notas.map(n => `[${n.id}] (${n.tema}) ${n.texto} — ${n.fecha}${n.tuya ? ' — ESCRITA POR EL CLIENTE' : ''}`).join('\n')
+        : '(vacía)';
+    const system = `Eres el ayudante de un entrenador personal y llevas su libreta de notas sobre un cliente. Apuntas solo lo útil y duradero para entrenarle mejor:
+- salud: lesiones, molestias que se repiten, qué le duele y con qué.
+- gustos: ejercicios o tipos de entreno que le gustan o no, cómo prefiere que le hablen.
+- funciona: qué le sienta bien o mal (duración, intensidad, horarios, descansos), cómo responde al entreno.
+- vida: trabajo, sueño, estrés, horarios, otros deportes, familia si afecta al entreno.
+- metas: lo que quiere conseguir y para cuándo.
+REGLAS:
+- NO apuntes lo que la app ya guarda sola: pesos de cada día, fechas, series, récords. Tampoco cosas de un solo día sin importancia ("hoy estaba cansado"), salvo que se repitan.
+- Cada nota: una frase corta en tercera persona, sin nombre.
+- Si algo nuevo cambia una nota, cámbiala. Si una nota ya no es cierta, quítala. No dupliques.
+- Las notas "ESCRITAS POR EL CLIENTE" no las quites ni cambies, salvo que él diga claramente lo contrario.
+- Si hay más de ${MAX_NOTAS - 5} notas, junta las parecidas.
+- Si no hay nada nuevo que merezca la pena, devuelve listas vacías. Es lo normal muchas veces.
+Responde SOLO con JSON: {"nuevas":[{"tema":"salud|gustos|funciona|vida|metas","texto":"..."}],"cambiar":[{"id":"n3","texto":"..."}],"quitar":["n5"]${tipo === 'chat' ? ',"resumen":"1-2 frases: de qué hablasteis y qué se decidió"' : ''}}`;
+    const user = `LIBRETA ACTUAL:\n${notasTexto}\n\n${tipo === 'chat' ? 'CONVERSACIÓN NUEVA CON EL ENTRENADOR' : 'ENTRENO QUE ACABA DE GUARDAR (con su valoración)'}:\n${contenido}`;
+
+    const respuesta = await groqChat({ messages: [{ role: 'system', content: system }, { role: 'user', content: user }], temperature: 0.2, maxTokens: 700, json: true });
+    const r = extraerObjetoJSON(respuesta) || {};
+    if (!esDeEste()) return;
+
+    const actual = cargarMemoria(); // por si se tocó mientras tanto (el usuario borró una nota)
+    const quitar = new Set((Array.isArray(r.quitar) ? r.quitar : []).map(String));
+    actual.notas = actual.notas.filter(n => !quitar.has(n.id) || n.tuya);
+    (Array.isArray(r.cambiar) ? r.cambiar : []).forEach(c => {
+        const n = actual.notas.find(x => x.id === String(c?.id));
+        const texto = String(c?.texto || '').trim().slice(0, 200);
+        if (n && texto && !n.tuya) { n.texto = texto; n.fecha = fechaDeHoy(); }
+    });
+    (Array.isArray(r.nuevas) ? r.nuevas : []).slice(0, 5).forEach(n => añadirNota(actual, n?.tema, n?.texto));
+    if (tipo === 'chat' && r.resumen) actual.conversaciones.push({ fecha: fechaDeHoy(), texto: String(r.resumen).trim().slice(0, 300) });
+    guardarMemoria(actual);
+    if (document.getElementById('memoria-lista')) renderizarMemoria();
+}
+
+// Después de guardar un entreno
+function apuntarEntrenoEnMemoria(sesion) {
+    setTimeout(() => actualizarMemoria('entreno', lineaSesionIA(sesion)), 3000);
+}
+
+// ── Lo que tu entrenador sabe de ti (Perfil) ──
+function renderizarMemoria() {
+    const cont = document.getElementById('memoria-lista');
+    if (!cont) return;
+    const m = cargarMemoria();
+    if (!m.notas.length) {
+        cont.innerHTML = `<p class="perfil-nota">Todavía no ha apuntado nada. Lo irá haciendo cuando guardes entrenos con tu valoración y cuando hables con él.</p>`;
+        return;
+    }
+    cont.innerHTML = Object.entries(MEMORIA_TEMAS).map(([tema, titulo]) => {
+        const notas = m.notas.filter(n => n.tema === tema);
+        if (!notas.length) return '';
+        return `<div class="mem-tema">${titulo}</div>` + notas.map(n => `
+            <div class="mem-nota">
+                <span class="mem-texto">${escaparHTML(n.texto)} <small>${escaparHTML(n.fecha)}</small></span>
+                <button class="mem-btn" onclick="editarNota('${n.id}')" aria-label="Corregir">✏️</button>
+                <button class="mem-btn" onclick="borrarNota('${n.id}')" aria-label="Borrar">✕</button>
+            </div>`).join('');
+    }).join('');
+}
+
+function editarNota(id) {
+    const m = cargarMemoria();
+    const n = m.notas.find(x => x.id === id);
+    if (!n) return;
+    const texto = prompt('Corrige la nota:', n.texto);
+    if (texto === null) return;
+    if (!texto.trim()) { borrarNota(id); return; }
+    n.texto = texto.trim().slice(0, 200);
+    n.fecha = fechaDeHoy();
+    n.tuya = true;
+    guardarMemoria(m);
+    renderizarMemoria();
+}
+
+function borrarNota(id) {
+    const m = cargarMemoria();
+    m.notas = m.notas.filter(x => x.id !== id);
+    guardarMemoria(m);
+    renderizarMemoria();
+}
+
+function añadirNotaManual() {
+    const input = document.getElementById('memoria-nueva');
+    const tema = document.getElementById('memoria-tema').value;
+    if (!input.value.trim()) return;
+    const m = cargarMemoria();
+    añadirNota(m, tema, input.value, true);
+    guardarMemoria(m);
+    input.value = '';
+    renderizarMemoria();
+}
+
+// ── Buscar en todo el historial lo que tiene que ver con la pregunta ──
+const _palabras = s => _sinAcentos(s).split(/[^a-z0-9ñ]+/).filter(Boolean);
+const _PALABRAS_VACIAS = new Set('con de del la las el los en un una unos unas por para al y o a mi mis tu que como cual cuando donde esta este esto estos estas hoy ayer voy vas va hago hace hacer hice puedo debo deberia tengo tiene tener me te se le lo muy mas menos pero sin sobre entre desde hasta ya algo todo toda todos cada otro otra bien mal semana dia dias mes'.split(' '));
+const _EJ_GENERICAS = new Set(['barra', 'mancuerna', 'mancuernas', 'maquina', 'polea', 'banco', 'disco', 'discos', 'kettlebell', 'pesa', 'pesas', 'goma', 'banda', 'agarre']);
+const _EJ_DEBILES = new Set(['press', 'remo', 'curl', 'elevacion', 'elevaciones', 'extension', 'extensiones', 'jalon', 'aperturas', 'apertura']);
+const _raiz = p => p.slice(0, 5);
+
+function historialRelevante(texto) {
+    const sesiones = cargarSesiones();
+    if (!sesiones.length) return '';
+    const raicesTexto = new Set(_palabras(texto).filter(p => p.length >= 4 && !_PALABRAS_VACIAS.has(p)).map(_raiz));
+    if (!raicesTexto.size) return '';
+
+    // 1. Ejercicios que nombra (en todas las sesiones guardadas)
+    const veces = {};
+    sesiones.forEach(s => (s.ejercicios || []).forEach(e => { if (e.nombre) veces[e.nombre] = (veces[e.nombre] || 0) + 1; }));
+    const usadas = new Set();
+    const ejercicios = Object.keys(veces).filter(nombre => {
+        const sig = _palabras(nombre).filter(p => p.length >= 4 && !_PALABRAS_VACIAS.has(p) && !_EJ_GENERICAS.has(p));
+        const coinciden = sig.filter(p => raicesTexto.has(_raiz(p)));
+        const ok = sig.length && coinciden.some(p => !_EJ_DEBILES.has(p)) && coinciden.length >= sig.length - 1;
+        if (ok) coinciden.forEach(p => usadas.add(_raiz(p)));
+        return ok;
+    }).sort((a, b) => veces[b] - veces[a]).slice(0, 4);
+
+    let t = '';
+    ejercicios.forEach(nombre => {
+        const filas = [];
+        sesiones.forEach(s => (s.ejercicios || []).forEach(e => {
+            if (e.nombre !== nombre) return;
+            let f = `${s.fecha}: `;
+            if (e.seriesHechas?.length) f += e.seriesHechas.map(x => `${x.kg ? x.kg + 'kg' : ''}${x.reps ? '×' + x.reps : ''}`).join(', ');
+            else if (e.pesoUsado) f += `${e.pesoUsado} kg${e.repsHechas ? ' × ' + e.repsHechas : ''}`;
+            else if (e.resultado) f += e.resultado;
+            else f += `${e.series || '?'}×${e.reps || '?'} (sin pesos apuntados)`;
+            if (e.rir !== undefined && e.rir !== null) f += ` (le sobraban ${e.rir})`;
+            if (s.descarga) f += ' [descarga]';
+            filas.push(f);
+        }));
+        const lista = filas.length > 15 ? [...filas.slice(0, 3), '…', ...filas.slice(-11)] : filas;
+        t += `\n${nombre} (${filas.length} veces):\n  ${lista.join('\n  ')}`;
+    });
+
+    // 2. Notas, molestias y valoraciones que mencionan lo que pregunta (p. ej. "rodilla")
+    const raicesLibres = [...raicesTexto].filter(r => !usadas.has(r) && r.length >= 4);
+    if (raicesLibres.length) {
+        const filas = [];
+        sesiones.forEach(s => {
+            const partes = [['molestia', s.molestia], ['nota', s.comentario], ['lo más duro', s.ejercicio_mas_duro], ['valoración', s.evaluacion_respuesta]]
+                .filter(([, v]) => v && raicesLibres.some(r => _palabras(v).some(p => p.startsWith(r))));
+            if (partes.length) filas.push(`${s.fecha}: ${partes.map(([k, v]) => `${k}: "${String(v).slice(0, 150)}"`).join(' / ')}`);
+        });
+        if (filas.length) t += `\nNotas y molestias de su historial que tienen que ver:\n  ${filas.slice(-10).join('\n  ')}`;
+    }
+    if (!t) return '';
+    return `\nDE TODO SU HISTORIAL (${sesiones.length} entrenos guardados), LO QUE TIENE QUE VER CON SU PREGUNTA:${t}\n`;
+}
+
 // ===================== CHAT =====================
+// La conversación se guarda (gym_chat, con el perfil) para seguir otro día.
+// A la IA solo le llegan los últimos mensajes; lo anterior lo recuerda por la libreta.
+const CHAT_KEY = 'gym_chat';
+const MAX_CHAT_GUARDADO = 40;
 let chatHistorial = []; // [{ role: 'user'|'assistant', content: '...' }]
+let _chatDe = null;            // de qué usuario es chatHistorial
+let _chatApuntadoHasta = 0;    // mensajes ya pasados a la libreta
+let _timerMemoriaChat = null;
+
+function cargarChatGuardado() {
+    if (_chatDe === _currentGymUser) return;
+    _chatDe = _currentGymUser;
+    let g = null;
+    try { g = JSON.parse(localStorage.getItem(CHAT_KEY) || 'null'); } catch {}
+    chatHistorial = Array.isArray(g?.mensajes) ? g.mensajes : [];
+    _chatApuntadoHasta = Math.min(g?.apuntado || 0, chatHistorial.length);
+    const cont = document.getElementById('chat-mensajes');
+    if (cont) cont.innerHTML = '';
+    const cfp = document.getElementById('cfp-mensajes');
+    if (cfp) cfp.innerHTML = '';
+}
+
+function guardarChat() {
+    if (_chatDe !== _currentGymUser || localStorage.getItem('gym_data_owner') !== _currentGymUser) return;
+    const sobran = Math.max(0, chatHistorial.length - MAX_CHAT_GUARDADO);
+    if (sobran) { chatHistorial.splice(0, sobran); _chatApuntadoHasta = Math.max(0, _chatApuntadoHasta - sobran); }
+    const mensajes = chatHistorial.map(m => ({ role: m.role, content: String(m.content).slice(0, 4000) }));
+    localStorage.setItem(CHAT_KEY, JSON.stringify({ mensajes, apuntado: _chatApuntadoHasta }));
+    scheduleSyncGym();
+}
+
+// Pasa a la libreta lo nuevo de la conversación (al rato de dejar de escribir o al salir)
+function programarMemoriaChat(ya = false) {
+    clearTimeout(_timerMemoriaChat);
+    if (chatHistorial.length <= _chatApuntadoHasta) return;
+    if (!ya) { _timerMemoriaChat = setTimeout(() => programarMemoriaChat(true), 90000); return; }
+    const nuevos = chatHistorial.slice(_chatApuntadoHasta).slice(-14);
+    _chatApuntadoHasta = chatHistorial.length;
+    guardarChat();
+    const texto = nuevos.map(m => `${m.role === 'user' ? 'CLIENTE' : 'ENTRENADOR'}: ${quitarRutinaJSON(m.content).slice(0, m.role === 'user' ? 600 : 500)}`).join('\n');
+    actualizarMemoria('chat', texto);
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') programarMemoriaChat(true); });
+
+const quitarRutinaJSON = t => String(t || '')
+    .replace(/<<<RUTINA_MODIFICADA>>>[\s\S]*?<<<FIN_RUTINA>>>/g, '[rutina modificada]')
+    .replace(/```json[\s\S]*?```/gi, '[rutina modificada]');
+
+function pintarChatGuardado() {
+    const cont = document.getElementById('chat-mensajes');
+    cont.innerHTML = '';
+    chatHistorial.forEach(m => {
+        const b = añadirBurbuja(m.role, m.role === 'user' ? m.content : quitarRutinaJSON(m.content).trim());
+        if (m.role !== 'user') b.className = 'chat-burbuja ia';
+    });
+    if (chatHistorial.length) {
+        const pie = document.createElement('div');
+        pie.className = 'chat-nueva';
+        pie.innerHTML = `<button onclick="nuevaConversacion()">🧹 Empezar una conversación nueva</button>`;
+        cont.prepend(pie);
+    }
+}
+
+function nuevaConversacion() {
+    if (!confirm('¿Borrar esta conversación de la pantalla? Lo importante ya lo tiene apuntado tu entrenador en su libreta.')) return;
+    programarMemoriaChat(true);
+    chatHistorial = [];
+    _chatApuntadoHasta = 0;
+    guardarChat();
+    document.getElementById('cfp-mensajes').innerHTML = '';
+    renderizarChatVacio();
+}
 
 function mostrarChat() {
     ocultarTodas();
@@ -7970,10 +8329,12 @@ function mostrarChat() {
     document.getElementById('btn-header-perfil').style.display = 'none';
     document.getElementById('btn-header-historial').style.display = 'none';
 
-    if (chatHistorial.length === 0) {
-        renderizarChatVacio();
-    }
+    cargarChatGuardado();
+    if (chatHistorial.length === 0) renderizarChatVacio();
+    else pintarChatGuardado();
     window.scrollTo(0, 0);
+    const cont = document.getElementById('chat-mensajes');
+    cont.scrollTop = cont.scrollHeight;
 }
 
 function renderizarChatVacio() {
@@ -8036,7 +8397,7 @@ function añadirBurbuja(rol, texto, escribiendo = false) {
     return div;
 }
 
-function construirSystemPromptChat() {
+function construirSystemPromptChat(pregunta = '') {
     const perfil   = cargarPerfil() || {};
     const sesiones = cargarSesiones();
     const records  = cargarRecords();
@@ -8052,24 +8413,7 @@ function construirSystemPromptChat() {
 
     const matTexto = textoLugaresIA(perfil, material);
 
-    const ultimasSesiones = sesiones.slice(-20).map(s => {
-        let linea = `- ${s.fecha}: ${s.nivel || ''} / ${s.objetivo || ''} / ${s.tiempo || ''}min${s.duracionReal ? ` (duró ${s.duracionReal})` : ''}`;
-        if (s.tipo_entrenamiento) linea += ` / ${s.tipo_entrenamiento}`;
-        if (s.completada)         linea += ` / completada: ${s.completada}`;
-        if (s.dificultad)         linea += ` / dificultad: ${s.dificultad}`;
-        if (s.molestia)           linea += ` / molestia: "${s.molestia}"`;
-        if (s.comentario)         linea += ` / nota: "${s.comentario}"`;
-        if (s.evaluacion_respuesta) linea += ` / eval: "${s.evaluacion_respuesta}"`;
-        const fmtDep = (lista) => (lista||[]).map(e => { const n = e.deporte||e; if(!e.dias||e.dias.length===0) return n; const ds = e.dias.map(d => d.dia + (d.tipo_cf ? ` (${d.tipo_cf})` : '')).join(' y '); return `${n}: ${ds}`; }).join(', ');
-        if (s.deporteHecho    && s.deporteHecho.length)    linea += ` / deporte hecho: ${fmtDep(s.deporteHecho)}`;
-        if (s.deportePrevisto && s.deportePrevisto.length) linea += ` / deporte previsto: ${fmtDep(s.deportePrevisto)}`;
-        const ejercs = (s.ejercicios || []).map(e => e.nombre + (e.resultado ? ` [${e.resultado}]` : '') + (
-            e.pesoUsado ? ` (${e.pesoUsado} kg${e.repsHechas ? ' × ' + e.repsHechas : ''} hecho)`
-            : (e.pesoSugerido || e.peso) ? ` (sugerido ${e.pesoSugerido || e.peso}, sin confirmar)` : ''
-        )).join(', ');
-        if (ejercs) linea += `\n  Ejercicios: ${ejercs}`;
-        return linea;
-    }).join('\n');
+    const ultimasSesiones = sesiones.slice(-20).map(lineaSesionIA).join('\n');
 
     const stats = calcularStats();
 
@@ -8121,12 +8465,13 @@ ${ultimasSesiones || 'Sin sesiones registradas aún.'}
 
 RÉCORDS PERSONALES:
 ${recsTexto ? `  ${recsTexto}` : 'Sin récords registrados aún.'}
-
+${historialRelevante(pregunta)}${textoMemoriaIA(true)}
 SERIES DE LOS ÚLTIMOS 7 DÍAS POR MÚSCULO:
 ${textoSeriesSemanales()}
 ${textoMolestias() ? `\nMOLESTIAS DE LAS ÚLTIMAS ${DIAS_MOLESTIAS / 7} SEMANAS:\n${textoMolestias()}\n${molestiasRecurrentes().length ? 'Si alguna se repite, recomiéndale que lo vea un fisioterapeuta o médico y no le propongas cargar esa zona.\n' : ''}` : ''}
 ${rutinaActivaTexto}
 INSTRUCCIONES GENERALES:
+- Ya le conoces: usa tu libreta y las conversaciones anteriores con naturalidad ("como me dijiste…"), sin recitarlas. Si algo de la libreta es antiguo y viene al caso, pregúntale si sigue igual.
 - Tienes acceso al historial completo del usuario. Úsalo para dar consejos personalizados y detectar patrones (días que entrena, ejercicios frecuentes, evolución de pesos, si suele completar las sesiones, etc.).
 - Responde de forma concisa y práctica. No des discursos largos salvo que lo pidan.
 - Si preguntan sobre su evolución o progreso, analiza los datos reales del historial.
@@ -8154,6 +8499,7 @@ async function enviarMensajeChat() {
     input.style.height = 'auto';
     btn.disabled = true;
 
+    cargarChatGuardado();
     añadirBurbuja('user', texto);
 
     const burbujaEscribiendo = añadirBurbuja('assistant', 'Escribiendo...', true);
@@ -8161,7 +8507,7 @@ async function enviarMensajeChat() {
     chatHistorial.push({ role: 'user', content: texto });
 
     try {
-        const systemPrompt = construirSystemPromptChat();
+        const systemPrompt = construirSystemPromptChat(texto);
         const mensajes = [
             { role: 'system', content: systemPrompt },
             ...chatHistorialReciente()
@@ -8170,6 +8516,8 @@ async function enviarMensajeChat() {
         const respuesta = await groqChat({ messages: mensajes, temperature: 0.7, maxTokens: 3500 });
 
         chatHistorial.push({ role: 'assistant', content: respuesta });
+        guardarChat();
+        programarMemoriaChat();
 
         // Detectar si la IA devuelve una rutina modificada
         let textoVisible = respuesta;
@@ -8299,7 +8647,9 @@ function toggleChatFlotante() {
         ico.textContent = '✕';
         badge.style.display = 'none';
         // Mostrar bienvenida si no hay mensajes
+        cargarChatGuardado();
         const cont = document.getElementById('cfp-mensajes');
+        if (cont.children.length === 0) chatHistorial.slice(-6).forEach(m => cfpAñadirBurbuja(m.role, m.role === 'user' ? m.content : quitarRutinaJSON(m.content).trim()));
         if (cont.children.length === 0) {
             const perfil = cargarPerfil();
             const nombre = perfil?.nombre || _currentGymUser || 'campeón';
@@ -8352,6 +8702,7 @@ async function cfpEnviar() {
     input.style.height = 'auto';
     btn.disabled = true;
 
+    cargarChatGuardado();
     cfpAñadirBurbuja('user', texto);
     const burbujaEsc = cfpAñadirBurbuja('assistant', 'Escribiendo...', true);
 
@@ -8366,13 +8717,15 @@ async function cfpEnviar() {
     }
 
     try {
-        const systemPrompt = construirSystemPromptChat();
+        const systemPrompt = construirSystemPromptChat(texto);
         const respuesta = await groqChat({
             messages: [{ role: 'system', content: systemPrompt }, ...chatHistorialReciente()],
             temperature: 0.7,
             maxTokens: 1500
         });
         chatHistorial.push({ role: 'assistant', content: respuesta });
+        guardarChat();
+        programarMemoriaChat();
 
         burbujaEsc.classList.remove('escribiendo');
         burbujaEsc.innerHTML = formatearMensajeIA(respuesta);
@@ -8469,7 +8822,7 @@ PERFIL:
 ${perfil.objetivo ? `- Objetivo a largo plazo (sus palabras): ${perfil.objetivo}\n` : ''}${perfil.lesiones ? `- Lesiones: ${perfil.lesiones}` : ''}
 ${textoPreferenciasIA(perfil)}
 - Deportes habituales: ${deportesHabituales.map(nombreDeporte).join(', ') || 'ninguno'}
-
+${textoMemoriaIA()}
 ÚLTIMAS SESIONES (más reciente primero):
 ${ultimasSes || 'Sin sesiones'}
 
@@ -9640,7 +9993,7 @@ async function loadGymUserList() {
 }
 
 // Datos de entrenamiento de cada usuario (la clave de Groq nunca entra aquí)
-const GYM_CLAVES_DATOS = ['gym_perfil','gym_material','gym_sesiones','gym_records','gym_reto','gym_plan_semanal','gym_peso_corporal','gym_descarga'];
+const GYM_CLAVES_DATOS = ['gym_perfil','gym_material','gym_sesiones','gym_records','gym_reto','gym_plan_semanal','gym_peso_corporal','gym_descarga','gym_memoria','gym_chat'];
 
 function clearLocalGymData() {
     GYM_CLAVES_DATOS.forEach(k => localStorage.removeItem(k));
@@ -9700,6 +10053,7 @@ async function recuperarCopia(input) {
     });
     // Los datos recuperados pasan a ser del usuario actual y se suben a su perfil en la nube
     if (_currentGymUser) {
+        _chatDe = null;
         localStorage.setItem('gym_data_owner', _currentGymUser);
         _gymDatosListos = true;
         scheduleSyncGym();
@@ -9858,6 +10212,9 @@ async function loadGymUserData(name) {
         if (d.gym_plan_semanal)    localStorage.setItem('gym_plan_semanal',   JSON.stringify(d.gym_plan_semanal));
         if (d.gym_peso_corporal)   localStorage.setItem('gym_peso_corporal',  JSON.stringify(d.gym_peso_corporal));
         if (d.gym_descarga)        localStorage.setItem('gym_descarga',       JSON.stringify(d.gym_descarga));
+        if (d.gym_memoria)         localStorage.setItem('gym_memoria',        JSON.stringify(d.gym_memoria));
+        if (d.gym_chat)            localStorage.setItem('gym_chat',           JSON.stringify(d.gym_chat));
+        _chatDe = null; // el chat en pantalla se vuelve a leer del perfil cargado
         // La API Key de Groq ya no se guarda en la nube (cualquiera con el nombre
         // de usuario podía leerla). Se queda solo en este navegador.
         localStorage.setItem('gym_data_owner', name);
@@ -9897,6 +10254,8 @@ async function syncGymUser() {
             gym_plan_semanal:   JSON.parse(localStorage.getItem('gym_plan_semanal')   || 'null'),
             gym_peso_corporal:  JSON.parse(localStorage.getItem('gym_peso_corporal')  || '[]'),
             gym_descarga:       JSON.parse(localStorage.getItem('gym_descarga')       || 'null'),
+            gym_memoria:        JSON.parse(localStorage.getItem('gym_memoria')        || 'null'),
+            gym_chat:           JSON.parse(localStorage.getItem('gym_chat')           || 'null'),
             gym_groq_key:       undefined, // borra de la nube la clave que se subía antes
             _publico:           actividadPublica(), // solo si el usuario ha decidido compartirla
         };
