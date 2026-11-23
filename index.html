@@ -1613,6 +1613,21 @@
             font-style: italic;
         }
 
+        /* Técnica de cada ejercicio, explicada paso a paso */
+        .ej-tecnica { margin-top: 10px; background: #fff8f3; border: 1px solid #ffe0cc; border-radius: 12px; padding: 10px 12px; font-size: 0.86rem; color: #333; line-height: 1.5; }
+        .ej-tecnica summary { cursor: pointer; font-weight: 800; color: #e64a19; }
+        .tec-parte { margin-top: 10px; }
+        .tec-parte b { display: block; margin-bottom: 3px; }
+        .tec-parte ol, .tec-parte ul { padding-left: 20px; margin: 0; }
+        .tec-parte li { margin-bottom: 3px; }
+        .tec-parte p { margin: 0; }
+        .tec-seguridad { background: #ffffff; border-radius: 8px; padding: 8px 10px; }
+        .tec-cargando { color: #888; margin: 8px 0 0; }
+        .tec-reintentar { margin-top: 8px; border: none; border-radius: 10px; padding: 8px 14px; font-weight: 700; background: #ff5722; color: white; cursor: pointer; }
+        #modo-guiado .ej-tecnica { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: #ddd; margin-bottom: 20px; text-align: left; }
+        #modo-guiado .ej-tecnica summary { color: #ff8a65; }
+        #modo-guiado .tec-seguridad { background: rgba(255,255,255,0.06); }
+
         .tag.descanso-ej {
             background: #f0f4ff;
             color: #3355cc;
@@ -2635,6 +2650,10 @@
             :root:not([data-tema="claro"]) .seccion-titulo { color: #b0b0b0; }
             :root:not([data-tema="claro"]) .ejercicio-card { background: #1c1c1e; }
             :root:not([data-tema="claro"]) .ej-explicacion { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .ej-tecnica { background: #2a1d17; border-color: #4a2c1e; color: #e5e5e5; }
+            :root:not([data-tema="claro"]) .ej-tecnica summary { color: #ff8a65; }
+            :root:not([data-tema="claro"]) .tec-seguridad { background: #1c1c1e; }
+            :root:not([data-tema="claro"]) .tec-cargando { color: #999; }
             :root:not([data-tema="claro"]) .extra-card { background: #1c1c1e; color: #cfcfcf; }
             :root:not([data-tema="claro"]) .extra-card .extra-titulo { color: #b0b0b0; }
             :root:not([data-tema="claro"]) .calendario { background: #1c1c1e; }
@@ -2851,6 +2870,10 @@
         :root[data-tema="oscuro"] .seccion-titulo { color: #b0b0b0; }
         :root[data-tema="oscuro"] .ejercicio-card { background: #1c1c1e; }
         :root[data-tema="oscuro"] .ej-explicacion { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .ej-tecnica { background: #2a1d17; border-color: #4a2c1e; color: #e5e5e5; }
+        :root[data-tema="oscuro"] .ej-tecnica summary { color: #ff8a65; }
+        :root[data-tema="oscuro"] .tec-seguridad { background: #1c1c1e; }
+        :root[data-tema="oscuro"] .tec-cargando { color: #999; }
         :root[data-tema="oscuro"] .extra-card { background: #1c1c1e; color: #cfcfcf; }
         :root[data-tema="oscuro"] .extra-card .extra-titulo { color: #b0b0b0; }
         :root[data-tema="oscuro"] .calendario { background: #1c1c1e; }
@@ -6896,10 +6919,120 @@ function cambiarPorAlternativa(card, numero) {
         };
         lista[i] = nuevo;
         const nueva = crearTarjetaEjercicio(nuevo, numero, SECCION_DE[seccion]);
-        if (card.classList.contains('abierta')) nueva.classList.add('abierta');
+        if (card.classList.contains('abierta')) { nueva.classList.add('abierta'); nueva.cargarTecnica(); }
         card.replaceWith(nueva);
         return;
     }
+}
+
+// ===================== TÉCNICA DE CADA EJERCICIO =====================
+// Cada ejercicio lleva su técnica explicada paso a paso. La escribe la IA la primera
+// vez que se abre ese ejercicio y se guarda en este dispositivo (gym_tecnicas), así
+// que después sale al momento, incluso sin conexión.
+const TECNICAS_KEY = 'gym_tecnicas';
+const MAX_TECNICAS = 300;
+const _tecnicasPendientes = {};
+
+function tecnicasGuardadas() {
+    try { return JSON.parse(localStorage.getItem(TECNICAS_KEY) || '{}') || {}; } catch { return {}; }
+}
+function tecnicaGuardada(nombre) {
+    return tecnicasGuardadas()[claveEjercicio(nombre)] || null;
+}
+function guardarTecnica(nombre, t) {
+    const todas = tecnicasGuardadas();
+    todas[claveEjercicio(nombre)] = { ...t, f: Date.now() };
+    const claves = Object.keys(todas);
+    if (claves.length > MAX_TECNICAS) {
+        claves.sort((a, b) => (todas[a].f || 0) - (todas[b].f || 0))
+            .slice(0, claves.length - MAX_TECNICAS).forEach(k => delete todas[k]);
+    }
+    try { localStorage.setItem(TECNICAS_KEY, JSON.stringify(todas)); } catch {}
+}
+
+// Si se abre el mismo ejercicio dos veces a la vez, se hace una sola llamada
+function obtenerTecnica(ej) {
+    const guardada = tecnicaGuardada(ej.nombre);
+    if (guardada) return Promise.resolve(guardada);
+    const k = claveEjercicio(ej.nombre);
+    if (!_tecnicasPendientes[k]) _tecnicasPendientes[k] = pedirTecnicaIA(ej).finally(() => delete _tecnicasPendientes[k]);
+    return _tecnicasPendientes[k];
+}
+
+async function pedirTecnicaIA(ej) {
+    const sistema = 'Eres un entrenador personal titulado (NSCA-CSCS) con formación en fisioterapia deportiva. '
+        + 'Explicas la técnica de los ejercicios de forma precisa, profesional y fácil de seguir, en español de España, '
+        + 'tuteando. Priorizas la seguridad articular (zona lumbar, rodillas, hombros). Sin relleno ni frases motivacionales.';
+    const usuario = `Explica la técnica correcta del ejercicio "${ej.nombre}"`
+        + (ej.nombre_en ? ` (en inglés: ${ej.nombre_en})` : '')
+        + (ej.grupo_muscular ? `. Músculo principal: ${ej.grupo_muscular}` : '') + `.
+Responde SOLO con este JSON:
+{"preparacion": ["2-4 pasos: posición inicial, agarre, apoyo de los pies, postura de espalda y hombros"],
+ "ejecucion": ["3-6 pasos del movimiento en orden: recorrido completo, qué articulación se mueve y el ritmo (por ejemplo: bajar en 2-3 segundos, subir con control)"],
+ "respiracion": "cuándo coger y cuándo soltar el aire",
+ "sentir": "dónde se tiene que notar el esfuerzo",
+ "errores": ["3-4 errores típicos, cada uno con cómo corregirlo"],
+ "seguridad": "la clave más importante para no lesionarse"}
+Cada paso, una frase corta y concreta. Si es un estiramiento o movilidad, di cuánto mantener y que sin rebotes. Si el nombre incluye varios ejercicios (circuito, AMRAP, EMOM, Tabata), en "ejecucion" da 1-2 pasos clave de cada uno, empezando por su nombre.`;
+    const texto = await groqChat({
+        messages: [{ role: 'system', content: sistema }, { role: 'user', content: usuario }],
+        temperature: 0.2, maxTokens: 900, json: true,
+    });
+    const d = extraerObjetoJSON(texto);
+    const lista = v => (Array.isArray(v) ? v : (v ? [v] : [])).map(x => String(x).trim()).filter(Boolean).slice(0, 8);
+    const frase = v => (Array.isArray(v) ? v.join(' ') : String(v || '')).trim();
+    const t = {
+        preparacion: lista(d.preparacion), ejecucion: lista(d.ejecucion),
+        respiracion: frase(d.respiracion), sentir: frase(d.sentir),
+        errores: lista(d.errores), seguridad: frase(d.seguridad),
+    };
+    if (!t.ejecucion.length) throw new Error('La IA no devolvió la técnica.');
+    guardarTecnica(ej.nombre, t);
+    return t;
+}
+
+function htmlTecnica(t) {
+    const li = arr => arr.map(x => `<li>${escaparHTML(x)}</li>`).join('');
+    const parte = (titulo, cuerpo, clase = '') => `<div class="tec-parte ${clase}"><b>${titulo}</b>${cuerpo}</div>`;
+    return (t.preparacion.length ? parte('🧍 Posición inicial', `<ol>${li(t.preparacion)}</ol>`) : '')
+        + parte('🔁 Movimiento', `<ol>${li(t.ejecucion)}</ol>`)
+        + (t.respiracion ? parte('🌬️ Respiración', `<p>${escaparHTML(t.respiracion)}</p>`) : '')
+        + (t.sentir ? parte('🎯 Dónde lo tienes que notar', `<p>${escaparHTML(t.sentir)}</p>`) : '')
+        + (t.errores.length ? parte('⚠️ Errores típicos', `<ul>${li(t.errores)}</ul>`) : '')
+        + (t.seguridad ? parte('🛡️ Para no lesionarte', `<p>${escaparHTML(t.seguridad)}</p>`, 'tec-seguridad') : '');
+}
+
+// Pone la técnica del ejercicio en "hueco" (la guardada, o la pide a la IA)
+function pintarTecnica(hueco, ej, abierta = true) {
+    if (!hueco || !ej || !ej.nombre) return;
+    const pintar = cuerpo => {
+        hueco.innerHTML = `<details class="ej-tecnica"${abierta ? ' open' : ''}><summary>📋 Cómo se hace: técnica correcta</summary>${cuerpo}</details>`;
+    };
+    const boton = (texto, accion) => {
+        const b = hueco.querySelector('.tec-reintentar');
+        if (b) { b.textContent = texto; b.onclick = accion; }
+    };
+    const guardada = tecnicaGuardada(ej.nombre);
+    if (guardada) { pintar(htmlTecnica(guardada)); return; }
+
+    const cargar = () => {
+        pintar('<p class="tec-cargando">⏳ Preparando la explicación de la técnica…</p>');
+        obtenerTecnica(ej)
+            .then(t => { if (hueco.isConnected) pintar(htmlTecnica(t)); })
+            .catch(e => {
+                if (!hueco.isConnected) return;
+                const saturada = /HTTP 429/.test(e && e.message);
+                pintar(`<p class="tec-cargando">No se ha podido preparar la técnica${saturada ? ': la IA está saturada, espera un minuto' : ''}.</p><button class="tec-reintentar"></button>`);
+                boton('Reintentar', cargar);
+            });
+    };
+    // Sin clave de Groq no se abre la ventana de la clave por sorpresa: se ofrece un botón
+    if (!(localStorage.getItem('gym_groq_key') || '').trim()) {
+        pintar('<p class="tec-cargando">Para ver aquí la técnica explicada paso a paso hace falta tu clave de Groq (gratis).</p><button class="tec-reintentar"></button>');
+        boton('Poner la clave', cargar);
+        return;
+    }
+    cargar();
 }
 
 // Tarjeta de un ejercicio: una fila corta (nombre, series × reps, peso, progreso)
@@ -6943,15 +7076,26 @@ function crearTarjetaEjercicio(ej, numero, seccion = 'Rutina principal') {
             ${info ? `<div class="tipo-explicacion">${info.desc}</div>` : ''}
             ${principal && !esEspecial ? hintProgresion(ej.nombre) : ''}
             ${ej.explicacion ? `<p class="ej-explicacion">${ej.explicacion}</p>` : ''}
+            <div class="tecnica-hueco"></div>
             <div class="ej-acciones">
-                <a class="tag youtube-link" href="${ytUrl}" target="_blank" rel="noopener">▶ Ver cómo se hace</a>
+                <a class="tag youtube-link" href="${ytUrl}" target="_blank" rel="noopener">▶ Ver vídeo</a>
                 ${!esEspecial && ej.descanso_series ? `<span class="tag descanso">Descanso ${escaparHTML(ej.descanso_series)}</span>` : ''}
             </div>
             ${variantes ? `<details class="ej-variantes"><summary>Variantes y alternativa</summary><div class="variantes-box">${variantes}</div></details>` : ''}
         </div>`;
     const cuerpo = card.querySelector('.ej-cuerpo');
     const fila = card.querySelector('.ej-fila');
-    fila.addEventListener('click', () => fila.setAttribute('aria-expanded', card.classList.toggle('abierta')));
+    // La técnica se prepara la primera vez que se abre el ejercicio
+    card.cargarTecnica = () => {
+        if (card._tecnica) return;
+        card._tecnica = true;
+        pintarTecnica(card.querySelector('.tecnica-hueco'), ej);
+    };
+    fila.addEventListener('click', () => {
+        const abierta = card.classList.toggle('abierta');
+        fila.setAttribute('aria-expanded', abierta);
+        if (abierta) card.cargarTecnica();
+    });
 
     // Cambiar por la alternativa con un toque (máquina ocupada, molestia...)
     const nombreAlt = nombreDeAlternativa(ej.alternativa);
@@ -7044,7 +7188,7 @@ function mostrarRutinaIA(resultado, tiempo, nivel, objetivo) {
     // El primer ejercicio principal sale abierto, para que se vea cómo funciona
     const primera = [...contenedor.querySelectorAll('.ejercicio-card')].find(c =>
         (resultado.ejercicios || []).some(e => e.nombre === c.dataset.ejNombre));
-    if (primera) { primera.classList.add('abierta'); primera.querySelector('.ej-fila').setAttribute('aria-expanded', 'true'); }
+    if (primera) { primera.classList.add('abierta'); primera.querySelector('.ej-fila').setAttribute('aria-expanded', 'true'); primera.cargarTecnica(); }
 
     // Consejos de la IA, plegados al final (la pregunta de evaluación va en la valoración)
     const consejos = [['cardio_sugerido', '🚶 Cardio'], ['consejo_recuperacion', '🛌 Recuperación']]
@@ -9202,10 +9346,12 @@ function _mgRenderEjercicio() {
                 ${ej.peso ? `<span class="mg-tag">${escaparHTML(ej.peso)}</span>` : ''}</div>
             <div class="mg-explicacion">${escaparHTML(info.desc)}</div>
             ${ej.explicacion ? `<div class="mg-explicacion">${ej.explicacion}</div>` : ''}
+            <div class="tecnica-hueco" id="mg-tecnica"></div>
             <div id="mg-bloque"></div>
             <button class="mg-btn-serie" onclick="_mgCompletarSerie(1, 0)">✓ Bloque terminado${ultimo ? '' : ' →'}</button>
             ${ultimo ? '' : `<button class="mg-btn-saltar" onclick="_mgSaltarEjercicio()">Saltar ejercicio →</button>`}
             <div id="mg-timer-area"></div>`;
+        pintarTecnica(document.getElementById('mg-tecnica'), ej);
         _mg.panelBloque = crearPanelBloque(ej, tipo);
         document.getElementById('mg-bloque').appendChild(_mg.panelBloque);
         _mg.serie = 1;
@@ -9249,6 +9395,7 @@ function _mgRenderEjercicio() {
         ${_mg.serie === 1 ? htmlFotoEjercicio(ej) : ''}
         ${progHtml}
         ${ej.explicacion ? `<div class="mg-explicacion">${ej.explicacion}</div>` : ''}
+        <div class="tecnica-hueco" id="mg-tecnica"></div>
         ${pesoRow}
         <button class="mg-btn-serie" onclick="_mgCompletarSerie(${series}, ${descSegs})">
             ✓ Serie hecha
@@ -9257,6 +9404,8 @@ function _mgRenderEjercicio() {
             ? `<button class="mg-btn-saltar" onclick="_mgSaltarEjercicio()">Saltar ejercicio →</button>` : ''}
         <div id="mg-timer-area"></div>
     `;
+    // Técnica: abierta en la primera serie; luego plegada, por si se quiere repasar
+    pintarTecnica(document.getElementById('mg-tecnica'), ej, _mg.serie === 1);
     document.getElementById('modo-guiado').scrollTo(0, 0);
 }
 
