@@ -1628,6 +1628,9 @@
         #modo-guiado .ej-tecnica summary { color: #ff8a65; }
         #modo-guiado .tec-seguridad { background: rgba(255,255,255,0.06); }
 
+        .obj-nota { font-size: 0.78rem; color: #888; margin: 8px 0 0; }
+        .btn-op small { font-weight: 600; opacity: 0.8; }
+
         .tag.descanso-ej {
             background: #f0f4ff;
             color: #3355cc;
@@ -3132,11 +3135,8 @@
                 <button class="btn-op" data-valor="avanzado" onclick="elegirPerfil('nivel', this)">Avanzado</button>
             </div>
             <div class="card-label" style="margin-top:16px">Qué buscas en el gimnasio</div>
-            <div class="btn-group" id="perfil-objetivoTipo-group">
-                <button class="btn-op" data-valor="fuerza" onclick="elegirPerfil('objetivoTipo', this)">Fuerza y músculo</button>
-                <button class="btn-op" data-valor="peso" onclick="elegirPerfil('objetivoTipo', this)">Perder peso</button>
-                <button class="btn-op" data-valor="mantener" onclick="elegirPerfil('objetivoTipo', this)">Mantenerme</button>
-            </div>
+            <div class="btn-group" id="perfil-objetivos-group"></div>
+            <p class="obj-nota">Puedes marcar dos. El primero que marques es el principal.</p>
             <div class="card-label" style="margin-top:16px">¿Cuántos días a la semana puedes entrenar?</div>
             <div class="btn-group" id="perfil-diasSemana-group">
                 <button class="btn-op" data-valor="2" onclick="elegirPerfil('diasSemana', this)">2</button>
@@ -3677,7 +3677,7 @@ function guardarPerfil() {
         objetivo: val('perfil-objetivo'),
         deportesHabituales: deportesPerfilSeleccionados.filter(d => d !== 'gimnasio'),
         deportesOtros: limpiarDeportesOtros(val('perfil-deportes-otros')),
-        nivel: _perfilSel.nivel, objetivoTipo: _perfilSel.objetivoTipo,
+        nivel: _perfilSel.nivel, objetivos: [..._perfilSel.objetivos], objetivoTipo: _perfilSel.objetivos[0],
         diasSemana: parseInt(_perfilSel.diasSemana) || null,
         compartirActividad: !!anterior.compartirActividad,
         lugares,
@@ -3906,17 +3906,65 @@ function actualizarSidebar() {
     }
 }
 
+// ===================== OBJETIVOS (hasta 2: principal y secundario) =====================
+// perfil.objetivos = ['peso', 'mantener'] (el primero es el principal). perfil.objetivoTipo
+// se sigue guardando (= el principal) para las versiones anteriores. En las sesiones y en
+// la IA, los dos van juntos en una clave: 'peso+mantener'.
+const OBJETIVOS = { fuerza: 'Fuerza y músculo', peso: 'Perder peso', mantener: 'Estar en forma' };
+const OBJETIVOS_IA = {
+    fuerza: 'ganar fuerza y músculo: ejercicios compuestos con carga progresiva, 6-12 repeticiones, descansos de 1,5-3 min',
+    peso: 'perder grasa SIN perder músculo: la base sigue siendo la fuerza con cargas (8-15 repeticiones) para conservar el músculo, más gasto extra con superseries, circuitos, descansos cortos o un final metabólico. El cardio complementa, nunca sustituye a la fuerza',
+    mantener: 'estar en forma y con buena salud: fuerza de cuerpo completo, algo de cardio y movilidad, sin llegar al límite',
+};
+const listaObjetivos = clave => [...new Set(String(clave || '').split('+').filter(o => OBJETIVOS[o]))].slice(0, 2);
+const nombreObjetivo = clave => listaObjetivos(clave).map(o => OBJETIVOS[o]).join(' + ') || String(clave || '');
+function textoObjetivoIA(clave) {
+    const [a, b] = listaObjetivos(clave);
+    if (!a) return OBJETIVOS_IA.mantener;
+    if (!b) return OBJETIVOS_IA[a];
+    return `PRINCIPAL (unos 2/3 de la sesión): ${OBJETIVOS_IA[a]}. SECUNDARIO (el resto): ${OBJETIVOS_IA[b]}`;
+}
+
 // Nivel y objetivo guardados en el perfil (con valores por defecto para perfiles antiguos)
 function nivelYObjetivo(perfil = cargarPerfil()) {
     const ultima = ultimaSesion();
     const validoNivel = v => ['principiante', 'medio', 'avanzado'].includes(v) ? v : null;
-    const validoObj   = v => ['fuerza', 'peso', 'mantener'].includes(v) ? v : null;
+    let objetivos = listaObjetivos((perfil && Array.isArray(perfil.objetivos)) ? perfil.objetivos.join('+') : '');
+    if (!objetivos.length) objetivos = listaObjetivos(perfil && perfil.objetivoTipo);
+    if (!objetivos.length) objetivos = listaObjetivos(ultima && ultima.objetivo);
+    if (!objetivos.length) objetivos = ['mantener'];
     return {
         nivel:        validoNivel(perfil && perfil.nivel) || validoNivel(ultima && ultima.nivel) || 'medio',
-        objetivoTipo: validoObj(perfil && perfil.objetivoTipo) || validoObj(ultima && ultima.objetivo) || 'mantener',
+        objetivoTipo: objetivos.join('+'), // clave para la IA y las sesiones
+        objetivos,
     };
 }
-let _perfilSel = { nivel: 'medio', objetivoTipo: 'mantener', diasSemana: null, lugares: ['casa'] };
+
+// Marcar/desmarcar un objetivo: como mucho dos; con dos marcados, el nuevo cambia el secundario.
+// Siempre queda al menos uno.
+function alternarObjetivo(lista, o) {
+    const i = lista.indexOf(o);
+    if (i !== -1) { if (lista.length > 1) lista.splice(i, 1); }
+    else if (lista.length < 2) lista.push(o);
+    else lista[1] = o;
+    return lista;
+}
+function botonesObjetivos(lista, accion, iconos = false) {
+    const ico = { fuerza: '💪 ', peso: '🔥 ', mantener: '🙂 ' };
+    return Object.entries(OBJETIVOS).map(([id, texto]) => {
+        const i = lista.indexOf(id);
+        const orden = lista.length > 1 && i !== -1 ? ` <small>(${i === 0 ? 'principal' : 'secundario'})</small>` : '';
+        return `<button class="btn-op${i !== -1 ? ' activo' : ''}" data-valor="${id}" onclick="${accion}('${id}')">${iconos ? ico[id] : ''}${texto}${orden}</button>`;
+    }).join('');
+}
+function renderObjetivosPerfil() {
+    document.getElementById('perfil-objetivos-group').innerHTML = botonesObjetivos(_perfilSel.objetivos, 'elegirObjetivoPerfil');
+}
+function elegirObjetivoPerfil(o) {
+    alternarObjetivo(_perfilSel.objetivos, o);
+    renderObjetivosPerfil();
+}
+let _perfilSel = { nivel: 'medio', objetivos: ['mantener'], diasSemana: null, lugares: ['casa'] };
 function elegirPerfil(campo, btn) {
     _perfilSel[campo] = btn.dataset.valor;
     btn.parentElement.querySelectorAll('.btn-op').forEach(b => b.classList.toggle('activo', b === btn));
@@ -3947,8 +3995,10 @@ function mostrarPerfil() {
     pon('perfil-objetivo', perfil.objetivo);
 
     // Nivel, objetivo, días y lugar
-    _perfilSel = { ...nivelYObjetivo(perfil), diasSemana: perfil.diasSemana ? String(perfil.diasSemana) : null, lugares: [...lugaresPerfil(perfil)] };
-    ['nivel', 'objetivoTipo', 'diasSemana'].forEach(campo => {
+    const no = nivelYObjetivo(perfil);
+    _perfilSel = { nivel: no.nivel, objetivos: [...no.objetivos], diasSemana: perfil.diasSemana ? String(perfil.diasSemana) : null, lugares: [...lugaresPerfil(perfil)] };
+    renderObjetivosPerfil();
+    ['nivel', 'diasSemana'].forEach(campo => {
         document.querySelectorAll(`#perfil-${campo}-group .btn-op`).forEach(b =>
             b.classList.toggle('activo', b.dataset.valor === _perfilSel[campo]));
     });
@@ -3996,7 +4046,7 @@ function mostrarFormulario() {
         // Banner perfil pequeño: nivel y objetivo (se cambian en el perfil)
         const { nivel, objetivoTipo } = nivelYObjetivo(perfil);
         const txtNivel = { principiante: 'Principiante', medio: 'Nivel medio', avanzado: 'Avanzado' }[nivel];
-        const txtObj   = { fuerza: 'Fuerza y músculo', peso: 'Perder peso', mantener: 'Mantenerme' }[objetivoTipo];
+        const txtObj   = nombreObjetivo(objetivoTipo);
         document.getElementById('banner-nombre').textContent = `${txtNivel} · ${txtObj}`;
         document.getElementById('banner-material').textContent = 'Material: ' + nombresMaterial(material);
     }
@@ -4045,7 +4095,7 @@ const OB_MATERIAL_RAPIDO = ['pesas', 'barras', 'press_banca', 'barra_dominadas',
 
 function mostrarBienvenida() {
     const nombre = _currentGymUser ? _currentGymUser.charAt(0).toUpperCase() + _currentGymUser.slice(1) : '';
-    _ob = { paso: 0, nombre, objetivoTipo: null, nivel: 'medio', diasSemana: 3, lugares: [], material: [], pesasKg: '', lesiones: '', anio: '' };
+    _ob = { paso: 0, nombre, objetivos: [], nivel: 'medio', diasSemana: 3, lugares: [], material: [], pesasKg: '', lesiones: '', anio: '' };
     ocultarTodas();
     document.body.classList.add('primer-dia');
     document.getElementById('pantalla-inicio').style.display = 'block';
@@ -4058,6 +4108,13 @@ function _obGuardarCampos() {
     if (v('ob-kg') !== null) _ob.pesasKg = v('ob-kg');
     if (v('ob-lesiones') !== null) _ob.lesiones = v('ob-lesiones');
     if (v('ob-anio') !== null) _ob.anio = v('ob-anio');
+}
+function obObjetivo(o) {
+    _obGuardarCampos();
+    // En la bienvenida se puede desmarcar del todo (aún no hay ninguno elegido)
+    const i = _ob.objetivos.indexOf(o);
+    if (i !== -1) _ob.objetivos.splice(i, 1); else alternarObjetivo(_ob.objetivos, o);
+    renderBienvenida();
 }
 function obElegir(campo, valor) {
     _obGuardarCampos();
@@ -4102,8 +4159,9 @@ function renderBienvenida() {
     } else if (_ob.paso === 1) {
         html = `<h2>¿Qué buscas en el gimnasio?</h2>
             <div class="card"><div class="input-label">¿Cómo te llamas?</div><input type="text" id="ob-nombre" value="${escaparHTML(_ob.nombre)}" placeholder="Tu nombre"></div>
-            <div class="btn-group ob-grande">${op('objetivoTipo', 'fuerza', '💪 Fuerza y músculo')}${op('objetivoTipo', 'peso', '🔥 Perder peso')}${op('objetivoTipo', 'mantener', '🙂 Estar en forma')}</div>
-            <button class="btn-generar" onclick="obIr(2)" ${_ob.objetivoTipo ? '' : 'disabled'}>Siguiente →</button>`;
+            <div class="btn-group ob-grande">${botonesObjetivos(_ob.objetivos, 'obObjetivo', true)}</div>
+            <p class="ob-nota">Puedes marcar dos. El primero que marques es el principal.</p>
+            <button class="btn-generar" onclick="obIr(2)" ${_ob.objetivos.length ? '' : 'disabled'}>Siguiente →</button>`;
     } else if (_ob.paso === 2) {
         html = `<h2>Tu nivel y tu semana</h2>
             <div class="card"><div class="card-label">¿Cuánta experiencia tienes?</div>
@@ -4142,7 +4200,8 @@ function terminarBienvenida() {
         nombre: _ob.nombre, anioNacimiento: anio, edad: anio ? String(new Date().getFullYear() - anio) : '',
         peso: '', altura: '', lesiones: _ob.lesiones, evitar: '', objetivo: '',
         deportesHabituales: [], deportesOtros: [],
-        nivel: _ob.nivel, objetivoTipo: _ob.objetivoTipo || 'mantener', diasSemana: _ob.diasSemana,
+        nivel: _ob.nivel, objetivos: _ob.objetivos.length ? [..._ob.objetivos] : ['mantener'],
+        objetivoTipo: _ob.objetivos[0] || 'mantener', diasSemana: _ob.diasSemana,
         lugares: _ob.lugares.length ? _ob.lugares : ['casa'],
         pesasKg: _ob.material.includes('pesas') ? _ob.pesasKg : '', materialOtro: '',
     };
@@ -4802,7 +4861,6 @@ function parseFechaES(str) {
 }
 
 function construirPrompt(perfil, material, sesiones, tiempo, nivel, objetivo, contextoSemana = '') {
-    const nombresObj = { fuerza: 'fuerza e hipertrofia', peso: 'pérdida de peso y cardio', mantener: 'mantenimiento general' };
     const numEj = cuantosEjercicios(tiempo);
     const diasSemana = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
     const hoy = diasSemana[new Date().getDay()];
@@ -4957,7 +5015,7 @@ ${duracionText}SOLICITUD DE HOY (${hoy}):
 - Tiempo disponible: ${tiempo} minutos${modoCircuito ? ' — MODO CIRCUITO: usa circuitos en lugar de series separadas, mantén intensidad' : ''}
 - Energía del usuario hoy: ${energiaTexto[energia]}
 - Nivel: ${nivel}
-- Objetivo: ${nombresObj[objetivo]}
+- Objetivo: ${textoObjetivoIA(objetivo)}
 - Zonas a trabajar: ${elegido.zonas.length === 0 || elegido.zonas.includes('fullbody') ? 'cuerpo completo (distribuye entre todos los grupos musculares)' : elegido.zonas.join(', ')}
 - Deporte hecho esta semana: ${elegido.deporteHecho.length > 0 ? elegido.deporteHecho.map(e => { const nombre = nombreDeporte(e.deporte); if(!e.dias||e.dias.length===0) return nombre; const diasStr = e.dias.map(d => { let s = d.dia; if(d.tipo_cf) s += ` (${CF_TIPOS.find(t=>t.id===d.tipo_cf)?.label||d.tipo_cf})`; return s; }).join(' y '); return `${nombre}: ${diasStr}`; }).join(' | ') : 'ninguno indicado'}
 - Deporte previsto esta semana: ${elegido.deportePrevisto.length > 0 ? elegido.deportePrevisto.map(e => { const nombre = nombreDeporte(e.deporte); if(!e.dias||e.dias.length===0) return nombre; const diasStr = e.dias.map(d => { let s = d.dia; if(d.tipo_cf) s += ` (${CF_TIPOS.find(t=>t.id===d.tipo_cf)?.label||d.tipo_cf})`; return s; }).join(' y '); return `${nombre}: ${diasStr}`; }).join(' | ') : 'ninguno indicado'}
@@ -7141,12 +7199,11 @@ function crearTarjetaEjercicio(ej, numero, seccion = 'Rutina principal') {
 }
 
 function mostrarRutinaIA(resultado, tiempo, nivel, objetivo) {
-    const textoObjetivo = { fuerza: 'Fuerza', peso: 'Perder peso', mantener: 'Mantenerse' };
     const textoNivel    = { principiante: 'Principiante', medio: 'Nivel medio', avanzado: 'Avanzado' };
 
     // Título: el tipo de entreno ("Fuerza tren superior"); antes salía "Medio — Mantenerse"
     document.getElementById('rutina-titulo').textContent =
-        resultado.tipo_entrenamiento || `${textoNivel[nivel]} — ${textoObjetivo[objetivo]}`;
+        resultado.tipo_entrenamiento || `${textoNivel[nivel]} — ${nombreObjetivo(objetivo)}`;
     document.getElementById('rutina-subtitulo').textContent =
         `${tiempo} min · ${(resultado.ejercicios || []).length} ${(resultado.ejercicios || []).length === 1 ? 'ejercicio' : 'ejercicios'} · ${textoNivel[nivel] || ''}`;
 
@@ -7805,7 +7862,6 @@ function renderizarCalendario(mes, anio) {
 
 function mostrarDetalleDia(fechaStr, sesiones) {
     const detalle = document.getElementById('diario-detalle');
-    const textoObj  = { fuerza: 'Fuerza', peso: 'Perder peso', mantener: 'Mantenerse' };
     const textoNiv  = { principiante: 'Principiante', medio: 'Medio', avanzado: 'Avanzado' };
     const textoComp = { si: '✅ Completada', medias: '⚡ A medias', no: '❌ No completada' };
     const claseComp = { si: 'completada-si', medias: 'completada-medias', no: 'completada-no' };
@@ -7851,7 +7907,7 @@ function mostrarDetalleDia(fechaStr, sesiones) {
         // Cabecera: tipo + nivel/objetivo/tiempo
         const infoTags = [];
         if (s.nivel) infoTags.push(`<span class="tag">${textoNiv[s.nivel] || s.nivel}</span>`);
-        if (s.objetivo) infoTags.push(`<span class="tag">${textoObj[s.objetivo] || s.objetivo}</span>`);
+        if (s.objetivo && s.objetivo !== '—') infoTags.push(`<span class="tag">${escaparHTML(nombreObjetivo(s.objetivo))}</span>`);
         if (s.tiempo) infoTags.push(`<span class="tag">${s.tiempo} min${s.duracionReal ? ` · ⏱ ${s.duracionReal} reales` : ''}</span>`);
         if (s.descarga) infoTags.push(`<span class="tag" style="background:#edf7ee">🧘 Descarga</span>`);
         if (s.tipo_entrenamiento) infoTags.push(`<span class="tag" style="background:#f0f0f0">${s.tipo_entrenamiento}</span>`);
@@ -8031,7 +8087,7 @@ function construirSystemPromptChat() {
         rutinaActivaTexto = `
 RUTINA ACTIVA ACTUALMENTE (la que está viendo el usuario ahora mismo):
 Tipo: ${sesionActual.tipo_entrenamiento || 'Sin tipo'}
-Nivel: ${sesionActual.nivel || '-'} | Objetivo: ${sesionActual.objetivo || '-'} | Tiempo: ${sesionActual.tiempo || '-'} min
+Nivel: ${sesionActual.nivel || '-'} | Objetivo: ${nombreObjetivo(sesionActual.objetivo) || '-'} | Tiempo: ${sesionActual.tiempo || '-'} min
 
 Calentamiento:
 ${fmtEj(sesionActual.calentamiento)}
@@ -8052,6 +8108,7 @@ PERFIL DEL USUARIO:
 - Material disponible: ${matTexto}
 ${lesiones ? `- Lesiones/limitaciones: ${lesiones}` : ''}
 ${textoPreferenciasIA(perfil)}
+- Qué busca: ${nombreObjetivo(nivelYObjetivo(perfil).objetivoTipo)}
 ${objetivo ? `- Objetivo personal: ${objetivo}` : ''}
 
 ESTADÍSTICAS GLOBALES:
@@ -8408,8 +8465,8 @@ PERFIL:
 - Edad: ${edadPerfil(perfil) || '?'} años | Peso: ${pesoActual(perfil) || '?'} kg
 - Material: ${matTexto}
 - Nivel: ${nivelYObjetivo(perfil).nivel}
-- Objetivo: ${perfil.objetivo || 'mantener forma'}
-${perfil.lesiones ? `- Lesiones: ${perfil.lesiones}` : ''}
+- Objetivo: ${textoObjetivoIA(nivelYObjetivo(perfil).objetivoTipo)}
+${perfil.objetivo ? `- Objetivo a largo plazo (sus palabras): ${perfil.objetivo}\n` : ''}${perfil.lesiones ? `- Lesiones: ${perfil.lesiones}` : ''}
 ${textoPreferenciasIA(perfil)}
 - Deportes habituales: ${deportesHabituales.map(nombreDeporte).join(', ') || 'ninguno'}
 
@@ -9665,6 +9722,23 @@ function mostrarEstadoCopia(texto, error = false) {
 // guarden en el perfil de otro (o que se suba un perfil vacío encima del bueno).
 let _gymDatosListos = false;
 
+// ===================== CAMBIOS SIN SUBIR =====================
+// Si se entrena sin conexión (sin cobertura, o con Cloudflare bloqueado por el fútbol),
+// el entreno se queda en el móvil y aquí se apunta que falta subirlo:
+// gym_sin_subir = { u: usuario, t: hora del último cambio }. Mientras exista, al abrir
+// la app NO se cambian los datos del móvil por los de la nube: primero se suben.
+function marcaSinSubir() {
+    try { return JSON.parse(localStorage.getItem('gym_sin_subir') || 'null'); } catch { return null; }
+}
+function hayCambiosSinSubir(name) {
+    const m = marcaSinSubir();
+    return !!(m && m.u === name && localStorage.getItem('gym_data_owner') === name);
+}
+function apuntarCambiosSinSubir() {
+    if (!_currentGymUser) return;
+    try { localStorage.setItem('gym_sin_subir', JSON.stringify({ u: _currentGymUser, t: Date.now() })); } catch {}
+}
+
 // ===================== PIN DEL PERFIL =====================
 // El servidor protege cada perfil con un PIN de 6 cifras. Este móvil lo recuerda
 // (por usuario) para no pedirlo en cada entreno.
@@ -9766,6 +9840,15 @@ async function loadGymUserData(name) {
         }
         if (!r.ok) throw new Error('HTTP ' + r.status);
         const d = await r.json();
+        if (hayCambiosSinSubir(name)) {
+            // Este móvil tiene entrenos que no llegaron a la nube: se quedan y se suben ya
+            _gymDatosListos = true;
+            const anterior = _currentGymUser;
+            _currentGymUser = name;
+            const ok = await syncGymUser();
+            if (!ok) _currentGymUser = anterior;
+            return;
+        }
         clearLocalGymData(); // solo borrar tras fetch exitoso
         if (d.gym_perfil)          localStorage.setItem('gym_perfil',         JSON.stringify(d.gym_perfil));
         if (d.gym_material)        localStorage.setItem('gym_material',       JSON.stringify(d.gym_material));
@@ -9790,8 +9873,10 @@ async function loadGymUserData(name) {
 }
 
 async function syncGymUser() {
-    if (!_currentGymUser || !_gymDatosListos) return;
-    if (localStorage.getItem('gym_data_owner') !== _currentGymUser) return;
+    if (!_currentGymUser || !_gymDatosListos) return false;
+    if (localStorage.getItem('gym_data_owner') !== _currentGymUser) return false;
+    const usuario = _currentGymUser;
+    const inicio = Date.now();
     try {
         // Leer datos actuales del servidor para no machacar datos de otras apps.
         // Si no se pueden leer, no se sube nada (se borrarían esos datos).
@@ -9800,7 +9885,7 @@ async function syncGymUser() {
         setTimeout(() => ctrl.abort(), 5000);
         const r = await fetch(`${GYM_WORKER}/user?name=${encodeURIComponent(_currentGymUser)}`, { signal: ctrl.signal, headers: cabecerasPin(_currentGymUser) });
         if (r.ok) existing = await r.json();
-        else if (r.status !== 404) return; // incluye PIN incorrecto: no se sube nada
+        else if (r.status !== 404) return false; // incluye PIN incorrecto: no se sube nada
 
         const data = {
             ...existing,
@@ -9815,15 +9900,29 @@ async function syncGymUser() {
             gym_groq_key:       undefined, // borra de la nube la clave que se subía antes
             _publico:           actividadPublica(), // solo si el usuario ha decidido compartirla
         };
-        await fetch(`${GYM_WORKER}/user?name=${encodeURIComponent(_currentGymUser)}`, {
+        const resp = await fetch(`${GYM_WORKER}/user?name=${encodeURIComponent(usuario)}`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', ...cabecerasPin(_currentGymUser) },
+            headers: { 'Content-Type': 'application/json', ...cabecerasPin(usuario) },
             body: JSON.stringify(data),
         });
-    } catch(e) { console.warn('syncGymUser error:', e); }
+        if (!resp.ok) return false;
+        // Subido. Si hubo otro cambio mientras se subía, la marca se queda (lo sube el siguiente)
+        const m = marcaSinSubir();
+        if (m && m.u === usuario && m.t <= inicio) localStorage.removeItem('gym_sin_subir');
+        return true;
+    } catch(e) { console.warn('syncGymUser error:', e); return false; }
 }
 
+// Al volver la conexión o al volver a la app, se sube lo que faltaba
+async function subirPendientes() {
+    if (_syncTimer || !hayCambiosSinSubir(_currentGymUser)) return;
+    await syncGymUser();
+}
+window.addEventListener('online', subirPendientes);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') subirPendientes(); });
+
 function scheduleSyncGym() {
+    if (_gymDatosListos && localStorage.getItem('gym_data_owner') === _currentGymUser) apuntarCambiosSinSubir();
     clearTimeout(_syncTimer);
     _syncTimer = setTimeout(syncGymUser, 2000);
 }
@@ -9836,10 +9935,17 @@ async function selectGymUser(name) {
     document.getElementById('gym-user-error').textContent = '';
     gymUserEsperando(true);
     // Subir ya los cambios pendientes del usuario anterior, antes de cambiar
-    if (_syncTimer) {
+    if (_syncTimer || hayCambiosSinSubir(_currentGymUser)) {
         clearTimeout(_syncTimer);
         _syncTimer = null;
         await syncGymUser();
+    }
+    // Si no se han podido subir, cambiar de usuario los borraría del móvil
+    if (name !== _currentGymUser && hayCambiosSinSubir(_currentGymUser)) {
+        gymUserEsperando(false);
+        document.getElementById('gym-user-error').textContent =
+            `Los últimos entrenos de ${_currentGymUser} aún no se han guardado en la nube. Espera a tener conexión y vuelve a intentarlo.`;
+        return;
     }
     // PIN: elegirlo si el perfil aún no tiene; escribirlo si este móvil no lo recuerda
     const estado = await consultarEstado(name);
