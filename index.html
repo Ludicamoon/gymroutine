@@ -2522,6 +2522,7 @@
         }
         @media (hover: hover) { .gym-user-enter:hover { background: #e64a19; } }
         .gym-user-note { font-size: 0.78rem; color: #666; margin-top: 12px; }
+        .gym-user-box .gym-user-paso { font-weight: 700; color: #333; margin: 14px 0 8px; }
         .groq-box { text-align: left; }
         .groq-box h2, .groq-box > div:first-child { text-align: center; }
         .groq-pasos { margin: 0 0 14px 18px; font-size: 0.88rem; line-height: 1.5; color: #333; display: flex; flex-direction: column; gap: 6px; }
@@ -2716,6 +2717,7 @@
             :root:not([data-tema="claro"]) .gym-user-list button:hover { background: #3a2219; }
             :root:not([data-tema="claro"]) .gym-user-input { border: 1.5px solid #3a3a3e; }
             :root:not([data-tema="claro"]) .gym-user-note { color: #b0b0b0; }
+            :root:not([data-tema="claro"]) .gym-user-box .gym-user-paso { color: #e5e5e5; }
             :root:not([data-tema="claro"]) .gym-pin-error { color: #ef9a9a; }
             :root:not([data-tema="claro"]) .gym-pin-volver { color: #b0b0b0; }
             :root:not([data-tema="claro"]) body { background: #0f0f11; color: #e6e6e6; }
@@ -2936,6 +2938,7 @@
         :root[data-tema="oscuro"] .gym-user-list button:hover { background: #3a2219; }
         :root[data-tema="oscuro"] .gym-user-input { border: 1.5px solid #3a3a3e; }
         :root[data-tema="oscuro"] .gym-user-note { color: #b0b0b0; }
+        :root[data-tema="oscuro"] .gym-user-box .gym-user-paso { color: #e5e5e5; }
         :root[data-tema="oscuro"] .gym-pin-error { color: #ef9a9a; }
         :root[data-tema="oscuro"] .gym-pin-volver { color: #b0b0b0; }
         :root[data-tema="oscuro"] body { background: #0f0f11; color: #e6e6e6; }
@@ -2996,10 +2999,11 @@
    <div id="gym-paso-nombre">
     <div style="font-size:2.8rem;margin-bottom:10px">🏋️</div>
     <h2>¿Quién entrena hoy?</h2>
-    <p>Selecciona tu perfil o crea uno nuevo</p>
+    <p class="gym-user-paso">¿Ya tienes perfil? Tócalo:</p>
     <div class="gym-user-list" id="gym-user-list">
       <span style="color:#ccc;font-size:0.85rem">Cargando perfiles…</span>
     </div>
+    <p class="gym-user-paso">¿Es tu primera vez? Escribe tu nombre para crear tu perfil:</p>
     <div class="gym-user-input-row">
       <input type="text" id="gym-user-input" class="gym-user-input" placeholder="Escribe tu nombre…" autocomplete="off" spellcheck="false" inputmode="text" style="font-size:16px">
       <button class="gym-user-enter" id="gym-user-entrar" onclick="selectGymUser(document.getElementById('gym-user-input').value)">Entrar →</button>
@@ -9690,7 +9694,7 @@ function pedirPin(name, modo, error = '') {
         const $ = id => document.getElementById(id);
         const textos = {
             crear:   ['Elige tu PIN', `Protege el perfil de <b>${escaparHTML(name)}</b> con un PIN de 6 cifras. Sin él, nadie podrá ver ni cambiar tus datos. Este móvil lo recordará.`, 'Guardar PIN y entrar →'],
-            entrar:  ['Escribe tu PIN', `El perfil de <b>${escaparHTML(name)}</b> está protegido. Escribe tu PIN de 6 cifras (solo una vez en este móvil).`, 'Entrar →'],
+            entrar:  ['Escribe tu PIN', `El perfil de <b>${escaparHTML(name)}</b> está protegido. Escribe tu PIN de 6 cifras (solo una vez en este móvil).<br><br>¿No eres ${escaparHTML(name)}? Pulsa «Volver» y escribe tu nombre para crear tu propio perfil.`, 'Entrar →'],
             cambiar: ['Nuevo PIN', 'Elige tu nuevo PIN de 6 cifras.', 'Cambiar PIN'],
         }[modo];
         document.getElementById('gym-user-modal').classList.remove('hidden');
