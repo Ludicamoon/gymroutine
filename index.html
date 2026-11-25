@@ -221,6 +221,8 @@
             }
             .bnav-item .bnav-ico { font-size: 1.3rem; line-height: 1; }
             .bnav-item.activo { color: #ff5722; }
+            .bnav-item.bnav-rutina { color: #ff8a50; }
+            .bnav-item.bnav-rutina.activo { color: #ff5722; }
             .bnav-item:active { background: rgba(255,87,34,0.08); }
         }
 
@@ -3123,6 +3125,9 @@
         <button class="nav-item activo" id="nav-entrenar" onclick="mostrarFormulario()">
             <span class="nav-ico">🏋️</span> Entrenar
         </button>
+        <button class="nav-item nav-rutina" id="nav-rutina" onclick="volverARutina()" style="display:none">
+            <span class="nav-ico">💪</span> Mi rutina
+        </button>
         <button class="nav-item" id="nav-progreso" onclick="mostrarProgreso()">
             <span class="nav-ico">📊</span> Progreso
         </button>
@@ -3473,7 +3478,7 @@
         <div id="lista-ejercicios"></div>
         <button class="btn-generar btn-terminar" onclick="irAFeedback()">✓ Terminar entreno</button>
         <button class="btn-secundario btn-modificar-ia" onclick="abrirChatModificar()" style="margin-top:6px;">💬 Modificar rutina con IA</button>
-        <button class="btn-secundario" style="margin-top:6px; color:#666; border-color:#eee;" onclick="resetear()">← Crear otra rutina</button>
+        <button class="btn-secundario" style="margin-top:6px; color:#666; border-color:#eee;" onclick="crearOtraRutina()">← Crear otra rutina</button>
     </div>
 
     <!-- ===================== MODO GUIADO ===================== -->
@@ -3665,6 +3670,9 @@
 <nav class="bottom-nav" id="bottom-nav">
     <button class="bnav-item activo" id="bnav-entrenar" onclick="mostrarFormulario()">
         <span class="bnav-ico">🏋️</span><span>Entrenar</span>
+    </button>
+    <button class="bnav-item bnav-rutina" id="bnav-rutina" onclick="volverARutina()" style="display:none">
+        <span class="bnav-ico">💪</span><span>Mi rutina</span>
     </button>
     <button class="bnav-item" id="bnav-progreso" onclick="mostrarProgreso()">
         <span class="bnav-ico">📊</span><span>Progreso</span>
@@ -3988,13 +3996,15 @@ function textoPreferenciasIA(perfil = cargarPerfil()) {
 function init() {
     const perfil = cargarPerfil();
     if (perfil) {
-        mostrarFormulario();
+        if (!recuperarRutinaEnCurso()) mostrarFormulario();
     } else {
+        _rutinaActiva = false; actualizarBotonRutina();
         mostrarBienvenida(); // primer día: presentación y 4 pasos
     }
 }
 
 function ocultarTodas() {
+    guardarRutinaEnCurso(); // la rutina de hoy no se pierde al cambiar de pantalla
     ['pantalla-perfil','pantalla-form','pantalla-rutina',
      'pantalla-feedback','pantalla-historial','pantalla-cargando','pantalla-diario','pantalla-chat','pantalla-plan',
      'pantalla-temporizadores', 'pantalla-inicio', 'pantalla-foto-entreno']
@@ -7580,11 +7590,89 @@ function mostrarRutinaIA(resultado, tiempo, nivel, objetivo) {
         .filter(([k]) => resultado[k]).map(([k, t]) => `<p><b>${t}:</b> ${resultado[k]}</p>`).join('');
     if (consejos) contenedor.insertAdjacentHTML('beforeend', `<details class="consejos-rutina"><summary>💡 Consejos para hoy</summary>${consejos}</details>`);
 
+    _rutinaResultado = resultado;
+    _rutinaActiva = true;
     ocultarTodas();
+    activarNavItem('nav-rutina');
+    actualizarBotonRutina();
     document.getElementById('pantalla-rutina').style.display = 'block';
     document.body.classList.add('en-rutina'); // muestra la burbuja del chat
     window.scrollTo(0, 0);
 }
+
+// ===================== RUTINA DE HOY (pestaña "Mi rutina") =====================
+// La rutina que se está haciendo se queda en la pestaña "💪 Mi rutina" aunque se
+// vaya a Perfil, Progreso o Reloj, y se guarda en el móvil (gym_rutina_hoy, solo ese
+// dispositivo) por si se cierra la app. Se quita al guardar o saltar la valoración,
+// con "Crear otra rutina" o a las RUTINA_HOY_HORAS.
+const RUTINA_HOY_HORAS = 16;
+let _rutinaActiva = false;
+let _rutinaResultado = null;
+
+function actualizarBotonRutina() {
+    ['nav-rutina', 'bnav-rutina'].forEach(id => {
+        const b = document.getElementById(id);
+        if (b) b.style.display = _rutinaActiva ? '' : 'none';
+    });
+}
+
+function guardarRutinaEnCurso() {
+    if (!_rutinaActiva) return;
+    try {
+        localStorage.setItem('gym_rutina_hoy', JSON.stringify({
+            u: _currentGymUser || '', t: sesionActual.inicio || Date.now(),
+            sesion: sesionActual, resultado: _rutinaResultado,
+            registro: registroSeries, bloques: resultadosBloques,
+            avisados: recordsAvisados, recordsAntes: recordsAlEmpezar,
+        }));
+    } catch (e) { /* sin sitio en el móvil: sigue en memoria */ }
+}
+
+function borrarRutinaEnCurso() {
+    _rutinaActiva = false;
+    _rutinaResultado = null;
+    localStorage.removeItem('gym_rutina_hoy');
+    actualizarBotonRutina();
+}
+
+function volverARutina() {
+    if (!_rutinaActiva) return mostrarFormulario();
+    ocultarTodas();
+    activarNavItem('nav-rutina');
+    document.getElementById('pantalla-rutina').style.display = 'block';
+    document.body.classList.add('en-rutina');
+    window.scrollTo(0, 0);
+}
+
+// Al abrir la app (o cambiar de usuario): vuelve a la rutina a medias de ese usuario
+function recuperarRutinaEnCurso() {
+    _rutinaActiva = false;
+    actualizarBotonRutina();
+    let d = null;
+    try { d = JSON.parse(localStorage.getItem('gym_rutina_hoy')); } catch (e) {}
+    if (!d || !d.sesion || !(d.sesion.ejercicios || []).length) return false;
+    if (Date.now() - (d.t || 0) > RUTINA_HOY_HORAS * 3600000) { localStorage.removeItem('gym_rutina_hoy'); return false; }
+    if ((d.u || '') !== (_currentGymUser || '')) return false; // es de otro usuario
+    sesionActual      = d.sesion;
+    registroSeries    = d.registro || {};
+    resultadosBloques = d.bloques || {};
+    recordsAvisados   = d.avisados || {};
+    recordsAlEmpezar  = d.recordsAntes || cargarRecords();
+    const s = sesionActual;
+    mostrarRutinaIA(d.resultado || s, s.tiempo, s.nivel, s.objetivo);
+    Object.keys(resultadosBloques).forEach(n => registrarResultado(n, resultadosBloques[n]));
+    return true;
+}
+
+// Guarda lo apuntado (series, kilos) poco después de tocar algo, y al salir de la app
+let _rutinaGuardarT = null;
+['click', 'input', 'change'].forEach(ev => document.addEventListener(ev, () => {
+    if (!_rutinaActiva) return;
+    clearTimeout(_rutinaGuardarT);
+    _rutinaGuardarT = setTimeout(guardarRutinaEnCurso, 600);
+}, true));
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') guardarRutinaEnCurso(); });
+window.addEventListener('pagehide', guardarRutinaEnCurso);
 
 // ===================== FEEDBACK =====================
 // Resumen de lo apuntado en la sesión: series hechas, kg movidos, récords
@@ -9081,7 +9169,14 @@ function pararTemporizadoresRutina() {
     cerrarDescanso();
 }
 
+function crearOtraRutina() {
+    const marcadas = Object.values(registroSeries).some(r => (r.series || []).some(x => x.hecho));
+    if (marcadas && !confirm('Ya has marcado series en esta rutina. Si creas otra, se pierde lo apuntado. ¿Seguro?')) return;
+    resetear();
+}
+
 function resetear() {
+    borrarRutinaEnCurso(); // se termina la rutina de hoy (guardada, saltada o cambiada)
     pararTemporizadoresRutina();
     elegido.nivel           = null;
     elegido.objetivo        = null;
