@@ -3481,12 +3481,12 @@
             <h2>📷 Apuntar un entreno</h2>
             <p>Haz una foto de la pizarra o de la rutina que hiciste y tu entrenador la apunta en tu historial.</p>
         </div>
+        <div class="card">
+            <div class="card-label">¿Qué día fue?</div>
+            <div class="btn-group" id="fe-dias"></div>
+            <input type="date" id="fe-fecha-otra" onchange="feElegirDia(this.value)" style="margin-top:10px">
+        </div>
         <div id="fe-paso1">
-            <div class="card">
-                <div class="card-label">¿Qué día fue?</div>
-                <div class="btn-group" id="fe-dias"></div>
-                <input type="date" id="fe-fecha-otra" onchange="feElegirDia(this.value)" style="margin-top:10px">
-            </div>
             <div class="card">
                 <div class="card-label">La foto <span class="opcional">(hasta 3)</span></div>
                 <input type="file" id="fe-input" accept="image/*" multiple hidden onchange="feAgregarFotos(this.files)">
@@ -5074,6 +5074,9 @@ function construirPrompt(perfil, material, sesiones, tiempo, nivel, objetivo, co
             const diasSem = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
             const diaStr = isNaN(fechaDate) ? s.fecha : `${diasSem[fechaDate.getDay()]} ${s.fecha}`;
             let linea = `[${diaStr}] ${s.tiempo}min${s.duracionReal ? ` (duró ${s.duracionReal}min de verdad)` : ''}${s.lugar ? ` · en ${s.lugar}` : ''} · nivel:${s.nivel} · obj:${s.objetivo}`;
+            if (s.tipo_entrenamiento) linea += ` · ${s.tipo_entrenamiento}`;
+            const fuera = s.origen === 'foto' || s.origen === 'chat';
+            if (fuera)               linea += ' · HECHO FUERA DE LA APP';
             if (s.completada)        linea += ` · completada:${s.completada}`;
             if (s.dificultad)        linea += ` · dificultad:${s.dificultad}`;
             if (s.pesos_feedback)    linea += ` · pesos:${s.pesos_feedback}`;
@@ -5088,6 +5091,8 @@ function construirPrompt(perfil, material, sesiones, tiempo, nivel, objetivo, co
                 // Ejercicios con pesos
                 const ejPesos = s.ejercicios.filter(e => e.nombre).map(e => {
                     let txt = e.nombre;
+                    // Entreno de fuera: qué había dentro de cada bloque (EMOM: push press 8-10, remo...)
+                    if (fuera && e.explicacion) txt += ` (${String(e.explicacion).slice(0, 140)})`;
                     if (e.resultado) txt += ` [resultado: ${e.resultado}]`;
                     if (e.seriesHechas && e.seriesHechas.length) txt += ` ${e.seriesHechas.map(x => `${x.kg ? x.kg + 'kg×' : ''}${x.reps || '?'}`).join(', ')}${(e.rir === 0 || e.rir > 0) ? ` (sobraban ${e.rir >= 3 ? '3+' : e.rir} en la última)` : ''} HECHO`;
                     else if (e.pesoUsado) txt += ` ${e.pesoUsado}kg${e.repsHechas ? '×' + e.repsHechas : ''}${(e.rir === 0 || e.rir > 0) ? ` sobraban ${e.rir >= 3 ? '3+' : e.rir}` : ''} HECHO`;
@@ -5221,7 +5226,7 @@ ${duracionText}SOLICITUD DE HOY (${hoy}):
 - Deporte hecho esta semana: ${elegido.deporteHecho.length > 0 ? elegido.deporteHecho.map(e => { const nombre = nombreDeporte(e.deporte); if(!e.dias||e.dias.length===0) return nombre; const diasStr = e.dias.map(d => { let s = d.dia; if(d.tipo_cf) s += ` (${CF_TIPOS.find(t=>t.id===d.tipo_cf)?.label||d.tipo_cf})`; return s; }).join(' y '); return `${nombre}: ${diasStr}`; }).join(' | ') : 'ninguno indicado'}
 - Deporte previsto esta semana: ${elegido.deportePrevisto.length > 0 ? elegido.deportePrevisto.map(e => { const nombre = nombreDeporte(e.deporte); if(!e.dias||e.dias.length===0) return nombre; const diasStr = e.dias.map(d => { let s = d.dia; if(d.tipo_cf) s += ` (${CF_TIPOS.find(t=>t.id===d.tipo_cf)?.label||d.tipo_cf})`; return s; }).join(' y '); return `${nombre}: ${diasStr}`; }).join(' | ') : 'ninguno indicado'}
 - Ejercicios en rutina principal: exactamente ${numEj}
-${textoMemoriaIA()}${contextoSemana ? `\nCONTEXTO ADICIONAL DEL USUARIO (muy importante, adáptate a esto):\n${contextoSemana}` : ''}
+${textoMemoriaIA()}${textoCharlasRecientesIA()}${contextoSemana ? `\nCONTEXTO ADICIONAL DEL USUARIO (muy importante, adáptate a esto):\n${contextoSemana}` : ''}
 
 INSTRUCCIONES OBLIGATORIAS:
 1. ESTRUCTURA: calentamiento (3-4 ejercicios), rutina principal (exactamente ${numEj} ejercicios) y estiramientos (3-4 ejercicios).
@@ -5324,7 +5329,7 @@ function mostrarFotoEntreno() {
     document.getElementById('pantalla-foto-entreno').style.display = 'block';
     document.getElementById('btn-header-perfil').style.display = 'none';
     document.getElementById('btn-header-historial').style.display = 'none';
-    _fe = { fecha: _fechaES(new Date()), fotos: [], items: [], dificultad: null };
+    _fe = { fecha: _fechaES(new Date()), fotos: [], items: [], dificultad: null, origen: 'foto' };
     document.getElementById('fe-paso1').style.display = '';
     document.getElementById('fe-paso2').style.display = 'none';
     document.getElementById('fe-nota').value = '';
@@ -5395,12 +5400,7 @@ Responde solo con JSON: {"tipo_entrenamiento":"...","duracion_min":60,"ejercicio
         const d = extraerObjetoJSON(r) || {};
         const lista = Array.isArray(d.ejercicios) ? d.ejercicios : [];
         if (!lista.length) throw new Error('No he sabido leer ejercicios en la foto. Prueba con una foto más cerca y con buena luz.');
-        _fe.items = lista.slice(0, 30).map(e => ({
-            seccion: ['calentamiento', 'principal', 'estiramientos'].includes(e?.seccion) ? e.seccion : 'principal',
-            nombre: String(e?.nombre || '').slice(0, 80), grupo_muscular: String(e?.grupo_muscular || ''),
-            series: parseInt(e?.series) || 1, reps: String(e?.reps ?? '').slice(0, 30),
-            detalle: String(e?.detalle || '').slice(0, 300), kg: _num(e?.kg) > 0 ? _num(e.kg) : '',
-        }));
+        _fe.items = itemsFeDesdeIA(lista);
         document.getElementById('fe-tipo').value = String(d.tipo_entrenamiento || '').slice(0, 80);
         document.getElementById('fe-minutos').value = parseInt(d.duracion_min) > 0 ? Math.min(240, parseInt(d.duracion_min)) : '';
         _fe.dificultad = null;
@@ -5481,8 +5481,8 @@ function feGuardar() {
         dificultad: _fe.dificultad,
         molestia: '',
         comentario: limpia(document.getElementById('fe-nota').value).slice(0, 300),
-        tipo_entrenamiento: limpia(document.getElementById('fe-tipo').value).slice(0, 80) || 'Entreno apuntado con foto',
-        origen: 'foto',
+        tipo_entrenamiento: limpia(document.getElementById('fe-tipo').value).slice(0, 80) || (_fe.origen === 'chat' ? 'Entreno contado en el chat' : 'Entreno apuntado con foto'),
+        origen: _fe.origen || 'foto',
         calentamiento: items.filter(x => x.seccion === 'calentamiento').map(aEjercicio),
         ejercicios:    items.filter(x => x.seccion === 'principal').map(aEjercicio),
         estiramientos: items.filter(x => x.seccion === 'estiramientos').map(aEjercicio),
@@ -5745,6 +5745,7 @@ async function generarRutina() {
             if (msgEl) msgEl.textContent = 'Generando tu rutina…';
         }
 
+        await resumirChatPendiente(); // lo que se acaba de hablar en el chat
         const prompt   = construirPrompt(perfil, material, sesiones, tiempo, nivel, objetivo, contextoSemana);
         const resultado = await llamarIA(prompt);
 
@@ -8658,7 +8659,10 @@ function mostrarDetalleDia(fechaStr, sesiones) {
 const MEMORIA_KEY = 'gym_memoria';
 const MEMORIA_TEMAS = { salud: '🩹 Salud y molestias', gustos: '❤️ Gustos', funciona: '✅ Lo que te funciona', vida: '🏠 Tu vida', metas: '🎯 Metas' };
 const MAX_NOTAS = 30;
-const MAX_CONVERSACIONES = 8;
+const MAX_CONVERSACIONES = 30;   // resúmenes de charlas guardados
+const CONVERSACIONES_CHAT = 8;    // los que ve el chat
+const DIAS_CHARLAS_RUTINA = 21;   // la rutina y el plan ven las charlas de estas 3 semanas
+const MAX_CHARLAS_RUTINA = 10;
 const DIAS_NOTA_ANTIGUA = 60;
 
 function cargarMemoria() {
@@ -8708,9 +8712,28 @@ function textoMemoriaIA(conConversaciones = false) {
         t += `\nSU HISTORIA MES A MES (tu archivo):\n` + m.meses.map(x => `- ${nombreMes(x.mes)}: ${x.texto}`).join('\n') + '\n';
     }
     if (conConversaciones && m.conversaciones.length) {
-        t += `\nCONVERSACIONES ANTERIORES CONTIGO (resumen; puedes referirte a ellas):\n` + m.conversaciones.map(c => `- ${c.fecha}: ${c.texto}`).join('\n') + '\n';
+        t += `\nCONVERSACIONES ANTERIORES CONTIGO (resumen; puedes referirte a ellas):\n` + m.conversaciones.slice(-CONVERSACIONES_CHAT).map(c => `- ${c.fecha}: ${c.texto}`).join('\n') + '\n';
     }
     return t;
+}
+
+// Lo hablado en el chat las últimas semanas (entrenos o deporte fuera de la app,
+// cansancio, dolores, planes...): va en la rutina y en el plan semanal.
+function textoCharlasRecientesIA() {
+    const lista = cargarMemoria().conversaciones
+        .filter(c => diasDesde(c.fecha) <= DIAS_CHARLAS_RUTINA)
+        .slice(-MAX_CHARLAS_RUTINA);
+    if (!lista.length) return '';
+    return `\nLO QUE TE HA CONTADO EN EL CHAT ESTAS ${DIAS_CHARLAS_RUTINA / 7} SEMANAS (hoy es ${fechaDeHoy()}; tenlo en cuenta: entrenos o deporte fuera de la app, cansancio, dolores, viajes, lo que acordasteis):\n`
+        + lista.map(c => `- ${c.fecha}: ${c.texto}`).join('\n') + '\n';
+}
+
+// Antes de crear una rutina o un plan: si hay charla sin resumir, se resume ya
+// (como mucho 12 s de espera) para que la rutina sepa lo que se acaba de hablar.
+async function resumirChatPendiente() {
+    if (typeof chatHistorial === 'undefined' || chatHistorial.length <= _chatApuntadoHasta) return;
+    programarMemoriaChat(true);
+    await Promise.race([_colaMemoria, new Promise(r => setTimeout(r, 12000))]);
 }
 
 // Una sesión en una o dos líneas para la IA
@@ -8724,7 +8747,7 @@ function lineaSesionIA(s) {
     if (s.molestia)           linea += ` / molestia: "${s.molestia}"`;
     if (s.comentario)         linea += ` / nota: "${s.comentario}"`;
     if (s.evaluacion_respuesta) linea += s.evaluacion_pregunta ? ` / le preguntaste "${s.evaluacion_pregunta}" → "${s.evaluacion_respuesta}"` : ` / eval: "${s.evaluacion_respuesta}"`;
-    if (s.origen === 'foto')  linea += ' / entreno hecho fuera de la app (apuntado con foto)';
+    if (s.origen === 'foto' || s.origen === 'chat') linea += ` / entreno hecho fuera de la app (apuntado ${s.origen === 'chat' ? 'desde el chat' : 'con foto'})`;
     const fmtDep = (lista) => (lista||[]).map(e => { const n = e.deporte||e; if(!e.dias||e.dias.length===0) return n; const ds = e.dias.map(d => d.dia + (d.tipo_cf ? ` (${d.tipo_cf})` : '')).join(' y '); return `${n}: ${ds}`; }).join(', ');
     if (s.deporteHecho    && s.deporteHecho.length)    linea += ` / deporte hecho: ${fmtDep(s.deporteHecho)}`;
     if (s.deportePrevisto && s.deportePrevisto.length) linea += ` / deporte previsto: ${fmtDep(s.deportePrevisto)}`;
@@ -8766,7 +8789,7 @@ REGLAS:
 - Las notas "ESCRITAS POR EL CLIENTE" no las quites ni cambies, salvo que él diga claramente lo contrario.
 - Si hay más de ${MAX_NOTAS - 5} notas, junta las parecidas.
 - Si no hay nada nuevo que merezca la pena, devuelve listas vacías. Es lo normal muchas veces.
-Responde SOLO con JSON: {"nuevas":[{"tema":"salud|gustos|funciona|vida|metas","texto":"..."}],"cambiar":[{"id":"n3","texto":"..."}],"quitar":["n5"]${tipo === 'chat' ? ',"resumen":"1-2 frases: de qué hablasteis y qué se decidió"' : ''}}`;
+Responde SOLO con JSON: {"nuevas":[{"tema":"salud|gustos|funciona|vida|metas","texto":"..."}],"cambiar":[{"id":"n3","texto":"..."}],"quitar":["n5"]${tipo === 'chat' ? `,"resumen":"1-3 frases: de qué hablasteis, qué se decidió y lo que haya contado de su actividad (entrenos o deporte fuera de la app, cansancio, dolores, viajes, planes), con fechas concretas (hoy es ${fechaDeHoy()}: 'ayer' = el día anterior)"` : ''}}`;
     const titulos = { chat: 'CONVERSACIÓN NUEVA CON EL ENTRENADOR', entreno: 'ENTRENO QUE ACABA DE GUARDAR (con su valoración)', entrevista: 'ENTREVISTA PARA CONOCERLE (sus respuestas: apunta todo lo útil, aquí sí pueden salir bastantes notas)' };
     const user = `LIBRETA ACTUAL:\n${notasTexto}\n\n${titulos[tipo]}:\n${contenido}`;
 
@@ -8783,7 +8806,7 @@ Responde SOLO con JSON: {"nuevas":[{"tema":"salud|gustos|funciona|vida|metas","t
         if (n && texto && !n.tuya) { n.texto = texto; n.fecha = fechaDeHoy(); }
     });
     (Array.isArray(r.nuevas) ? r.nuevas : []).slice(0, tipo === 'entrevista' ? 15 : 5).forEach(n => añadirNota(actual, n?.tema, n?.texto));
-    if (tipo === 'chat' && r.resumen) actual.conversaciones.push({ fecha: fechaDeHoy(), texto: String(r.resumen).trim().slice(0, 300) });
+    if (tipo === 'chat' && r.resumen) actual.conversaciones.push({ fecha: fechaDeHoy(), texto: String(r.resumen).trim().slice(0, 350) });
     guardarMemoria(actual);
     if (document.getElementById('memoria-lista')) renderizarMemoria();
 }
@@ -9080,7 +9103,7 @@ function guardarChat() {
     if (_chatDe !== _currentGymUser || localStorage.getItem('gym_data_owner') !== _currentGymUser) return;
     const sobran = Math.max(0, chatHistorial.length - MAX_CHAT_GUARDADO);
     if (sobran) { chatHistorial.splice(0, sobran); _chatApuntadoHasta = Math.max(0, _chatApuntadoHasta - sobran); }
-    const mensajes = chatHistorial.map(m => ({ role: m.role, content: String(m.content).slice(0, 4000) }));
+    const mensajes = chatHistorial.map(m => ({ role: m.role, content: String(m.content).slice(0, 4000), ...(m.entreno ? { entreno: m.entreno } : {}) }));
     localStorage.setItem(CHAT_KEY, JSON.stringify({ mensajes, apuntado: _chatApuntadoHasta }));
     scheduleSyncGym();
 }
@@ -9100,14 +9123,16 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 
 const quitarRutinaJSON = t => String(t || '')
     .replace(/<<<RUTINA_MODIFICADA>>>[\s\S]*?<<<FIN_RUTINA>>>/g, '[rutina modificada]')
+    .replace(/<<<ENTRENO_HECHO>>>[\s\S]*?(<<<FIN_ENTRENO>>>|$)/g, '')
     .replace(/```json[\s\S]*?```/gi, '[rutina modificada]');
 
 function pintarChatGuardado() {
     const cont = document.getElementById('chat-mensajes');
     cont.innerHTML = '';
-    chatHistorial.forEach(m => {
+    chatHistorial.forEach((m, i) => {
         const b = añadirBurbuja(m.role, m.role === 'user' ? m.content : quitarRutinaJSON(m.content).trim());
         if (m.role !== 'user') b.className = 'chat-burbuja ia';
+        if (m.entreno) b.insertAdjacentHTML('beforeend', htmlBannerEntreno(m.entreno, i));
     });
     if (chatHistorial.length) {
         const pie = document.createElement('div');
@@ -9186,7 +9211,8 @@ function formatearMensajeIA(texto) {
 
 // Solo se mandan los últimos mensajes para no pasarse del límite de tokens de Groq
 function chatHistorialReciente() {
-    return chatHistorial.slice(-12);
+    // A la IA solo rol y texto (sin el entreno guardado en el mensaje)
+    return chatHistorial.slice(-12).map(m => ({ role: m.role, content: m.content + (m.entreno ? `\n[Entreno del ${m.entreno.fecha} ofrecido para apuntar]` : '') }));
 }
 
 function añadirBurbuja(rol, texto, escribiendo = false) {
@@ -9288,6 +9314,18 @@ INSTRUCCIONES GENERALES:
 - Puedes usar listas cuando ayude a la claridad.
 - ENLACES YOUTUBE: Cuando el usuario pida un vídeo o enlace de YouTube, DEBES proporcionarlo directamente. Construye la URL así: https://www.youtube.com/results?search_query=TERMINOS+EN+ESPAÑOL (sustituye los espacios por +). Nunca digas que no puedes dar enlaces; siempre dálos en formato markdown: [texto del enlace](url).
 
+ENTRENO O DEPORTE YA HECHO (para apuntarlo en su historial):
+- Si te cuenta o te pega un entreno o deporte que YA ha hecho fuera de la app (gimnasio, CrossFit, bici, correr, pádel, nadar...) y no está en su historial, coméntalo con normalidad (1-3 frases) y añade AL FINAL este bloque, para que lo apunte con un toque. Hoy es ${fechaDeHoy()}; "ayer" es el día anterior.
+<<<ENTRENO_HECHO>>>
+{"fecha":"dd/mm/aaaa","tipo_entrenamiento":"","duracion_min":null,"ejercicios":[{"seccion":"principal","nombre":"","grupo_muscular":"","series":1,"reps":"","detalle":"","kg":null}]}
+<<<FIN_ENTRENO>>>
+- "seccion": "calentamiento", "principal" o "estiramientos". Nombres en español, como se dicen en un gimnasio.
+- Bloque de rondas ("3 rondas: 15 tríceps, 20 bíceps"): cada ejercicio por separado, "series" = número de rondas y "reps" sus repeticiones.
+- AMRAP, EMOM, Tabata o "for time": UN solo elemento, "nombre" como "EMOM 15 min", "series" 1, "reps" la duración y en "detalle" los ejercicios con sus repeticiones (y su resultado si lo dice).
+- Deporte o cardio (bici 1 h, correr 5 km, pádel): un elemento, "grupo_muscular" "Cardio", "reps" la duración o la distancia.
+- "grupo_muscular": EXACTAMENTE uno de: ${GRUPOS_MUSCULARES.join(', ')}. "kg" solo si dice un peso concreto; si no, null. "duracion_min" solo si lo dice. No inventes nada.
+- NO pongas el bloque si solo lo tiene planeado, si pregunta algo o si ese entreno ya está en su historial.
+
 MODIFICACIÓN DE RUTINA:
 - Si el usuario pide modificar, cambiar, añadir o quitar ejercicios de la rutina activa, DEBES devolver la rutina completa modificada.
 - Explica brevemente qué has cambiado en texto normal, luego añade el JSON con este formato EXACTO al final de tu respuesta:
@@ -9346,9 +9384,12 @@ async function enviarMensajeChat() {
         ];
         if (fotos.length) mensajes[mensajes.length - 1] = { role: 'user', content: [{ type: 'text', text: texto }, ...fotos.map(url => ({ type: 'image_url', image_url: { url } }))] };
 
-        const respuesta = await groqChat({ messages: mensajes, temperature: 0.7, maxTokens: fotos.length ? 1500 : 3500, vision: fotos.length > 0 });
+        const bruta = await groqChat({ messages: mensajes, temperature: 0.7, maxTokens: fotos.length ? 1500 : 3500, vision: fotos.length > 0 });
+        // Entreno ya hecho que se puede apuntar (se quita del texto antes de buscar rutinas)
+        const { texto: respuesta, entreno } = sacarEntrenoChat(bruta);
 
-        chatHistorial.push({ role: 'assistant', content: respuesta });
+        chatHistorial.push(entreno ? { role: 'assistant', content: respuesta, entreno } : { role: 'assistant', content: respuesta });
+        const idxMensaje = chatHistorial.length - 1;
         guardarChat();
         programarMemoriaChat();
 
@@ -9400,6 +9441,7 @@ async function enviarMensajeChat() {
                 <button class="btn-aplicar-cambios" onclick="aplicarCambiosRutina(window._pendingRutinaModificada)">Ver rutina modificada →</button>
             </div>`;
         }
+        htmlBurbuja += htmlBannerEntreno(entreno, idxMensaje);
         burbujaEscribiendo.innerHTML = htmlBurbuja;
 
         const contenedor = document.getElementById('chat-mensajes');
@@ -9414,6 +9456,70 @@ async function enviarMensajeChat() {
 
     btn.disabled = false;
     input.focus();
+}
+
+// ===================== ENTRENO HECHO, CONTADO EN EL CHAT =====================
+// La IA añade <<<ENTRENO_HECHO>>>{json}<<<FIN_ENTRENO>>> cuando el usuario cuenta o
+// pega un entreno que ya hizo. Se quita del texto, se guarda en el mensaje (m.entreno)
+// y la burbuja ofrece "Revisar y apuntar en mi historial" (pantalla de apuntar entreno).
+function sacarEntrenoChat(texto) {
+    const t = String(texto || '');
+    const m = t.match(/<<<ENTRENO_HECHO>>>([\s\S]*?)(?:<<<FIN_ENTRENO>>>|$)/);
+    if (!m) return { texto: t, entreno: null };
+    const limpio = t.replace(m[0], '').trim();
+    let d = null;
+    try { d = extraerObjetoJSON(m[1]); } catch (e) { d = null; }
+    const lista = d && Array.isArray(d.ejercicios) ? d.ejercicios.filter(e => e && String(e.nombre || '').trim()) : [];
+    if (!lista.length) return { texto: limpio, entreno: null };
+    const fechaOk = /^\d{2}\/\d{2}\/\d{4}$/.test(String(d.fecha || '')) && _fechaAOrden(d.fecha) <= _fechaAOrden(_fechaES(new Date()));
+    return {
+        texto: limpio,
+        entreno: {
+            fecha: fechaOk ? d.fecha : _fechaES(new Date()),
+            tipo_entrenamiento: String(d.tipo_entrenamiento || '').slice(0, 80),
+            duracion_min: parseInt(d.duracion_min) > 0 ? Math.min(240, parseInt(d.duracion_min)) : null,
+            ejercicios: lista.slice(0, 30),
+        },
+    };
+}
+
+// Lista de la IA (foto o chat) → filas de la pantalla de revisión
+function itemsFeDesdeIA(lista) {
+    return lista.slice(0, 30).map(e => ({
+        seccion: ['calentamiento', 'principal', 'estiramientos'].includes(e?.seccion) ? e.seccion : 'principal',
+        nombre: String(e?.nombre || '').slice(0, 80), grupo_muscular: String(e?.grupo_muscular || ''),
+        series: parseInt(e?.series) || 1, reps: String(e?.reps ?? '').slice(0, 30),
+        detalle: String(e?.detalle || '').slice(0, 300), kg: _num(e?.kg) > 0 ? _num(e.kg) : '',
+    }));
+}
+
+function htmlBannerEntreno(entreno, i) {
+    if (!entreno) return '';
+    const n = entreno.ejercicios.length;
+    const ya = _sesionesConFecha(entreno.fecha).some(s => s.origen === 'chat' && s.tipo_entrenamiento === (entreno.tipo_entrenamiento || 'Entreno contado en el chat'));
+    return `<div class="chat-aplicar-banner">
+        <strong>📒 ${escaparHTML(entreno.tipo_entrenamiento || 'Entreno')} · ${escaparHTML(entreno.fecha)} · ${n} ${n === 1 ? 'ejercicio' : 'ejercicios'}</strong>
+        <button class="btn-aplicar-cambios" onclick="apuntarEntrenoDelChat(${i})">${ya ? '✅ Ya apuntado · Ver o apuntar otra vez' : 'Revisar y apuntar en mi historial →'}</button>
+    </div>`;
+}
+const _sesionesConFecha = f => cargarSesiones().filter(s => s.fecha === f);
+
+// Abre la pantalla de apuntar entreno ya rellena con lo que dijo en el chat
+function apuntarEntrenoDelChat(i) {
+    const m = chatHistorial[i];
+    if (!m || !m.entreno) return;
+    const e = m.entreno;
+    mostrarFotoEntreno();
+    _fe.fecha = e.fecha;
+    _fe.origen = 'chat';
+    _fe.items = itemsFeDesdeIA(e.ejercicios);
+    pintarDiasFe();
+    document.getElementById('fe-tipo').value = e.tipo_entrenamiento || '';
+    document.getElementById('fe-minutos').value = e.duracion_min || '';
+    pintarListaFe();
+    document.getElementById('fe-paso1').style.display = 'none';
+    document.getElementById('fe-paso2').style.display = '';
+    window.scrollTo(0, 0);
 }
 
 // ===================== MODIFICAR RUTINA DESDE CHAT =====================
@@ -9568,17 +9674,19 @@ async function cfpEnviar() {
 
     try {
         const systemPrompt = construirSystemPromptChat(texto);
-        const respuesta = await groqChat({
+        const bruta = await groqChat({
             messages: [{ role: 'system', content: systemPrompt }, ...chatHistorialReciente()],
             temperature: 0.7,
             maxTokens: 1500
         });
-        chatHistorial.push({ role: 'assistant', content: respuesta });
+        const { texto: respuesta, entreno } = sacarEntrenoChat(bruta);
+        chatHistorial.push(entreno ? { role: 'assistant', content: respuesta, entreno } : { role: 'assistant', content: respuesta });
+        const idxMensaje = chatHistorial.length - 1;
         guardarChat();
         programarMemoriaChat();
 
         burbujaEsc.classList.remove('escribiendo');
-        burbujaEsc.innerHTML = formatearMensajeIA(respuesta);
+        burbujaEsc.innerHTML = formatearMensajeIA(respuesta) + htmlBannerEntreno(entreno, idxMensaje);
         document.getElementById('cfp-mensajes').scrollTop = 99999;
 
         // Sincronizar respuesta en pantalla-chat si está visible
@@ -9629,6 +9737,7 @@ async function generarPlanSemanal() {
     cont.innerHTML = '<div class="plan-generando"><div class="cargando-spinner" style="margin:0 auto 12px"></div>La IA está diseñando tu semana...</div>';
 
     const perfil   = cargarPerfil() || {};
+    await resumirChatPendiente(); // lo que se acaba de hablar en el chat
     const sesiones = cargarSesiones();
     const material = cargarMaterial();
     const records  = cargarRecords();
@@ -9672,7 +9781,7 @@ PERFIL:
 ${perfil.objetivo ? `- Objetivo a largo plazo (sus palabras): ${perfil.objetivo}\n` : ''}${perfil.lesiones ? `- Lesiones: ${perfil.lesiones}` : ''}
 ${textoPreferenciasIA(perfil)}
 - Deportes habituales: ${deportesHabituales.map(nombreDeporte).join(', ') || 'ninguno'}
-${textoMemoriaIA()}
+${textoMemoriaIA()}${textoCharlasRecientesIA()}
 ÚLTIMAS SESIONES (más reciente primero):
 ${ultimasSes || 'Sin sesiones'}
 
