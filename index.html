@@ -221,7 +221,7 @@
             }
             .bnav-item .bnav-ico { font-size: 1.3rem; line-height: 1; }
             .bnav-item.activo { color: #ff5722; }
-            .bnav-item.bnav-rutina { color: #ff8a50; }
+            .bnav-item.bnav-rutina.con-rutina { color: #ff8a50; }
             .bnav-item.bnav-rutina.activo { color: #ff5722; }
             .bnav-item:active { background: rgba(255,87,34,0.08); }
         }
@@ -3125,7 +3125,7 @@
         <button class="nav-item activo" id="nav-entrenar" onclick="mostrarFormulario()">
             <span class="nav-ico">🏋️</span> Entrenar
         </button>
-        <button class="nav-item nav-rutina" id="nav-rutina" onclick="volverARutina()" style="display:none">
+        <button class="nav-item nav-rutina" id="nav-rutina" onclick="volverARutina()">
             <span class="nav-ico">💪</span> Mi rutina
         </button>
         <button class="nav-item" id="nav-progreso" onclick="mostrarProgreso()">
@@ -3671,7 +3671,7 @@
     <button class="bnav-item activo" id="bnav-entrenar" onclick="mostrarFormulario()">
         <span class="bnav-ico">🏋️</span><span>Entrenar</span>
     </button>
-    <button class="bnav-item bnav-rutina" id="bnav-rutina" onclick="volverARutina()" style="display:none">
+    <button class="bnav-item bnav-rutina" id="bnav-rutina" onclick="volverARutina()">
         <span class="bnav-ico">💪</span><span>Mi rutina</span>
     </button>
     <button class="bnav-item" id="bnav-progreso" onclick="mostrarProgreso()">
@@ -7609,10 +7609,11 @@ const RUTINA_HOY_HORAS = 16;
 let _rutinaActiva = false;
 let _rutinaResultado = null;
 
+// El botón está siempre; en naranja cuando hay una rutina en marcha
 function actualizarBotonRutina() {
     ['nav-rutina', 'bnav-rutina'].forEach(id => {
         const b = document.getElementById(id);
-        if (b) b.style.display = _rutinaActiva ? '' : 'none';
+        if (b) b.classList.toggle('con-rutina', _rutinaActiva);
     });
 }
 
@@ -7636,7 +7637,11 @@ function borrarRutinaEnCurso() {
 }
 
 function volverARutina() {
-    if (!_rutinaActiva) return mostrarFormulario();
+    if (!_rutinaActiva) {
+        mostrarFormulario();
+        avisoRapido('Hoy aún no tienes rutina: créala aquí o toca «Repetir».');
+        return;
+    }
     ocultarTodas();
     activarNavItem('nav-rutina');
     document.getElementById('pantalla-rutina').style.display = 'block';
