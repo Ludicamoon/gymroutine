@@ -686,6 +686,35 @@
             font-size: 0.82rem; font-weight: 600; text-align: left; cursor: pointer;
         }
         @media (hover: hover) { .btn-cambiar-ej:hover { border-color: #ff5722; color: #ff5722; } }
+        /* Cambiar ejercicio: lista de parecidos (colores neutros, valen en claro y oscuro) */
+        .cambio-lista { margin-top: 4px; }
+        .cambio-titulo { font-size: 0.78rem; color: #888; margin: 8px 0 2px; font-weight: 600; }
+        .cambio-op, .cambio-mas {
+            display: block; width: 100%; margin-top: 6px; padding: 10px 12px; border-radius: 10px;
+            background: transparent; color: inherit; border: 1px solid rgba(127,127,127,0.35);
+            font-size: 0.86rem; font-weight: 600; text-align: left; cursor: pointer;
+        }
+        .cambio-mas { border-style: dashed; color: #ff5722; }
+        .cambio-mas:disabled { opacity: 0.7; cursor: default; }
+        @media (hover: hover) { .cambio-op:hover { border-color: #ff5722; } }
+        /* Cronómetro de los ejercicios por tiempo (plancha 30 s...) */
+        .cuenta-ej { margin: 10px 0; }
+        .cuenta-ej-btn[hidden], .cuenta-ej-reloj[hidden], .cambio-lista[hidden] { display: none; }
+        .cuenta-ej-btn {
+            display: block; width: 100%; padding: 12px; border-radius: 12px;
+            background: transparent; color: #ff5722; border: 2px solid #ff5722;
+            font-size: 0.95rem; font-weight: 800; cursor: pointer;
+        }
+        .cuenta-ej-reloj { text-align: center; padding: 6px 0; }
+        .cuenta-ej-fase { font-size: 0.8rem; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .cuenta-ej-num { font-size: 2.6rem; font-weight: 900; color: #ff5722; line-height: 1.2; font-variant-numeric: tabular-nums; }
+        .cuenta-ej-reloj.prep .cuenta-ej-num { color: #f5a623; }
+        .cuenta-ej-barra { height: 8px; border-radius: 8px; background: rgba(127,127,127,0.2); overflow: hidden; margin: 6px 0 10px; }
+        .cuenta-ej-barra > div { height: 100%; width: 100%; background: #ff5722; }
+        .cuenta-ej-parar {
+            padding: 8px 18px; border-radius: 10px; background: transparent; color: inherit;
+            border: 1px solid rgba(127,127,127,0.4); font-size: 0.85rem; font-weight: 600; cursor: pointer;
+        }
 
         .grafica-record { font-weight: 600; font-size: 0.75rem; color: #b8860b; margin-left: 6px; white-space: nowrap; }
         .primeras-marcas { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -924,6 +953,11 @@
         .ej-foto .ej-foto-2 { animation: foto-alterna 3s infinite; }
         @keyframes foto-alterna { 0%, 45% { opacity: 0; } 55%, 95% { opacity: 1; } 100% { opacity: 0; } }
         #modo-guiado .ej-foto { margin: 10px auto; max-width: 300px; }
+        .ej-fotos-pasos { display: flex; gap: 8px; max-width: 360px; margin: 8px auto 4px; }
+        .ej-fotos-pasos figure { flex: 1; margin: 0; }
+        .ej-fotos-pasos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block; }
+        .ej-fotos-pasos figcaption { font-size: 0.72rem; color: #888; text-align: center; margin-top: 3px; font-weight: 600; }
+        #modo-guiado .ej-fotos-pasos { max-width: 300px; }
 
         /* ---- FASE D: empezar rápido ---- */
         .empezar-rapido { background: white; border-radius: 14px; padding: 12px 14px; margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
@@ -2508,6 +2542,10 @@
             color: #ff5722; margin-bottom: 8px;
         }
         .mg-timer-label { text-align: center; color: #888; font-size: 0.85rem; margin-bottom: 20px; }
+        #modo-guiado .btn-cambiar-ej { background: rgba(255,255,255,0.06); color: #ccc; border-color: #444; margin-bottom: 12px; }
+        #modo-guiado .cuenta-ej { margin: 0 0 14px; }
+        #modo-guiado .cuenta-ej-btn { padding: 16px; font-size: 1.05rem; border-radius: 14px; }
+        #modo-guiado .cuenta-ej-num { font-size: 3.6rem; }
         .mg-fin {
             text-align: center; padding: 40px 20px;
         }
@@ -5164,7 +5202,7 @@ ${textoMemoriaIA()}${contextoSemana ? `\nCONTEXTO ADICIONAL DEL USUARIO (muy imp
 INSTRUCCIONES OBLIGATORIAS:
 1. ESTRUCTURA: calentamiento (3-4 ejercicios), rutina principal (exactamente ${numEj} ejercicios) y estiramientos (3-4 ejercicios).
 2. CAMPOS: cada ejercicio de las tres secciones lleva siempre todos los campos de la plantilla de abajo.
-3. NOMBRES: "nombre" en español; "nombre_en" en inglés, como se llama en las bases de datos de ejercicios (ej: "Barbell Bench Press - Medium Grip", "Pullups", "Dumbbell Lunges"). "grupo_muscular" es el músculo PRINCIPAL y debe ser EXACTAMENTE uno de: ${GRUPOS_MUSCULARES.join(', ')}.
+3. NOMBRES: "nombre" en español; "nombre_en" en inglés, como se llama en las bases de datos de ejercicios (ej: "Barbell Bench Press - Medium Grip", "Pullups", "Dumbbell Lunges", "Arm Circles", "Cat Stretch", "Quad Stretch"), también en el calentamiento y los estiramientos (sirve para su foto). "grupo_muscular" es el músculo PRINCIPAL y debe ser EXACTAMENTE uno de: ${GRUPOS_MUSCULARES.join(', ')}.
 4. PESOS: sigue la sección PESOS de tus instrucciones. Los ejercicios con progresión calculada llevan ese peso; el calentamiento y los estiramientos van sin peso (null).
 5. INTENSIDAD SEGÚN EL HISTORIAL: si la última sesión fue "muy difícil" o no la completó, baja el volumen; si fue "fácil", súbelo un poco. Ten en cuenta la energía de hoy.
 6. MOLESTIAS: evita las zonas con molestias recientes y propón alternativas. Si una molestia está marcada como REPETIDA, nada de carga directa en esa zona y menciónalo en "mensaje" recomendando fisioterapeuta o médico.
@@ -5175,6 +5213,7 @@ INSTRUCCIONES OBLIGATORIAS:
 11. YOUTUBE: en "youtube" escribe los mejores términos de búsqueda en español para encontrar un tutorial del ejercicio.
 12. EXTRAS: un consejo de recuperación, una sugerencia de cardio para hoy y el nombre del usuario en "mensaje".
 13. EXPLICACIÓN: en "explicacion_rutina", 2-4 frases concretas sobre POR QUÉ esta rutina: qué has visto en el historial, el volumen semanal, las molestias, el deporte de la semana y la energía de hoy. Nada genérico.
+14. CAMBIOS: en "alternativas" de cada ejercicio de la rutina principal, ${MAX_ALTERNATIVAS} ejercicios parecidos para poder cambiarlo (máquina ocupada, no le gusta...): mismo músculo principal, mismo tipo de movimiento (empuje, tirón, sentadilla, bisagra de cadera, zancada, aislamiento) y dificultad parecida, que se puedan hacer con el material de hoy, del más parecido al menos. Solo el nombre en español. "alternativa" sigue siendo la opción si hay dolor.
 
 Responde ÚNICAMENTE con este JSON válido, sin texto antes ni después:
 {
@@ -5185,13 +5224,13 @@ Responde ÚNICAMENTE con este JSON válido, sin texto antes ni después:
   "mensaje": "mensaje motivador usando el nombre del usuario",
   "explicacion_rutina": "explica aquí por qué esta rutina, basándote en historial, deporte, energía, etc.",
   "calentamiento": [
-    { "nombre": "", "grupo_muscular": "", "explicacion": "", "series": 2, "reps": "30 seg", "descanso_series": "20s", "descanso_ejercicios": "15s", "peso": null, "alternativa": "", "variante_facil": "", "variante_avanzada": "", "youtube": "" }
+    { "nombre": "", "nombre_en": "", "grupo_muscular": "", "explicacion": "", "series": 2, "reps": "30 seg", "descanso_series": "20s", "descanso_ejercicios": "15s", "peso": null, "alternativa": "", "variante_facil": "", "variante_avanzada": "", "youtube": "" }
   ],
   "ejercicios": [
-    { "nombre": "", "nombre_en": "", "grupo_muscular": "", "explicacion": "", "tipo": "normal", "series": 3, "reps": "12", "descanso_series": "60s", "descanso_ejercicios": "90s", "peso": "20 kg", "alternativa": "", "variante_facil": "", "variante_avanzada": "", "youtube": "" }
+    { "nombre": "", "nombre_en": "", "grupo_muscular": "", "explicacion": "", "tipo": "normal", "series": 3, "reps": "12", "descanso_series": "60s", "descanso_ejercicios": "90s", "peso": "20 kg", "alternativa": "", "alternativas": ["", "", "", "", ""], "variante_facil": "", "variante_avanzada": "", "youtube": "" }
   ],
   "estiramientos": [
-    { "nombre": "", "grupo_muscular": "", "explicacion": "", "series": 1, "reps": "30 seg", "descanso_series": "10s", "descanso_ejercicios": "15s", "peso": null, "alternativa": "", "variante_facil": "", "variante_avanzada": "", "youtube": "" }
+    { "nombre": "", "nombre_en": "", "grupo_muscular": "", "explicacion": "", "series": 1, "reps": "30 seg", "descanso_series": "10s", "descanso_ejercicios": "15s", "peso": null, "alternativa": "", "variante_facil": "", "variante_avanzada": "", "youtube": "" }
   ],
   "cardio_sugerido": "",
   "consejo_recuperacion": "",
@@ -5206,7 +5245,7 @@ async function llamarIA(prompt) {
             { role: 'user',   content: prompt }
         ],
         temperature: 0.4,   // más bajo = respuestas más estables y menos JSON roto
-        maxTokens: 4000,
+        maxTokens: 4500, // con los 5 parecidos de cada ejercicio
         json: true
     });
     const parsed = extraerObjetoJSON(texto);
@@ -7045,6 +7084,21 @@ function _listaFotos() {
 }
 // Términos en español → inglés, para rutinas sin nombre en inglés (repetidas, del plan)
 const _ES_EN = [
+    // Calentamiento y estiramientos (para que también tengan foto)
+    [/(rotacion(es)?|circulos?) de brazos|molinos?/, 'arm circles'], [/(rotacion(es)?|circulos?) de hombros?/, 'shoulder circles'],
+    [/(rotacion(es)?|circulos?) de cadera/, 'standing hip circles'], [/(rotacion(es)?|circulos?) de tobillos?/, 'ankle circles'],
+    [/(rotacion(es)?|circulos?) de rodillas?/, 'knee circles'], [/(rotacion(es)?|circulos?) de munecas?/, 'wrist circles'],
+    [/jumping jacks?|saltos? de tijera|estrella/, 'star jump'], [/sentadillas? (con peso corporal|sin peso|al aire|libres?)/, 'bodyweight squat'],
+    [/zancadas? (con peso corporal|sin peso|caminando)/, 'bodyweight walking lunge'],
+    [/rotacion(es)? de (tronco|torso)/, 'torso rotation'], [/gato|camello/, 'cat stretch'], [/postura del nino|nino/, "child's pose"],
+    [/comba|saltar a la cuerda/, 'rope jumping'], [/escalador|mountain climber/, 'mountain climbers'], [/gusano|inchworm/, 'inchworm'],
+    [/talones? al gluteo|patadas? al gluteo/, 'butt kick'], [/rodillas? al pecho/, 'hug knees to chest'],
+    [/bicicleta( estatica)?|bici/, 'recumbent bike'], [/eliptica/, 'elliptical trainer'], [/cinta|caminar|andar/, 'walking treadmill'],
+    [/estiramiento.*isquio|isquiotibiales?/, 'hamstring stretch'], [/estiramiento.*cuadriceps/, 'quad stretch'],
+    [/estiramiento.*gemelos?/, 'calf stretch hands against wall'], [/estiramiento.*(pecho|pectoral)/, 'chest and front of shoulder stretch'],
+    [/estiramiento.*hombros?/, 'round the world shoulder stretch'], [/flexor(es)? de (la )?cadera|psoas/, 'kneeling hip flexor'],
+    [/estiramiento.*gluteos?|piriforme/, 'it band and glute stretch'], [/estiramiento.*(lumbar|espalda baja)/, 'chair lower back stretch'],
+    [/estiramiento.*triceps/, 'triceps stretch'], [/estiramiento.*(dorsal|espalda)/, 'dynamic back stretch'],
     [/remo con barra/, 'bent over barbell row'], [/remo con mancuernas?/, 'bent over two dumbbell row'], [/elevaciones? laterales?/, 'side lateral raise'], [/jalon/, 'wide grip lat pulldown'],
     [/press (de )?banca|press banca/, 'bench press'], [/press militar|press de hombros?/, 'shoulder press'], [/sentadilla goblet/, 'goblet squat'],
     [/sentadilla/, 'squat'], [/peso muerto rumano/, 'romanian deadlift'], [/peso muerto/, 'deadlift'], [/dominadas?/, 'pullup'],
@@ -7055,6 +7109,7 @@ const _ES_EN = [
     [/gemelos|elevacion(es)? de talones/, 'calf raise'], [/abdominales?|crunch/, 'crunch'], [/swings?/, 'swing'], [/burpees?/, 'burpee'],
     [/mancuernas?/, 'dumbbell'], [/barra z/, 'ez bar'], [/barra/, 'barbell'], [/polea|cables?/, 'cable'], [/kettlebell|pesa rusa/, 'kettlebell'],
     [/inclinad[oa]/, 'incline'], [/declinad[oa]/, 'decline'], [/sentad[oa]/, 'seated'], [/de pie/, 'standing'], [/maquina/, 'machine'],
+    [/estiramiento/, 'stretch'],
 ];
 function nombreEnIngles(nombreEs) {
     const t = _sinAcentos(nombreEs);
@@ -7084,9 +7139,15 @@ function buscarFoto(nombreEn, nombreEs) {
 function htmlFotoEjercicio(ej) {
     if (!ej.imagen) return '';
     const base = FOTOS_URL + encodeURI(ej.imagen);
-    return `<div class="ej-foto" aria-hidden="true">
-        <img src="${base}/0.jpg" loading="lazy" alt="" onerror="this.closest('.ej-foto').remove()">
-        <img src="${base}/1.jpg" loading="lazy" alt="" class="ej-foto-2" onerror="this.remove()">
+    return `<div class="ej-fotos" aria-hidden="true">
+        <div class="ej-foto">
+            <img src="${base}/0.jpg" loading="lazy" alt="" onerror="this.closest('.ej-fotos').remove()">
+            <img src="${base}/1.jpg" loading="lazy" alt="" class="ej-foto-2" onerror="this.remove()">
+        </div>
+        <div class="ej-fotos-pasos">
+            <figure><img src="${base}/0.jpg" loading="lazy" alt=""><figcaption>1 · Empieza así</figcaption></figure>
+            <figure><img src="${base}/1.jpg" loading="lazy" alt="" onerror="this.closest('figure').remove()"><figcaption>2 · Termina así</figcaption></figure>
+        </div>
     </div>`;
 }
 
@@ -7151,10 +7212,13 @@ function comprobarRecord(ej, kg) {
 }
 
 // Tabla de series dentro de la tarjeta: Serie · Anterior · kg · Reps · ✓
+const esDePrincipal = ej => (sesionActual.ejercicios || []).some(e => e.nombre === ej.nombre);
+
 function renderTablaSeries(cont, ej) {
     const r = regEj(ej);
+    const principalT = esDePrincipal(ej);
     const rango = rangoReps(ej.reps);
-    const conPeso = usaPeso(ej);
+    const conPeso = principalT && usaPeso(ej);
     const cls = conPeso ? '' : ' sin-peso';
     cont.innerHTML = `<div class="st-cab${cls}"><span>Serie</span><span>Anterior</span>${conPeso ? '<span>kg</span>' : ''}<span>Reps</span><span></span></div>`
         + r.series.map((sr, i) => `<div class="st-fila${sr.hecho ? ' hecha' : ''}${cls}" data-i="${i}">
@@ -7164,7 +7228,7 @@ function renderTablaSeries(cont, ej) {
             <input class="st-reps" type="number" inputmode="numeric" min="0" value="${escaparHTML(sr.reps)}" placeholder="${rango ? rango[1] : ''}" aria-label="Repeticiones serie ${i + 1}">
             <button class="st-ok" aria-label="Marcar serie ${i + 1} como hecha">✓</button>
         </div>`).join('')
-        + `<div class="st-rir"${r.series.every(x => x.hecho) ? '' : ' hidden'}>¿Cuántas reps más podías hacer en la última? <span>(opcional)</span>
+        + `<div class="st-rir"${principalT && r.series.every(x => x.hecho) ? '' : ' hidden'}>¿Cuántas reps más podías hacer en la última? <span>(opcional)</span>
             <div class="st-rir-ops">${[0, 1, 2, 3].map(v => `<button class="chip${r.rir === v ? ' activo' : ''}" data-rir="${v}">${v === 3 ? '3 o más' : v === 0 ? '0 · al límite' : v}</button>`).join('')}</div></div>`;
 
     cont.querySelectorAll('.st-fila').forEach(fila => {
@@ -7196,13 +7260,14 @@ function marcarSerie(ej, i, cont) {
     if (sr.hecho) {
         // Si no se escriben las reps, se da por hecho el máximo del rango
         if (!sr.reps) { const rango = rangoReps(ej.reps); if (rango) sr.reps = String(rango[1]); }
-        comprobarRecord(ej, _num(sr.kg));
+        if (esDePrincipal(ej)) comprobarRecord(ej, _num(sr.kg));
         const ultima = r.series.every(x => x.hecho);
         const segs = ultima
             ? (parsearDescanso(ej.descanso_ejercicios) || parsearDescanso(ej.descanso_series))
             : parsearDescanso(ej.descanso_series);
         iniciarDescanso(segs || 90, ultima ? 'Al siguiente ejercicio' : `Descanso · ${ej.nombre}`);
     }
+    if (!esDePrincipal(ej)) r.hecho = r.series.every(x => x.hecho); // calentamiento y estiramientos
     renderTablaSeries(cont, ej);
     actualizarCabeceraTarjeta(ej);
 }
@@ -7285,40 +7350,226 @@ function nombreDeAlternativa(texto) {
     return t.charAt(0).toUpperCase() + t.slice(1);
 }
 
-// Sustituye el ejercicio de la tarjeta por su alternativa, en pantalla y en la sesión.
-// El ejercicio original pasa a ser la alternativa, para poder volver a él.
-function cambiarPorAlternativa(card, numero) {
-    const nombreActual = card.dataset.ejNombre;
+// ===================== CAMBIAR UN EJERCICIO =====================
+// Hasta MAX_ALTERNATIVAS ejercicios parecidos (mismo músculo y mismo movimiento): los que
+// propuso la IA en la rutina ("alternativas" y "alternativa") y, si faltan, se piden a la
+// IA en el momento (pedirAlternativasIA). Se usa en la tarjeta y en el modo guiado.
+const MAX_ALTERNATIVAS = 5;
+
+// El ejercicio tal como está en la sesión (la tarjeta y el modo guiado pueden tener copias)
+function ejDeSesion(nombre) {
+    for (const sec of ['calentamiento', 'ejercicios', 'estiramientos']) {
+        const e = (sesionActual[sec] || []).find(x => x.nombre === nombre);
+        if (e) return e;
+    }
+    return null;
+}
+
+// Opciones para cambiarlo: [{nombre, nombre_en}], sin repetir ni el propio ejercicio
+function opcionesCambio(ej) {
+    const vistos = new Set([claveEjercicio(ej.nombre)]);
+    const out = [];
+    [ej.alternativa, ...(Array.isArray(ej.alternativas) ? ej.alternativas : [])].forEach(a => {
+        const obj = a && typeof a === 'object';
+        const nombre = nombreDeAlternativa(obj ? a.nombre : a);
+        if (!nombre || vistos.has(claveEjercicio(nombre))) return;
+        vistos.add(claveEjercicio(nombre));
+        out.push({ nombre, nombre_en: obj ? (a.nombre_en || '') : '' });
+    });
+    return out.slice(0, MAX_ALTERNATIVAS);
+}
+
+// Pide a la IA ejercicios parecidos con el material de hoy y los añade al ejercicio
+async function pedirAlternativasIA(ej) {
+    const perfil = cargarPerfil() || {};
+    const ya = opcionesCambio(ej).map(o => o.nombre);
+    const usuario = `Ejercicio: "${ej.nombre}"${ej.grupo_muscular ? ` (músculo principal: ${ej.grupo_muscular})` : ''}.
+Dame ${MAX_ALTERNATIVAS} ejercicios para cambiarlo que trabajen el MISMO músculo principal con el MISMO tipo de movimiento (empuje, tirón, sentadilla, bisagra de cadera, zancada, aislamiento, core, estiramiento...) y una dificultad parecida, del más parecido al menos.
+Material disponible hoy: ${textoMaterialIA()}
+${perfil.evitar ? `No incluyas nunca: ${perfil.evitar}.\n` : ''}${ya.length ? `No repitas estos: ${ya.join(', ')}.\n` : ''}Responde SOLO con este JSON: {"alternativas": [{"nombre": "en español", "nombre_en": "en inglés, como en las bases de datos de ejercicios"}]}`;
+    const texto = await groqChat({
+        messages: [
+            { role: 'system', content: 'Eres un entrenador personal titulado. Propones cambios de ejercicio equivalentes, realistas y seguros, en español de España.' },
+            { role: 'user', content: usuario },
+        ],
+        temperature: 0.3, maxTokens: 500, json: true,
+    });
+    const d = extraerObjetoJSON(texto);
+    const nuevas = (Array.isArray(d.alternativas) ? d.alternativas : [])
+        .map(a => (a && typeof a === 'object') ? { nombre: String(a.nombre || ''), nombre_en: String(a.nombre_en || '') } : { nombre: String(a || ''), nombre_en: '' })
+        .filter(a => a.nombre.trim());
+    if (!nuevas.length) throw new Error('La IA no devolvió ejercicios.');
+    ej.alternativas = [...(Array.isArray(ej.alternativas) ? ej.alternativas : []), ...nuevas];
+    guardarRutinaEnCurso();
+}
+
+// Cambia un ejercicio por otro en la sesión y en su tarjeta. El de antes pasa a ser
+// una de las opciones, para poder volver a él. Devuelve el ejercicio nuevo.
+function sustituirEjercicio(nombreActual, opcion) {
     for (const seccion of ['calentamiento', 'ejercicios', 'estiramientos']) {
         const lista = sesionActual[seccion] || [];
         const i = lista.findIndex(e => e.nombre === nombreActual);
         if (i === -1) continue;
         const viejo = lista[i];
-        const nombre = nombreConocido(nombreDeAlternativa(viejo.alternativa));
+        const nombre = nombreConocido(opcion.nombre);
         // Si ya se ha hecho antes con peso real, se usa la progresión; si no, se deja
         // el peso a criterio del usuario (el del ejercicio anterior no sirve).
         // ¿El ejercicio llevaba carga? (con peso propuesto o con la casilla de peso libre)
         const conCarga = !!(viejo.peso || viejo.pesoLibre);
         const prog = conCarga ? calcularProgresion(nombre) : null;
+        const resto = opcionesCambio(viejo).filter(o => claveEjercicio(o.nombre) !== claveEjercicio(nombre));
         const nuevo = {
             ...viejo,
             nombre,
             alternativa: viejo.nombre,
+            alternativas: [{ nombre: viejo.nombre, nombre_en: viejo.nombre_en || '' }, ...resto],
             variante_facil: '',
             variante_avanzada: '',
             youtube: nombre,
-            nombre_en: '', imagen: buscarFoto(null, nombre),
-            explicacion: `En lugar de "${viejo.nombre}". ${viejo.alternativa}`,
+            nombre_en: opcion.nombre_en || '',
+            imagen: buscarFoto(opcion.nombre_en || null, nombre),
+            explicacion: `En lugar de "${escaparHTML(viejo.nombre)}".`,
             peso: prog ? `${prog.siguienteKg} kg` : null,
             // Ejercicio con carga pero sin peso conocido: casilla vacía para apuntarlo
             pesoLibre: !prog && conCarga,
         };
         lista[i] = nuevo;
-        const nueva = crearTarjetaEjercicio(nuevo, numero, SECCION_DE[seccion]);
-        if (card.classList.contains('abierta')) { nueva.classList.add('abierta'); nueva.cargarTecnica(); }
-        card.replaceWith(nueva);
-        return;
+        const card = tarjetaDe(nombreActual);
+        if (card) {
+            const nueva = crearTarjetaEjercicio(nuevo, card._numero, SECCION_DE[seccion]);
+            if (card.classList.contains('abierta')) { nueva.classList.add('abierta'); nueva.cargarTecnica(); }
+            card.replaceWith(nueva);
+        }
+        guardarRutinaEnCurso();
+        return nuevo;
     }
+    return null;
+}
+
+// Botón "🔄 Cambiar ejercicio" con la lista de parecidos. getEj() da el ejercicio actual.
+function crearSelectorCambio(getEj, onElegir) {
+    const caja = document.createElement('div');
+    caja.className = 'cambio-caja';
+    const btn = document.createElement('button');
+    btn.className = 'btn-cambiar-ej';
+    btn.textContent = '🔄 Cambiar ejercicio';
+    const lista = document.createElement('div');
+    lista.className = 'cambio-lista';
+    lista.hidden = true;
+    caja.append(btn, lista);
+    const pintar = () => {
+        const ej = getEj();
+        const ops = opcionesCambio(ej);
+        lista.innerHTML = ops.length ? '<div class="cambio-titulo">Cámbialo por uno parecido:</div>' : '';
+        ops.forEach(o => {
+            const b = document.createElement('button');
+            b.className = 'cambio-op';
+            b.textContent = o.nombre;
+            b.addEventListener('click', () => onElegir(o));
+            lista.appendChild(b);
+        });
+        if (ops.length >= MAX_ALTERNATIVAS) return;
+        const mas = document.createElement('button');
+        mas.className = 'cambio-mas';
+        mas.textContent = ops.length ? '🤖 Buscar más parecidos' : '🤖 Buscar ejercicios parecidos';
+        mas.addEventListener('click', async () => {
+            mas.disabled = true;
+            mas.textContent = '⏳ Buscando ejercicios parecidos…';
+            try {
+                await pedirAlternativasIA(ej);
+                if (caja.isConnected) pintar();
+            } catch (e) {
+                mas.disabled = false;
+                mas.textContent = /HTTP 429/.test(e && e.message)
+                    ? 'La IA está saturada: espera un minuto y toca otra vez'
+                    : 'No se ha podido. Toca para reintentar';
+            }
+        });
+        lista.appendChild(mas);
+    };
+    btn.addEventListener('click', () => {
+        lista.hidden = !lista.hidden;
+        btn.textContent = lista.hidden ? '🔄 Cambiar ejercicio' : '✕ No cambiar';
+        if (!lista.hidden) pintar();
+    });
+    return caja;
+}
+
+// ===================== CRONÓMETRO DE LOS EJERCICIOS POR TIEMPO =====================
+// Segundos de un ejercicio que va por tiempo ("30 seg", "45s", "1 min", "30-45 seg",
+// "1 min 30 seg"); null si va por repeticiones o es un bloque (AMRAP, EMOM...).
+function segundosEjercicio(ej) {
+    if (!ej || tipoBloque(ej) !== 'normal') return null;
+    const s = String(ej.reps || '').toLowerCase().replace(/,/g, '.');
+    const mMin = s.match(/(\d+(?:\.\d+)?)\s*(?:(?:-|–|a)\s*(\d+(?:\.\d+)?)\s*)?min/);
+    const mSeg = s.match(/(\d+)\s*(?:(?:-|–|a)\s*(\d+)\s*)?(?:seg|s\b|")/);
+    let total = 0;
+    if (mMin) total += parseFloat(mMin[2] || mMin[1]) * 60;
+    if (mSeg) total += parseInt(mSeg[2] || mSeg[1]);
+    total = Math.round(total);
+    return total >= 5 && total <= 900 ? total : null;
+}
+
+function _fmtSegs(n) { return n >= 60 ? `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}` : `${n} s`; }
+
+// Cuenta atrás de un ejercicio por tiempo: 3 s para colocarse, el tiempo y un aviso al
+// acabar. onFin() se llama al terminar. el._parar() lo para (al salir de la rutina).
+function crearCuentaEjercicio(segs, onFin) {
+    const PREP = 3;
+    const el = document.createElement('div');
+    el.className = 'cuenta-ej';
+    el.innerHTML = `<button class="cuenta-ej-btn">⏱ Empezar · ${_fmtSegs(segs)}</button>
+        <div class="cuenta-ej-reloj" hidden>
+            <div class="cuenta-ej-fase"></div>
+            <div class="cuenta-ej-num"></div>
+            <div class="cuenta-ej-barra"><div></div></div>
+            <button class="cuenta-ej-parar">Parar</button>
+        </div>`;
+    const btn = el.querySelector('.cuenta-ej-btn'), reloj = el.querySelector('.cuenta-ej-reloj');
+    const fase = el.querySelector('.cuenta-ej-fase'), num = el.querySelector('.cuenta-ej-num');
+    const barra = el.querySelector('.cuenta-ej-barra > div');
+    let t = null;
+    const parar = (texto) => {
+        clearInterval(t); t = null;
+        soltarPantalla('ejercicio');
+        reloj.hidden = true;
+        btn.hidden = false;
+        btn.textContent = texto || `⏱ Empezar · ${_fmtSegs(segs)}`;
+    };
+    el._parar = () => { if (t) parar(); };
+    el.querySelector('.cuenta-ej-parar').addEventListener('click', () => parar());
+    btn.addEventListener('click', () => {
+        _prepararAudio();
+        mantenerPantallaEncendida('ejercicio');
+        btn.hidden = true;
+        reloj.hidden = false;
+        const inicio = Date.now();
+        let ultimo = null;
+        const tic = () => {
+            const pasado = (Date.now() - inicio) / 1000;
+            if (pasado < PREP) {
+                reloj.classList.add('prep');
+                fase.textContent = 'Prepárate';
+                num.textContent = Math.ceil(PREP - pasado);
+                barra.style.width = '100%';
+                return;
+            }
+            reloj.classList.remove('prep');
+            if (ultimo === null) { ultimo = 'ya'; avisoFinTimer([150]); }
+            const resta = Math.max(0, Math.ceil(segs - (pasado - PREP)));
+            fase.textContent = '¡Aguanta!';
+            num.textContent = _fmtSegs(resta);
+            barra.style.width = (resta / segs * 100) + '%';
+            if (resta <= 0) {
+                avisoFinTimer();
+                parar(`✓ Hecho · ⏱ Otra vez (${_fmtSegs(segs)})`);
+                if (onFin) onFin();
+            }
+        };
+        tic();
+        t = setInterval(tic, 200);
+    });
+    return el;
 }
 
 // ===================== TÉCNICA DE CADA EJERCICIO =====================
@@ -7456,6 +7707,7 @@ function crearTarjetaEjercicio(ej, numero, seccion = 'Rutina principal') {
     const card = document.createElement('div');
     card.className = 'ejercicio-card compacta' + (esEspecial ? ' especial' : '');
     card.dataset.ejNombre = ej.nombre;
+    card._numero = numero;
     card.innerHTML = `
         <button class="ej-fila" aria-expanded="false">
             <span class="num">${numero}</span>
@@ -7493,14 +7745,20 @@ function crearTarjetaEjercicio(ej, numero, seccion = 'Rutina principal') {
         if (abierta) card.cargarTecnica();
     });
 
-    // Cambiar por la alternativa con un toque (máquina ocupada, molestia...)
-    const nombreAlt = nombreDeAlternativa(ej.alternativa);
-    if (nombreAlt) {
-        const btnCambiar = document.createElement('button');
-        btnCambiar.className = 'btn-cambiar-ej';
-        btnCambiar.textContent = `🔄 Cambiar por: ${nombreAlt}`;
-        btnCambiar.addEventListener('click', () => cambiarPorAlternativa(card, numero));
-        cuerpo.appendChild(btnCambiar);
+    // Cambiar por otro parecido (máquina ocupada, molestia, no le gusta...)
+    if (!esEspecial) {
+        cuerpo.appendChild(crearSelectorCambio(
+            () => ejDeSesion(ej.nombre) || ej,
+            op => sustituirEjercicio(ej.nombre, op)));
+    }
+
+    // Ejercicio por tiempo (plancha 30 s...): cronómetro que al acabar marca la serie
+    const segsEj = segundosEjercicio(ej);
+    if (segsEj) {
+        cuerpo.appendChild(crearCuentaEjercicio(segsEj, () => {
+            const ok = card.querySelector('.series-tabla .st-fila:not(.hecha) .st-ok');
+            if (ok) ok.click();
+        }));
     }
 
     if (esEspecial) {
@@ -7514,19 +7772,13 @@ function crearTarjetaEjercicio(ej, numero, seccion = 'Rutina principal') {
             cuerpo.appendChild(kgRow);
         }
         cuerpo.appendChild(crearPanelBloque(ej, tipo));
-    } else if (principal) {
+    } else {
+        // Todas las secciones igual: serie a serie con ✓ y descanso (en calentamiento y
+        // estiramientos sin kg ni récords; solo cuenta para el progreso la rutina principal)
         const tabla = document.createElement('div');
         tabla.className = 'series-tabla';
         cuerpo.appendChild(tabla);
         renderTablaSeries(tabla, ej);
-    } else {
-        // Calentamiento y estiramientos: basta con marcarlos como hechos
-        const r = regEj(ej);
-        const btn = document.createElement('button');
-        btn.className = 'btn-hecho' + (r.hecho ? ' activo' : '');
-        btn.textContent = '✓ Hecho';
-        btn.addEventListener('click', () => { r.hecho = !r.hecho; btn.classList.toggle('activo', r.hecho); actualizarCabeceraTarjeta(ej, card); });
-        cuerpo.appendChild(btn);
     }
     actualizarCabeceraTarjeta(ej, card);
     return card;
@@ -7664,7 +7916,8 @@ function recuperarRutinaEnCurso() {
     recordsAvisados   = d.avisados || {};
     recordsAlEmpezar  = d.recordsAntes || cargarRecords();
     const s = sesionActual;
-    mostrarRutinaIA(d.resultado || s, s.tiempo, s.nivel, s.objetivo);
+    const res = { ...(d.resultado || {}), calentamiento: s.calentamiento, ejercicios: s.ejercicios, estiramientos: s.estiramientos };
+    mostrarRutinaIA(res, s.tiempo, s.nivel, s.objetivo);
     Object.keys(resultadosBloques).forEach(n => registrarResultado(n, resultadosBloques[n]));
     return true;
 }
@@ -9014,7 +9267,7 @@ MODIFICACIÓN DE RUTINA:
 - Si el usuario pide modificar, cambiar, añadir o quitar ejercicios de la rutina activa, DEBES devolver la rutina completa modificada.
 - Explica brevemente qué has cambiado en texto normal, luego añade el JSON con este formato EXACTO al final de tu respuesta:
 <<<RUTINA_MODIFICADA>>>
-{"tipo_entrenamiento":"...","duracion_estimada":"...","objetivo_dia":"...","mensaje":"...","calentamiento":[{"nombre":"","grupo_muscular":"","explicacion":"","series":2,"reps":"30 seg","descanso_series":"20s","descanso_ejercicios":"15s","peso":null,"alternativa":"","variante_facil":"","variante_avanzada":"","youtube":""}],"ejercicios":[{"nombre":"","grupo_muscular":"","explicacion":"","series":3,"reps":"12","descanso_series":"60s","descanso_ejercicios":"90s","peso":null,"alternativa":"","variante_facil":"","variante_avanzada":"","youtube":""}],"estiramientos":[{"nombre":"","grupo_muscular":"","explicacion":"","series":1,"reps":"30 seg","descanso_series":"10s","descanso_ejercicios":"15s","peso":null,"alternativa":"","variante_facil":"","variante_avanzada":"","youtube":""}],"cardio_sugerido":"","consejo_recuperacion":""}
+{"tipo_entrenamiento":"...","duracion_estimada":"...","objetivo_dia":"...","mensaje":"...","calentamiento":[{"nombre":"","nombre_en":"","grupo_muscular":"","explicacion":"","series":2,"reps":"30 seg","descanso_series":"20s","descanso_ejercicios":"15s","peso":null,"alternativa":"","variante_facil":"","variante_avanzada":"","youtube":""}],"ejercicios":[{"nombre":"","grupo_muscular":"","explicacion":"","series":3,"reps":"12","descanso_series":"60s","descanso_ejercicios":"90s","peso":null,"alternativa":"","alternativas":["","","","",""],"variante_facil":"","variante_avanzada":"","youtube":""}],"estiramientos":[{"nombre":"","nombre_en":"","grupo_muscular":"","explicacion":"","series":1,"reps":"30 seg","descanso_series":"10s","descanso_ejercicios":"15s","peso":null,"alternativa":"","variante_facil":"","variante_avanzada":"","youtube":""}],"cardio_sugerido":"","consejo_recuperacion":""}
 <<<FIN_RUTINA>>>
 - Si el usuario solo hace preguntas (no pide modificar), responde solo en texto natural, SIN JSON ni bloques de código.`;
 }
@@ -9150,6 +9403,10 @@ function abrirChatModificar() {
 
 function aplicarCambiosRutina(nuevaRutina) {
     if (!nuevaRutina) return;
+    // Foto para cada ejercicio nuevo (también calentamiento y estiramientos)
+    ['calentamiento', 'ejercicios', 'estiramientos'].forEach(sec => (nuevaRutina[sec] || []).forEach(e => {
+        if (e && !e.imagen) e.imagen = buscarFoto(e.nombre_en, e.nombre);
+    }));
     if (nuevaRutina.calentamiento)      sesionActual.calentamiento      = nuevaRutina.calentamiento;
     if (nuevaRutina.ejercicios)         sesionActual.ejercicios         = nuevaRutina.ejercicios;
     if (nuevaRutina.estiramientos)      sesionActual.estiramientos      = nuevaRutina.estiramientos;
@@ -9169,7 +9426,7 @@ function aplicarCambiosRutina(nuevaRutina) {
 // Para los temporizadores (descanso, AMRAP, EMOM, Tabata, circuito) de la rutina
 // que se deja: si no, seguían corriendo ocultos y pitando.
 function pararTemporizadoresRutina() {
-    document.querySelectorAll('#lista-ejercicios .tabata-panel').forEach(p => { if (p._parar) p._parar(); });
+    document.querySelectorAll('#lista-ejercicios .tabata-panel, #lista-ejercicios .cuenta-ej').forEach(p => { if (p._parar) p._parar(); });
     if (typeof _pararTimerDescanso === 'function') _pararTimerDescanso();
     cerrarDescanso();
 }
@@ -10347,16 +10604,17 @@ function _mgRenderEjercicio() {
     const serieAct = reg.series[iSerie];
     const conPeso = esPrincipal && usaPeso(ej);
     const anterior = esPrincipal ? textoAnterior(ej, iSerie) : '—';
-    const pesoRow = esPrincipal ? `
+    const pesoRow = `
         <div class="mg-serie-campos">
             ${conPeso ? `<label>kg<input type="number" id="mg-peso-inp" inputmode="decimal" step="0.5" min="0" value="${escaparHTML(serieAct.kg)}"></label>` : ''}
-            <label>Reps<input type="number" id="mg-reps-inp" inputmode="numeric" min="0" value="${escaparHTML(serieAct.reps)}" placeholder="${rangoMg ? rangoMg[1] : ''}"></label>
+            ${segundosEjercicio(ej) ? '' : `<label>Reps<input type="number" id="mg-reps-inp" inputmode="numeric" min="0" value="${escaparHTML(serieAct.reps)}" placeholder="${rangoMg ? rangoMg[1] : ''}"></label>`}
         </div>
         ${anterior !== '—' ? `<div class="mg-anterior">La vez anterior: <b>${escaparHTML(anterior)}</b></div>` : ''}
-        ${iSerie === reg.series.length - 1 ? `<div class="mg-rir">¿Cuántas más podías hacer? <span>(opcional)</span><div>
-            ${[0, 1, 2, 3].map(v => `<button class="chip${reg.rir === v ? ' activo' : ''}" onclick="_mgRir(${v}, this)">${v === 3 ? '3+' : v}</button>`).join('')}</div></div>` : ''}` : '';
+        ${esPrincipal && iSerie === reg.series.length - 1 ? `<div class="mg-rir">¿Cuántas más podías hacer? <span>(opcional)</span><div>
+            ${[0, 1, 2, 3].map(v => `<button class="chip${reg.rir === v ? ' activo' : ''}" onclick="_mgRir(${v}, this)">${v === 3 ? '3+' : v}</button>`).join('')}</div></div>` : ''}`;
 
     const descSegs = parsearDescanso(ej.descanso_series) || 0;
+    const segsGuiado = segundosEjercicio(ej);
 
     document.getElementById('mg-contenido').innerHTML = `
         <div class="mg-seccion">${ej._seccion}</div>
@@ -10364,7 +10622,7 @@ function _mgRenderEjercicio() {
         ${ej.grupo_muscular ? `<div class="mg-grupo">${ej.grupo_muscular}</div>` : ''}
         <div class="mg-tags">
             <span class="mg-tag">${series} series</span>
-            <span class="mg-tag">${ej.reps || ''} reps</span>
+            <span class="mg-tag">${escaparHTML(ej.reps || '')}${segsGuiado ? '' : ' reps'}</span>
             ${ej.descanso_series ? `<span class="mg-tag">Descanso: ${ej.descanso_series}</span>` : ''}
         </div>
         <div class="mg-serie-info">Serie ${_mg.serie} de ${series}</div>
@@ -10373,13 +10631,31 @@ function _mgRenderEjercicio() {
         ${ej.explicacion ? `<div class="mg-explicacion">${ej.explicacion}</div>` : ''}
         <div class="tecnica-hueco" id="mg-tecnica"></div>
         ${pesoRow}
+        <div id="mg-cuenta"></div>
         <button class="mg-btn-serie" onclick="_mgCompletarSerie(${series}, ${descSegs})">
             ✓ Serie hecha
         </button>
         ${_mg.idx < _mg.lista.length - 1 || _mg.serie < series
             ? `<button class="mg-btn-saltar" onclick="_mgSaltarEjercicio()">Saltar ejercicio →</button>` : ''}
+        <div id="mg-cambio"></div>
         <div id="mg-timer-area"></div>
     `;
+    // Por tiempo: cronómetro que al acabar da la serie por hecha
+    if (segsGuiado) {
+        _mg.panelBloque = crearCuentaEjercicio(segsGuiado, () => _mgCompletarSerie(series, descSegs));
+        document.getElementById('mg-cuenta').appendChild(_mg.panelBloque);
+    }
+    // Cambiar este ejercicio por otro parecido sin salir del modo guiado
+    document.getElementById('mg-cambio').appendChild(crearSelectorCambio(
+        () => ejDeSesion(ej.nombre) || ej,
+        op => {
+            const nuevo = sustituirEjercicio(ej.nombre, op);
+            if (!nuevo) return;
+            _mg.lista[_mg.idx] = { ...nuevo, _seccion: ej._seccion };
+            _mg.serie = 1;
+            _mgRenderEjercicio();
+            avisoRapido(`🔄 Cambiado por: ${nuevo.nombre}`);
+        }));
     // Técnica: abierta en la primera serie; luego plegada, por si se quiere repasar
     pintarTecnica(document.getElementById('mg-tecnica'), ej, _mg.serie === 1);
     document.getElementById('modo-guiado').scrollTo(0, 0);
