@@ -558,6 +558,23 @@
         }
 
         .rutina-header p { color: #aaa; font-size: 0.88rem; }
+        /* Cerrar la rutina (la cabecera es oscura en los dos temas) */
+        .rutina-header { position: relative; padding-top: 44px; }
+        .rutina-cerrar {
+            position: absolute; top: 10px; right: 10px; padding: 6px 12px; border-radius: 10px;
+            background: rgba(255,255,255,0.12); color: #fff; border: none; font-size: 0.8rem; font-weight: 700; cursor: pointer;
+        }
+        .rutina-cerrar-panel { margin-top: 16px; padding-top: 14px; border-top: 1px solid #333; }
+        .rutina-cerrar-panel[hidden] { display: none; }
+        .rutina-cerrar-panel p { color: #ddd; font-weight: 700; margin-bottom: 10px; }
+        .rutina-cerrar-panel button {
+            display: block; width: 100%; margin-top: 8px; padding: 12px; border-radius: 12px;
+            font-size: 0.92rem; font-weight: 800; cursor: pointer; border: 1px solid #444;
+            background: rgba(255,255,255,0.06); color: #fff;
+        }
+        .rutina-cerrar-panel .rc-guardar { background: #ff5722; border-color: #ff5722; }
+        .rutina-cerrar-panel .rc-borrar { color: #ff8a80; }
+        .rutina-cerrar-panel .rc-seguir { color: #aaa; font-weight: 600; }
 
         .ejercicio-card {
             background: white;
@@ -3508,15 +3525,22 @@
     <!-- ===================== PANTALLA RUTINA ===================== -->
     <div id="pantalla-rutina">
         <div class="rutina-header">
+            <button class="rutina-cerrar" onclick="abrirCerrarRutina(true)">✕ Cerrar rutina</button>
             <h2 id="rutina-titulo"></h2>
             <p id="rutina-subtitulo"></p>
+            <div class="rutina-cerrar-panel" id="rutina-cerrar-panel" hidden>
+                <p>¿Qué hacemos con esta rutina?</p>
+                <button class="rc-guardar" onclick="abrirCerrarRutina(false); irAFeedback()">✓ Terminar y guardar el entreno</button>
+                <button class="rc-borrar" onclick="abrirCerrarRutina(false); crearOtraRutina()">🗑 Borrarla y hacer otra</button>
+                <button class="rc-seguir" onclick="abrirCerrarRutina(false)">Seguir con ella</button>
+            </div>
         </div>
         <button class="btn-generar" onclick="iniciarModoGuiado()" style="margin-bottom:6px">▶ Empezar entreno</button>
         <p class="rutina-ayuda">Paso a paso, serie a serie. O toca cada ejercicio y marca ✓ al terminar cada serie.</p>
         <div id="lista-ejercicios"></div>
         <button class="btn-generar btn-terminar" onclick="irAFeedback()">✓ Terminar entreno</button>
         <button class="btn-secundario btn-modificar-ia" onclick="abrirChatModificar()" style="margin-top:6px;">💬 Modificar rutina con IA</button>
-        <button class="btn-secundario" style="margin-top:6px; color:#666; border-color:#eee;" onclick="crearOtraRutina()">← Crear otra rutina</button>
+        <button class="btn-secundario" style="margin-top:6px; color:#666; border-color:#eee;" onclick="crearOtraRutina()">🗑 Borrar rutina y crear otra</button>
     </div>
 
     <!-- ===================== MODO GUIADO ===================== -->
@@ -7844,6 +7868,7 @@ function mostrarRutinaIA(resultado, tiempo, nivel, objetivo) {
 
     _rutinaResultado = resultado;
     _rutinaActiva = true;
+    abrirCerrarRutina(false);
     ocultarTodas();
     activarNavItem('nav-rutina');
     actualizarBotonRutina();
@@ -9429,6 +9454,12 @@ function pararTemporizadoresRutina() {
     document.querySelectorAll('#lista-ejercicios .tabata-panel, #lista-ejercicios .cuenta-ej').forEach(p => { if (p._parar) p._parar(); });
     if (typeof _pararTimerDescanso === 'function') _pararTimerDescanso();
     cerrarDescanso();
+}
+
+// "✕ Cerrar rutina": terminar y guardar, borrarla para hacer otra o seguir
+function abrirCerrarRutina(abrir) {
+    const panel = document.getElementById('rutina-cerrar-panel');
+    if (panel) panel.hidden = !abrir;
 }
 
 function crearOtraRutina() {
